@@ -1,0 +1,10 @@
+export('getAirportArrivals')
+export('getAirportDepartures')
+export('getAircraftFlights')
+export('getIntervalFlights')
+export('getSingleTimeStateVectors')
+export('getAircraftStateVectorsSeries')
+export('getAircraftMetadata')
+import('httr')
+import('xml2')
+

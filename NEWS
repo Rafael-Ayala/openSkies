@@ -1,0 +1,10 @@
+Changes in version 1.0.0 (2020-11-03)
++ Aircraft metadata can now be retrieved with getAircraftMetadata
++ Available on CRAN
+
+Changes in version 0.99.3 (2020-10-24)
++ Added link to OpenSky website in DESCRIPTION
+
+Changes in version 0.99.0 (2020-10-14)
++ First version
++ Submitted to CRAN

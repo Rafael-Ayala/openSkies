@@ -1,0 +1,27 @@
+body{ /* Normal  */
+        font-size: 18px;
+      text-align:justify;
+    }
+  h1 { /* Header 1 */
+      font-size: 14px;
+    color: DarkBlue;
+    text-align:center
+  }
+  h2 { /* Header 2 */
+      font-size: 22px;
+    color: DarkBlue;
+  }
+  h3 { /* Header 3 */
+      font-size: 18px;
+    color: DarkBlue;
+  }
+  h4 { /* Header 4 */
+      font-size: 18px;
+    color:Gray;
+  }
+  code.r{ /* Code block */
+      font-size: 14px;
+  }
+  pre { /* Code block */
+      font-size: 14px
+  }
