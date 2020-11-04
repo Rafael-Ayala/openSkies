@@ -54,6 +54,27 @@ formatAircraftMetadataResponse <- function(responseList) {
   return(formattedList)
 }
 
+formatAirportMetadataResponse <- function(responseList) {
+  formattedList <- list("ICAO"=responseList$icao,
+                        "IATA"=responseList$iata,
+                        "name"=responseList$name,
+                        "city"=responseList$city,
+                        "municipality"=responseList$municipality,
+                        "region"=responseList$region,
+                        "country"=responseList$country,
+                        "continent"=responseList$continent,
+                        "longitude"=responseList$position$longitude,
+                        "latitude"=responseList$position$latitude,
+                        "altitude"=responseList$position$altitude,
+                        "reliablePosition"=responseList$position$reasonable,
+                        "GPSCode"=responseList$gpsCode,
+                        "type"=responseList$type,
+                        "website"=responseList$homepage,
+                        "wikipediaEntry"=responseList$wikipedia
+  )
+  return(formattedList)
+}
+
 stringToEpochs <- function(dateTimeString, timeZone) {
   return(as.integer(as.POSIXct(dateTimeString, tz=timeZone, origin="1970-01-01")))
 }

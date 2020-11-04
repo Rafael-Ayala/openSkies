@@ -146,8 +146,21 @@ getAircraftMetadata <- function(aircraft) {
   response <- GET(paste(openskyApiRootURL, "metadata/aircraft/icao/", aircraft, sep=""))
   if(status_code(response) != 200) {
     stop(strwrap("No metadata for the aircraft with the provided ICAO24 address 
-                 is available.", initial="", prefix="\n"))
+                  is available.", initial="", prefix="\n"))
   }
   formattedMetadata <- formatAircraftMetadataResponse(content(response))
+  return(formattedMetadata)
+}
+
+
+getAirportMetadata <- function(airport) {
+  checkAirport(airport)
+  response <- GET(paste(openskyApiRootURL, "airports", sep=""),
+                  query=list(icao=airport))
+  if(status_code(response) != 200) {
+    stop(strwrap("No metadata for the airport with the provided ICAO code 
+                  is available.", initial="", prefix="\n"))
+  }
+  formattedMetadata <- formatAirportMetadataResponse(content(response))
   return(formattedMetadata)
 }
