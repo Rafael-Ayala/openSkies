@@ -1,9 +1,7 @@
-Changes in version 1.1.0 (2020-11-04)
-+ Airport metadata can now be retrieved with getAirportMetadata
-
-Changes in version 1.0.0 (2020-11-03)
+Changes in version 1.0.0 (2020-11-05)
 + Aircraft metadata can now be retrieved with getAircraftMetadata
-+ Available on CRAN
++ Airport metadata can now be retrieved with getAirportMetadata
++ Route metadata can now be retrieved with getRouteMetadata
 
 Changes in version 0.99.3 (2020-10-24)
 + Added link to OpenSky website in DESCRIPTION

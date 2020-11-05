@@ -7,6 +7,15 @@ checkAirport <- function(airport) {
   }
 }
 
+checkCallSign <- function(callSign) {
+  if(!is.character(callSign) | length(callSign) == 0) {
+    stop("Please enter a valid call sign")
+  }
+  if(length(callSign) > 1) {
+    stop("Only one call sign per query is supported")
+  }
+}
+
 checkTime <- function(timeString) {
   tryCatch({
     invisible(as.Date(timeString))

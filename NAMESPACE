@@ -6,6 +6,7 @@ export('getSingleTimeStateVectors')
 export('getAircraftStateVectorsSeries')
 export('getAircraftMetadata')
 export('getAirportMetadata')
+export('getRouteMetadata')
 import('httr')
 import('xml2')
 

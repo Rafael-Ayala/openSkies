@@ -1,65 +1,38 @@
-\name{getAirportMetadata}
-\alias{getAirportMetadata}
-\title{Retrieve metadata for a specified airport
+\name{getRouteMetadata}
+\alias{getRouteMetadata}
+\title{Retrieve metadata for a specified route
 }
 \description{
-Retrieves the available metadata for a specified airport. These include its
-IATA code, common name and location, among others. A single airport  must be 
-specified using its ICAO code.
+Retrieves the available metadata for a specified route (flight). These include 
+the airports of origin and destination, the operator IATA code and the flight
+number.
 }
 \usage{
-getAircraftMetadata(aircraft)
+getRouteMetadata(route)
 }
 \arguments{
-  \item{airport}{string with the ICAO 4-letter code of an airport (for 
-  example, \"LEZL\" for Sevilla Airport.
+  \item{route}{string with the call sign of a route/flight (for example, 
+  \"AAL683\" for American Airlines flight number 683.
   }
 }
 \value{
-A list with the following elements that provide information about the airport:
-  \item{ICAO }{ICAO 4-letter code of the airport
+A list with the following elements that provide information about the route:
+  \item{callSign }{Call sign of the route/flight
   }
-  \item{IATA }{IATA 3-letter code of the airport
+  \item{originAirportICAO }{ICAO 4-letter code of the airport of origin
   }
-  \item{name }{Common name of the airport
+  \item{destinationAirportICAO }{ICAO 4-letter code of the airport of origin
   }
-  \item{city }{City where the airport is located
+  \item{operatorIATA }{IATA code for the operator of the route
   }
-  \item{municipality }{Municipality where the airport is located
-  }
-  \item{region }{ISO 3166-2 code for the region where the airport is located
-  }
-  \item{country }{ISO 3166-1 alpha-2 code for the country where the airport is 
-  located
-  }
-  \item{continent }{ISO 3166-1 alpha-2 code for the continent where the airport 
-  is located
-  }
-  \item{longitude }{Longitude value for the position of the airport
-  }
-  \item{latitude }{Latitude value for the position of the airport
-  }
-  \item{altitude }{Altitude value for the position of the airport
-  }
-  \item{reliablePosition }{Logical value indicating if the position of the 
-  airport is reliable
-  }
-  \item{GPSCode }{GPS code of the airport
-  }
-  \item{type }{Information about the type of airport
-  }
-  \item{website }{Website for the airport. Can be NULL even if the airport
-  actually has a website
-  }
-  \item{wikipediaEntry }{Link to the Wikipedia entry for the airport. Can be 
-  NULL even if the airport actually has a Wikipedia entry
+  \item{flightNumber }{Flight number for the route
   }
 }
 \references{
-https://en.wikipedia.org/wiki/List_of_airports_by_IATA_and_ICAO_code
+https://en.wikipedia.org/wiki/Flight_number
 }
 \examples{
-# Obtain metadata for the airport with ICAO code LEZL with ICAO 24-bit address 3922e2 
+# Obtain metadata for the flight with call sign AAL683
 
-getAirportMetadata("LEZL")
+getRouteMetadata("AAL683")
 }
