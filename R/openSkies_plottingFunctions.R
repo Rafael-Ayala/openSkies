@@ -1,4 +1,4 @@
-getMapLimits = function(longitudes, latitudes, marginFactor){
+getMapLimits = function(longitudes, latitudes, paddingFactor){
   minLon = min(unlist(longitudes))
   maxLon = max(unlist(longitudes))
   minLat = min(unlist(latitudes))
@@ -6,15 +6,15 @@ getMapLimits = function(longitudes, latitudes, marginFactor){
   width = maxLon - minLon
   height = maxLat - minLat
   mapLimits = c(
-    left = minLon - width * marginFactor,
-    right = maxLon + width * marginFactor,
-    top = maxLat + height * marginFactor,
-    bottom = minLat - height * marginFactor
+    left = minLon - width * paddingFactor,
+    right = maxLon + width * paddingFactor,
+    top = maxLat + height * paddingFactor,
+    bottom = minLat - height * paddingFactor
   )
   return(mapLimits)
 }
 
-plotRoute = function(stateVectors, pathColor="blue", ggmapObject=NULL, plotResult=TRUE, marginFactor=0.2, lineSize=1, lineAlpha=0.5, pointSize=0.3, pointAlpha=0.8){
+plotRoute = function(stateVectors, pathColor="blue", ggmapObject=NULL, plotResult=TRUE, paddingFactor=0.2, lineSize=1, lineAlpha=0.5, pointSize=0.3, pointAlpha=0.8){
   longitudes = unlist(sapply(stateVectors, function(stateVector) stateVector["longitude"]))
   latitudes = unlist(sapply(stateVectors, function(stateVector) stateVector["latitude"]))
   if(length(longitudes) == 0){
@@ -23,7 +23,7 @@ plotRoute = function(stateVectors, pathColor="blue", ggmapObject=NULL, plotResul
   }
   data = data.frame(lat=latitudes, lon=longitudes)
   if (is.null(ggmapObject)){
-    limits = getMapLimits(longitudes, latitudes, marginFactor)
+    limits = getMapLimits(longitudes, latitudes, paddingFactor)
     map = get_map(limits)
     ggmapObject = ggmap(map)
   }
@@ -36,7 +36,7 @@ plotRoute = function(stateVectors, pathColor="blue", ggmapObject=NULL, plotResul
   return(ggmapObject)
 }
 
-plotRoutes = function(stateVectorsList, pathColor="blue", ggmapObject=NULL, plotResult=TRUE, marginFactor=0.2, lineSize=1, lineAlpha=0.5, pointSize=0.3, pointAlpha=0.8){
+plotRoutes = function(stateVectorsList, pathColors="blue", ggmapObject=NULL, plotResult=TRUE, paddingFactor=0.2, lineSize=1, lineAlpha=0.5, pointSize=0.3, pointAlpha=0.8){
   longitudes = sapply(stateVectorsList, function(stateVectors) unlist(sapply(stateVectors, function(stateVector) stateVector["longitude"])))
   latitudes = sapply(stateVectorsList, function(stateVectors) unlist(sapply(stateVectors, function(stateVector) stateVector["latitude"])))
   if(length(longitudes[!sapply(longitudes, is.null)]) == 0){
@@ -44,7 +44,7 @@ plotRoutes = function(stateVectorsList, pathColor="blue", ggmapObject=NULL, plot
                  prefix="\n"))
   }
   if (is.null(ggmapObject)){
-    limits = getMapLimits(longitudes, latitudes, marginFactor)
+    limits = getMapLimits(longitudes, latitudes, paddingFactor)
     map = get_map(limits)
     ggmapObject = ggmap(map)
   }
@@ -52,14 +52,16 @@ plotRoutes = function(stateVectorsList, pathColor="blue", ggmapObject=NULL, plot
   for (i in 1:length(stateVectorsList)){
     lat = latitudes[[i]]
     lon = longitudes[[i]]
+    pathColor = pathColors[[i %% length(pathColors) + 1]]
     if (!is.null(lat)){
-      newData = data.frame(lat=lat, lon=lon, group=i)
+      newData = data.frame(lat=lat, lon=lon, group=i, pathColor=pathColor)
       data = rbind(data, newData)
     }
   } 
   ggmapObject =  ggmapObject +
-    geom_path(data=data, aes(x=lon, y=lat, group=group), color=pathColor, size=lineSize, alpha=lineAlpha) + 
-    geom_point(data=data, aes(x=lon, y=lat), color=pathColor, size=pointSize, alpha=pointAlpha)
+    geom_path(data=data, aes(x=lon, y=lat, group=group, color=pathColor), size=lineSize, alpha=lineAlpha) + 
+    geom_point(data=data, aes(x=lon, y=lat, color=pathColor), size=pointSize, alpha=pointAlpha) +
+    scale_color_manual(values = pathColors)
   if(plotResult){
     ggmapObject
   }
