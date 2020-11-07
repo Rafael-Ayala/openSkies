@@ -3,27 +3,41 @@
 \title{Plot several aircraft routes given as a list of lists of state vectors
 }
 \description{
-Draws the given routes on a ggmap object. The routes must be given as a list of lists of
-state vectors, each represented by a list with at least longitude and latitude
-fields.
+Draws the given routes on a ggmap object. The routes must be given as a list of 
+lists of state vectors, each represented by a list with at least longitude and 
+latitude fields.
 }
 \usage{
-plotRoutes(stateVectorsList, pathColor="blue", ggmapObject=NULL, plotResult=TRUE, paddingFactor=0.2, lineSize=1, lineAlpha=0.5, pointSize=0.3, pointAlpha=0.8)
+plotRoutes(stateVectorsList, pathColor="blue", ggmapObject=NULL, 
+plotResult=TRUE, paddingFactor=0.2, lineSize=1, lineAlpha=0.5, pointSize=0.3, 
+pointAlpha=0.8)
 }
 \arguments{
-  \item{stateVectors}{list of lists of state vectors. Each state vector must be represented by a list with, at least, fields "longitude" and "latitude".
+  \item{stateVectors}{list of lists of state vectors. Each state vector must be 
+  represented by a list with, at least, fields "longitude" and "latitude".
   }
-  \item{pathColors}{vector with the colors of the paths and points that will be used to draw the routes. If the number of routes is greater than the number of colors, these will be rotated. Each color must be a value accepted by ggmap's color attributes.
+  \item{pathColors}{vector with the colors of the paths and points that will be 
+  used to draw the routes. If the number of routes is greater than the number of 
+  colors, these will be rotated. Each color must be a value accepted by ggmap's 
+  color attributes.
   }
-  \item{ggmapObject}{optional ggmap object on which the routes will be drawn. By default, a new ggmap object will be created, covering the necessary space plus an amount of padding determined by the paddingFactor argument.
+  \item{ggmapObject}{optional ggmap object on which the routes will be drawn. By 
+  default, a new ggmap object will be created, covering the necessary space plus
+  an amount of padding determined by the paddingFactor argument.
   }
-  \item{plotResult}{wether or not the resulting ggmap object with the added routes should be plotted.
+  \item{plotResult}{wether or not the resulting ggmap object with the added 
+  routes should be plotted.
   }
-  \item{paddingFactor}{amount of padding to add to the map if no ggmap object is provided. The added padding will be equal to paddingFactor multiplied by the height and width of the map (determined by the difference between the maximum and minimum longitudes/latitudes).
+  \item{paddingFactor}{amount of padding to add to the map if no ggmap object is
+  provided. The added padding will be equal to paddingFactor multiplied by the 
+  height and width of the map (determined by the difference between the maximum 
+  and minimum longitudes/latitudes).
   }
-  \item{lineSize}{width of the line that connects the points of the routes in the plot.
+  \item{lineSize}{width of the line that connects the points of the routes in 
+  the plot.
   }
-  \item{lineAlpha}{opacity of the line that connects the points of the routes in the plot.
+  \item{lineAlpha}{opacity of the line that connects the points of the routes in
+  the plot.
   }
   \item{pointSize}{size of the points of the routes in the plot.
   }
@@ -35,11 +49,23 @@ A ggmap object with added paths and points representing the routes.
 }
 \references{
 https://opensky-network.org/apidoc/rest
+}
 \examples{
-# Plot the routes followed by the aircraft with icao 40070f during three different days.
+# Plot the routes followed by the aircraft with ICAO address 40070f during three 
+# different days.
 
-vectors1 = getAircraftStateVectorsSeries(aircraft="44070f", startTime="2020-06-18 00:00:00", endTime="2020-06-18 23:59:00", timeZone = "Europe/Tallinn", timeResolution = 360)
-vectors2 = getAircraftStateVectorsSeries(aircraft="44070f", startTime="2020-08-04 00:00:00", endTime="2020-08-04 23:59:00", timeZone = "Europe/Tallinn", timeResolution = 360)
-vectors3 = getAircraftStateVectorsSeries(aircraft="44070f", startTime="2020-09-22 00:00:00", endTime="2020-09-22 23:59:00", timeZone = "Europe/Tallinn", timeResolution = 360)
-plotRoutes(list(vectors1, vectors2, vectors3), pathColors = c("red", "green", "blue"))
+vectors1 <- getAircraftStateVectorsSeries(aircraft="44070f", 
+startTime="2020-06-18 00:00:00", endTime="2020-06-18 23:59:00", 
+timeZone="Europe/Tallinn", timeResolution=360)
+
+vectors2 <- getAircraftStateVectorsSeries(aircraft="44070f", 
+startTime="2020-08-04 00:00:00", endTime="2020-08-04 23:59:00", 
+timeZone="Europe/Tallinn", timeResolution=360)
+
+vectors3 = getAircraftStateVectorsSeries(aircraft="44070f", 
+startTime="2020-09-22 00:00:00", endTime="2020-09-22 23:59:00", 
+timeZone="Europe/Tallinn", timeResolution=360)
+
+plotRoutes(list(vectors1, vectors2, vectors3), 
+pathColors=c("red", "green", "blue"))
 }
