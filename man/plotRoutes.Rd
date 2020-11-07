@@ -8,13 +8,13 @@ lists of state vectors, each represented by a list with at least longitude and
 latitude fields.
 }
 \usage{
-plotRoutes(stateVectorsList, pathColor="blue", ggmapObject=NULL, 
+plotRoutes(stateVectorsList, pathColors="blue", ggmapObject=NULL, 
 plotResult=TRUE, paddingFactor=0.2, lineSize=1, lineAlpha=0.5, pointSize=0.3, 
 pointAlpha=0.8)
 }
 \arguments{
-  \item{stateVectors}{list of lists of state vectors. Each state vector must be 
-  represented by a list with, at least, fields "longitude" and "latitude".
+  \item{stateVectorsList}{list of lists of state vectors. Each state vector must 
+  be represented by a list with, at least, fields "longitude" and "latitude".
   }
   \item{pathColors}{vector with the colors of the paths and points that will be 
   used to draw the routes. If the number of routes is greater than the number of 
@@ -54,6 +54,7 @@ https://opensky-network.org/apidoc/rest
 # Plot the routes followed by the aircraft with ICAO address 40070f during three 
 # different days.
 
+\donttest{
 vectors1 <- getAircraftStateVectorsSeries(aircraft="44070f", 
 startTime="2020-06-18 00:00:00", endTime="2020-06-18 23:59:00", 
 timeZone="Europe/Tallinn", timeResolution=360)
@@ -68,4 +69,5 @@ timeZone="Europe/Tallinn", timeResolution=360)
 
 plotRoutes(list(vectors1, vectors2, vectors3), 
 pathColors=c("red", "green", "blue"))
+}
 }

@@ -11,4 +11,5 @@ export('plotRoute')
 export('plotRoutes')
 import('httr')
 import('xml2')
-
+import('ggplot2')
+import('ggmap')

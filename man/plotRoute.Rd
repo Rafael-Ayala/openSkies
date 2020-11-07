@@ -48,7 +48,11 @@ A ggmap object with added paths and points representing the route.
 # Plot the route followed by the aircraft with ICAO address 40070f 
 # during the 18th of June, 2020.
 
-vectors <- getAircraftStateVectorsSeries(aircraft="44070f", startTime="2020-06-18 00:00:00", endTime="2020-06-18 23:59:00", timeZone = "Europe/Tallinn", timeResolution = 360)
+\donttest{
+vectors <- getAircraftStateVectorsSeries(aircraft="44070f", 
+startTime="2020-06-18 00:00:00", endTime="2020-06-18 23:59:00", 
+timeZone = "Europe/Tallinn", timeResolution = 360)
 
 plotRoute(vectors)
+}
 }
