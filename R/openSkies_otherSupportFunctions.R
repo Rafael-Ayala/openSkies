@@ -22,7 +22,7 @@ generateTimePoints <- function(startTime, endTime, timeZone, timeResolution) {
   return(seq(startTimeEpochs, endTimeEpochs, by=timeResolution))
 }
 
-getMapLimits <- function(longitudes, latitudes, paddingFactor){
+getMapLimits <- function(longitudes, latitudes, paddingFactor) {
   minLon <- min(unlist(longitudes))
   maxLon <- max(unlist(longitudes))
   minLat <- min(unlist(latitudes))
@@ -30,10 +30,10 @@ getMapLimits <- function(longitudes, latitudes, paddingFactor){
   width <- maxLon - minLon
   height <- maxLat - minLat
   mapLimits <- c(
-    left <- minLon - width * paddingFactor,
-    right <- maxLon + width * paddingFactor,
-    top <- maxLat + height * paddingFactor,
-    bottom <- minLat - height * paddingFactor
+    left = minLon - width * paddingFactor,
+    right = maxLon + width * paddingFactor,
+    top = maxLat + height * paddingFactor,
+    bottom = minLat - height * paddingFactor
   )
   return(mapLimits)
 }

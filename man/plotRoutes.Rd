@@ -51,23 +51,18 @@ A ggmap object with added paths and points representing the routes.
 https://opensky-network.org/apidoc/rest
 }
 \examples{
-# Plot the routes followed by the aircraft with ICAO address 40070f during three 
-# different days.
+# Plot the routes followed by two aircrafts departing from Sevilla airport the
+# 4th of November, 2020.
 
 \donttest{
-vectors1 <- getAircraftStateVectorsSeries(aircraft="44070f", 
-startTime="2020-06-18 00:00:00", endTime="2020-06-18 23:59:00", 
-timeZone="Europe/Tallinn", timeResolution=360)
+vectors1=getAircraftStateVectorsSeries(aircraft="345107", 
+startTime="2020-11-04 11:55:00", endTime="2020-11-04 13:10:00", 
+timeZone="Europe/London", timeResolution=300)
 
-vectors2 <- getAircraftStateVectorsSeries(aircraft="44070f", 
-startTime="2020-08-04 00:00:00", endTime="2020-08-04 23:59:00", 
-timeZone="Europe/Tallinn", timeResolution=360)
+vectors2=getAircraftStateVectorsSeries(aircraft = "4ca7b3", 
+startTime="2020-11-04 10:30:00", endTime="2020-11-04 12:00:00",
+timeZone="Europe/London", timeResolution=300)
 
-vectors3 = getAircraftStateVectorsSeries(aircraft="44070f", 
-startTime="2020-09-22 00:00:00", endTime="2020-09-22 23:59:00", 
-timeZone="Europe/Tallinn", timeResolution=360)
-
-plotRoutes(list(vectors1, vectors2, vectors3), 
-pathColors=c("red", "green", "blue"))
+plotRoutes(list(vectors1, vectors2), pathColors=c("red", "blue"))
 }
 }

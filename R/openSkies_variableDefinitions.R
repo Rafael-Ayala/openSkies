@@ -1,6 +1,6 @@
 openskyApiRootURL <- "https://opensky-network.org/api/"
 
-globalVariables(c("lat", "lon"))
+globalVariables(c("lat", "lon", "group"))
 
 localOS <- Sys.info()["sysname"]
 

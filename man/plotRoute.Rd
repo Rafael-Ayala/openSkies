@@ -9,7 +9,8 @@ fields.
 }
 \usage{
 plotRoute(stateVectors, pathColor="blue", ggmapObject=NULL, plotResult=TRUE, 
-paddingFactor=0.2, lineSize=1, lineAlpha=0.5, pointSize=0.3, pointAlpha=0.8)
+          paddingFactor=0.2, lineSize=1, lineAlpha=0.5, pointSize=0.3, 
+          pointAlpha=0.8)
 }
 \arguments{
   \item{stateVectors}{list of state vectors. Each state vector must be 
@@ -45,13 +46,13 @@ paddingFactor=0.2, lineSize=1, lineAlpha=0.5, pointSize=0.3, pointAlpha=0.8)
 A ggmap object with added paths and points representing the route.
 }
 \examples{
-# Plot the route followed by the aircraft with ICAO address 40070f 
-# during the 18th of June, 2020.
+# Plot the route followed by the aircraft with ICAO address 4ca7b3 
+# during the 4th of November, 2020.
 
 \donttest{
-vectors <- getAircraftStateVectorsSeries(aircraft="44070f", 
-startTime="2020-06-18 00:00:00", endTime="2020-06-18 23:59:00", 
-timeZone = "Europe/Tallinn", timeResolution = 360)
+vectors <- getAircraftStateVectorsSeries(aircraft="4ca7b3", 
+startTime="2020-11-04 10:30:00", endTime="2020-11-04 12:00:00", 
+timeZone="Europe/London", timeResolution=300)
 
 plotRoute(vectors)
 }

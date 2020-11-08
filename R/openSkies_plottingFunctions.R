@@ -40,16 +40,16 @@ plotRoutes <- function(stateVectorsList, pathColors="blue", ggmapObject=NULL,
   for (i in 1:length(stateVectorsList)){
     lat <- latitudes[[i]]
     lon <- longitudes[[i]]
-    pathColor <- pathColors[i %% length(pathColors) + 1]
+    pathColor <- pathColors[[i %% length(pathColors) + 1]]
     if (!is.null(lat)){
       newData <- data.frame(lat=lat, lon=lon, group=i, pathColor=pathColor)
       data <- rbind(data, newData)
     }
   } 
-  ggmapObject <-ggmapObject +
+  ggmapObject <- ggmapObject +
     geom_path(data=data, aes(x=lon, y=lat, group=group, color=pathColor), size=lineSize, alpha=lineAlpha) + 
     geom_point(data=data, aes(x=lon, y=lat, color=pathColor), size=pointSize, alpha=pointAlpha) +
-    scale_color_manual(values <- pathColors)
+    scale_color_manual(values=pathColors)
   if(plotResult){
     ggmapObject
   }
