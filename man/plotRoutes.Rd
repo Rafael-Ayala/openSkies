@@ -43,6 +43,8 @@ pointAlpha=0.8)
   }
   \item{pointAlpha}{opacity of the points of the routes in the plot.
   }
+  \item{arrowLength}{length of the segment arrows in centimeters.
+  }
 }
 \value{
 A ggmap object with added paths and points representing the routes.

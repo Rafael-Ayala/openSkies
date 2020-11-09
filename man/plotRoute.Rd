@@ -41,6 +41,8 @@ plotRoute(stateVectors, pathColor="blue", ggmapObject=NULL, plotResult=TRUE,
   }
   \item{pointAlpha}{opacity of the points of the route in the plot.
   }
+  \item{arrowLength}{length of the segment arrows in centimeters.
+  }
 }
 \value{
 A ggmap object with added paths and points representing the route.
