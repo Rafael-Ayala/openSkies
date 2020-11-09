@@ -10,7 +10,7 @@ fields.
 \usage{
 plotRoute(stateVectors, pathColor="blue", ggmapObject=NULL, plotResult=TRUE, 
           paddingFactor=0.2, lineSize=1, lineAlpha=0.5, pointSize=0.3, 
-          pointAlpha=0.8)
+          pointAlpha=0.8, arrowLength=0.3)
 }
 \arguments{
   \item{stateVectors}{list of state vectors. Each state vector must be 
