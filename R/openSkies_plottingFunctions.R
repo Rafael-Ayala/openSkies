@@ -57,3 +57,35 @@ plotRoutes <- function(stateVectorsList, pathColors="blue", ggmapObject=NULL,
   }
   return(ggmapObject)
 }
+
+plotPlanes <- function(stateVectors, ggmapObject=NULL, plotResult=TRUE, 
+                       paddingFactor=0.2, iconSize=1) {
+  longitudes <- unlist(sapply(stateVectors, function(stateVector) stateVector["longitude"]))
+  latitudes <- unlist(sapply(stateVectors, function(stateVector) stateVector["latitude"]))
+  aircrafts <- unlist(sapply(stateVectors, function(stateVector) stateVector["ICAO24"]))
+  trueTracks <- unlist(sapply(stateVectors, function(stateVector) stateVector["trueTrack"]))
+  if(length(longitudes) == 0) {
+    stop(strwrap("Unable to plot location of aircrafts: no non-NULL state 
+                  vectors available.", initial="", prefix="\n"))
+  }
+  data <- data.frame(lat=latitudes, lon=longitudes, planes=aircrafts, angles=trueTracks)
+  if (is.null(ggmapObject)){
+    limits <- getMapLimits(longitudes, latitudes, paddingFactor)
+    map <- get_map(limits)
+    ggmapObject <- ggmap(map)
+  }
+  plane <- magick::image_read(system.file("images", "airplane-4-48.png", package="openSkies"))
+  plane <- magick::image_background(plane, "#FF000000")
+  ggmapObject <- ggmapObject +
+    mapply(function(x, y, angle) {
+      ggmap::inset(rasterGrob(magick::image_rotate(plane, angle)),
+                        xmin=x-iconSize*0.08*(1+abs(sin(angle*2*pi/180)*((2/sqrt(2))-1))),
+                        xmax=x+iconSize*0.08*(1+abs(sin(angle*2*pi/180)*((2/sqrt(2))-1))),
+                        ymin=y-iconSize*0.08*(1+abs(sin(angle*2*pi/180)*((2/sqrt(2))-1))),
+                        ymax=y+iconSize*0.08*(1+abs(sin(angle*2*pi/180)*((2/sqrt(2))-1))))
+    }, longitudes, latitudes, trueTracks) 
+  if(plotResult) {
+    ggmapObject
+  }
+  return(ggmapObject)
+}
