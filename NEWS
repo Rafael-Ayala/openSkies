@@ -1,8 +1,13 @@
-Changes in version 1.0.0 (2020-11-06)
+Changes in version 1.0.0 (2020-11-12)
 + Aircraft metadata can now be retrieved with getAircraftMetadata
 + Airport metadata can now be retrieved with getAirportMetadata
 + Route metadata can now be retrieved with getRouteMetadata
 + One or more routes can now be plotted with plotRoute and plotRoutes
++ Location of aircrafts can now be plotted with plotPlanes
+
+Changes in version 0.99.4 (2020-11-11)
++ Added additional checks to results of queries
++ Added informative messages to failed requests
 
 Changes in version 0.99.3 (2020-10-24)
 + Added link to OpenSky website in DESCRIPTION
