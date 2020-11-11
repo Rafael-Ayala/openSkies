@@ -1,7 +1,7 @@
 Package: openSkies
 Type: Package
 Title: An R Client-Side Interface to the 'OpenSky' API
-Version: 1.0.0.20
+Version: 1.0.0.21
 Date: 2020-11-10
 Author: Rafael Ayala, Daniel Ayala, Aleix Sellés, Lara Sellés Vidal
 Maintainer: Rafael Ayala <r.ayala14@imperial.ac.uk>
@@ -9,7 +9,7 @@ Description: Provides a client interface to the 'OpenSky' API <https://opensky-n
     of flight information, as well as aircraft state vectors.
 License: CC BY-NC 4.0
 Depends: grid
-Imports: httr, xml2, ggplot2, ggmap, magick, utils
+Imports: httr, xml2, ggmap, ggplot2, magick, utils
 Suggests: knitr, BiocStyle, RUnit, BiocGenerics
 VignetteBuilder: knitr
 NeedsCompilation: no
