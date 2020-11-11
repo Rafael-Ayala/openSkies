@@ -78,11 +78,11 @@ plotPlanes <- function(stateVectors, ggmapObject=NULL, plotResult=TRUE,
   plane <- magick::image_background(plane, "#FF000000")
   ggmapObject <- ggmapObject +
     mapply(function(x, y, angle) {
-      ggmap::inset(rasterGrob(magick::image_rotate(plane, angle)),
-                        xmin=x-iconSize*0.08*(1+abs(sin(angle*2*pi/180)*((2/sqrt(2))-1))),
-                        xmax=x+iconSize*0.08*(1+abs(sin(angle*2*pi/180)*((2/sqrt(2))-1))),
-                        ymin=y-iconSize*0.08*(1+abs(sin(angle*2*pi/180)*((2/sqrt(2))-1))),
-                        ymax=y+iconSize*0.08*(1+abs(sin(angle*2*pi/180)*((2/sqrt(2))-1))))
+      ggmap::inset(grid::rasterGrob(magick::image_rotate(plane, angle)),
+                                    xmin=x-iconSize*0.08*(1+abs(sin(angle*2*pi/180)*((2/sqrt(2))-1))),
+                                    xmax=x+iconSize*0.08*(1+abs(sin(angle*2*pi/180)*((2/sqrt(2))-1))),
+                                    ymin=y-iconSize*0.08*(1+abs(sin(angle*2*pi/180)*((2/sqrt(2))-1))),
+                                    ymax=y+iconSize*0.08*(1+abs(sin(angle*2*pi/180)*((2/sqrt(2))-1))))
     }, longitudes, latitudes, trueTracks) 
   if(plotResult) {
     ggmapObject
