@@ -47,13 +47,13 @@ getAirportMetadata <- function(airport) {
   return(formattedMetadata)
 }
 
-getRouteMetadata <- function(route) {
-  checkCallSign(route)
+getFlightMetadata <- function(flight) {
+  checkCallSign(flight)
   jsonResponse <- FALSE
   attemptCount <- 0
   while(!jsonResponse) {
     response <- GET(paste(openskyApiRootURL, "routes", sep=""),
-                    query=list(callsign=route))
+                    query=list(callsign=flight))
     jsonResponse <- grepl("json", headers(response)$`content-type`)
     if(attemptCount > 100) {
       message(strwrap("Resource not currently available. Please try again 
@@ -62,9 +62,9 @@ getRouteMetadata <- function(route) {
     }
   }
   if(status_code(response) != 200) {
-    stop(strwrap("No metadata for the route/flight with the provided call sign 
+    stop(strwrap("No metadata for the flight with the provided call sign 
                   is available.", initial="", prefix="\n"))
   }
-  formattedMetadata <- formatRouteMetadataResponse(content(response))
+  formattedMetadata <- formatFlightMetadataResponse(content(response))
   return(formattedMetadata)
 }

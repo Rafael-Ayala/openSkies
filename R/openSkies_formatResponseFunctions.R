@@ -75,7 +75,7 @@ formatAirportMetadataResponse <- function(responseList) {
   return(formattedList)
 }
 
-formatRouteMetadataResponse <- function(responseList) {
+formatFlightMetadataResponse <- function(responseList) {
   formattedList <- list("callSign"=responseList$callsign,
                         "originAirportICAO"=responseList$route[[1]],
                         "destinationAirportICAO"=responseList$route[[2]],
