@@ -185,6 +185,11 @@ openSkiesAircraft <- R6Class(
       self$operator_iata <- operator_iata
       self$first_flight_date <- first_flight_date
       self$category_description <- category_description
+    },
+    add_state_vector = function(state_vector) {
+      self$last_state_vector <- state_vector
+      self$state_vector_history$add_state_vector(state_vector)
+      invisible(self)
     }
   )
 )
