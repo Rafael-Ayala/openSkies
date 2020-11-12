@@ -143,8 +143,8 @@ openSkiesAircraft <- R6Class(
     owner = character(),
     operator = character(),
     operator_call_sign = character(),
-    operator_icao = character(),
-    operator_iata = character(),
+    operator_ICAO = character(),
+    operator_IATA = character(),
     first_flight_date = character(),
     category_description = character(),
     initialize = function(ICAO24,
@@ -162,8 +162,8 @@ openSkiesAircraft <- R6Class(
                           owner = NULL,
                           operator = NULL,
                           operator_call_sign = NULL,
-                          operator_icao = NULL,
-                          operator_iata = NULL,
+                          operator_ICAO = NULL,
+                          operator_IATA = NULL,
                           first_flight_date = NULL,
                           category_description = NULL) {
       self$ICAO24 <- ICAO24
@@ -181,8 +181,8 @@ openSkiesAircraft <- R6Class(
       self$owner <- owner
       self$operator <- operator
       self$operator_call_sign <- operator_call_sign
-      self$operator_icao <- operator_icao
-      self$operator_iata <- operator_iata
+      self$operator_ICAO <- operator_ICAO
+      self$operator_IATA <- operator_IATA
       self$first_flight_date <- first_flight_date
       self$category_description <- category_description
     },
@@ -194,13 +194,13 @@ openSkiesAircraft <- R6Class(
   )
 )
 
-openSkiesAirport <- R6Class(
-  "openSkiesAirport",
+openSkiesFlight <- R6Class(
+  "openSkiesFlight",
   public = list(
-    name = character(),
-    ICAO = character(),
-    IATA = character(),
-    longitude = double(),
+    call_sign = character(),
+    origin_airport = NULL, #Should be an openSkiesAirport object
+    destination_airport = NULL, #Should be an openSkiesAirport object
+    operator_IATA = double(),
     latitude = double(),
     altitude = double(),
     city = character(),
