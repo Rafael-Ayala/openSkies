@@ -200,58 +200,23 @@ openSkiesFlight <- R6Class(
     call_sign = character(),
     origin_airport = NULL, #Should be an openSkiesAirport object
     destination_airport = NULL, #Should be an openSkiesAirport object
-    operator_IATA = double(),
-    latitude = double(),
-    altitude = double(),
-    city = character(),
-    municipality = character(),
-    region = character(),
-    country = character(),
-    continent = character(),
-    type = character(),
-    website = character(),
-    wikipedia_entry = character(),
-    reliable_position = logical(),
-    GPS_code = character(),
-    initialize = function(name,
-                          city,
-                          country,
-                          longitude,
-                          latitude,
-                          ICAO = NULL,
-                          IATA = NULL,
-                          altitude = NA,
-                          municipality = NULL,
-                          region = NULL,
-                          continent = NULL,
-                          type = NULL,
-                          website = NULL,
-                          wikipedia_entry = NULL,
-                          reliable_position = TRUE,
-                          GPS_code = NULL) {
-      self$name <- name
-      self$ICAO <- ICAO
-      self$IATA <- IATA
-      self$longitude <- longitude
-      self$latitude <- latitude
-      self$altitude <- altitude
-      self$city <- city
-      self$municipality <- municipality
-      self$region <- region
-      self$country <- country
-      self$continent <- continent
-      self$type <- type
-      self$website <- website
-      self$wikipedia_entry <- wikipedia_entry
-      self$reliable_position <- reliable_position
-      self$GPS_code <- GPS_code
+    operator_IATA = character(),
+    flight_number = character(),
+    initialize = function(call_sign,
+                          origin_airport,
+                          destination_airport,
+                          operator_IATA = NULL,
+                          flight_number = NULL) {
+      self$call_sign <- call_sign
+      self$origin_airport <- origin_airport
+      self$destination_airport <- destination_airport
+      self$operator_IATA <- operator_IATA
+      self$flight_number <- flight_number
     },
     print = function(...) {
-      cat("Airport name: ", self$name, "\n", sep = "")
-      if (!is.null(self$ICAO)) cat("ICAO code: ", self$ICAO, "\n", sep = "")
-      cat("Location: ", self$city, ", ", self$country, "\n", sep ="")
-      cat("Geographic coordinates: latitude ", self$latitude, 
-          " degrees, longitude ", self$longitude, " degrees", sep = "")
+      cat("Flight with call sign ", self$call_sign, "\n", sep = "")
+      cat("Departing from ", self$origin_airport$name, "\n", sep ="")
+      cat("Landing at  ", self$destination_airport$name, sep = "")
       invisible(self)
     }
   )
