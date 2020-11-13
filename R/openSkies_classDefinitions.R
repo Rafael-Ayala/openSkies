@@ -186,6 +186,11 @@ openSkiesAircraft <- R6Class(
       self$first_flight_date <- first_flight_date
       self$category_description <- category_description
     },
+    print = function(...) {
+      cat("Aircraft with ICAO 24-bit address ", self$ICAO24, "\n", sep = "")
+      if (!is.null(self$registration)) cat("Registration code ", self$registration, "\n", sep = "")
+      invisible(self)
+    },
     add_state_vector = function(state_vector) {
       self$last_state_vector <- state_vector
       self$state_vector_history$add_state_vector(state_vector)
@@ -194,8 +199,8 @@ openSkiesAircraft <- R6Class(
   )
 )
 
-openSkiesFlight <- R6Class(
-  "openSkiesFlight",
+openSkiesRoute <- R6Class(
+  "openSkiesRoute",
   public = list(
     call_sign = character(),
     origin_airport = NULL, #Should be an openSkiesAirport object
@@ -214,11 +219,43 @@ openSkiesFlight <- R6Class(
       self$flight_number <- flight_number
     },
     print = function(...) {
-      cat("Flight with call sign ", self$call_sign, "\n", sep = "")
+      cat("Flight route with call sign ", self$call_sign, "\n", sep = "")
       cat("Departing from ", self$origin_airport$name, "\n", sep ="")
       cat("Landing at  ", self$destination_airport$name, sep = "")
       invisible(self)
     }
   )
 )
+
+openSkiesFlight <- R6Class(
+  "openSkiesFlight",
+  public = list(
+    ICAO24 = character(),
+    call_sign = character(),
+    origin_airport = NULL, #Should be an openSkiesAirport object
+    destination_airport = NULL, #Should be an openSkiesAirport object
+    departure_time = character(),
+    arrival_time = character(),
+    initialize = function(ICAO24,
+                          call_sign = NULL,
+                          origin_airport = NULL,
+                          destination_airport = NULL,
+                          departure_time,
+                          arrival_time) {
+      self$ICAO24 <- ICAO24
+      self$call_sign <- call_sign
+      self$origin_airport <- origin_airport
+      self$destination_airport <- destination_airport
+      self$departure_time <- departure_time
+      self$arrival_time <- arrival_time
+    },
+    print = function(...) {
+      cat("Flight performed by aircraft with ICAO 24-bit address ", self$ICAO24, "\n", sep = "")
+      cat("Take-off time: ", self$departure_time, "\n", sep ="")
+      cat("Landing time:  ", self$arrival_time, sep = "")
+      invisible(self)
+    }
+  )
+)
+
 
