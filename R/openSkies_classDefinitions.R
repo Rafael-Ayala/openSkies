@@ -53,7 +53,8 @@ openSkiesAirport <- R6Class(
     print = function(...) {
       cat("Airport name: ", self$name, "\n", sep = "")
       if (!is.null(self$ICAO)) cat("ICAO code: ", self$ICAO, "\n", sep = "")
-      cat("Location: ", self$city, ", ", self$country, "\n", sep ="")
+      # cat("Location: ", self$city, ", ", self$country, "\n", sep ="")
+      cat("Country code: ", self$country, "\n", sep ="")
       cat("Geographic coordinates: latitude ", self$latitude, 
           " degrees, longitude ", self$longitude, " degrees", sep = "")
       invisible(self)

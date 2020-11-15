@@ -44,6 +44,25 @@ getAirportMetadata <- function(airport) {
     return(NULL)
   }
   formattedMetadata <- formatAirportMetadataResponse(content(response))
+  openSkiesAirportResult <- openSkiesAirport$new(
+    name = formattedMetadata$name,
+    city = formattedMetadata$city,
+    country = formattedMetadata$country,
+    longitude = formattedMetadata$longitude,
+    latitude = formattedMetadata$latitude,
+    ICAO = formattedMetadata$ICAO,
+    IATA = formattedMetadata$IATA,
+    altitude = formattedMetadata$altitude,
+    municipality = formattedMetadata$municipality,
+    region = formattedMetadata$region,
+    continent = formattedMetadata$continent,
+    type = formattedMetadata$type,
+    website = formattedMetadata$website,
+    wikipedia_entry = formattedMetadata$wikipediaEntry,
+    reliable_position = formattedMetadata$reliablePosition,
+    GPS_code = formattedMetadata$GPSCode
+  )
+  return(openSkiesAirportResult)
   return(formattedMetadata)
 }
 
