@@ -203,8 +203,8 @@ openSkiesRoute <- R6Class(
   "openSkiesRoute",
   public = list(
     call_sign = character(),
-    origin_airport = NULL, #Should be an openSkiesAirport object
-    destination_airport = NULL, #Should be an openSkiesAirport object
+    origin_airport = character(),
+    destination_airport = character(), 
     operator_IATA = character(),
     flight_number = character(),
     initialize = function(call_sign,
@@ -220,8 +220,8 @@ openSkiesRoute <- R6Class(
     },
     print = function(...) {
       cat("Flight route with call sign ", self$call_sign, "\n", sep = "")
-      cat("Departing from ", self$origin_airport$name, "\n", sep ="")
-      cat("Landing at  ", self$destination_airport$name, sep = "")
+      cat("Departing from airport with ICAO code ", self$origin_airport, "\n", sep ="")
+      cat("Landing at airport with ICAO code ", self$destination_airport, sep = "")
       invisible(self)
     }
   )
@@ -232,8 +232,8 @@ openSkiesFlight <- R6Class(
   public = list(
     ICAO24 = character(),
     call_sign = character(),
-    origin_airport = NULL, #Should be an openSkiesAirport object
-    destination_airport = NULL, #Should be an openSkiesAirport object
+    origin_airport = character(), #Should be an openSkiesAirport object
+    destination_airport = character(), #Should be an openSkiesAirport object
     departure_time = character(),
     arrival_time = character(),
     initialize = function(ICAO24,
