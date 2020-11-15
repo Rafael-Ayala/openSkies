@@ -20,7 +20,28 @@ getAircraftMetadata <- function(aircraft) {
     return(NULL)
   }
   formattedMetadata <- formatAircraftMetadataResponse(content(response))
-  return(formattedMetadata)
+  openSkiesAircraftResult <- openSkiesAircraft$new(
+    ICAO24 = formattedMetadata$ICAO24,
+    registration = formattedMetadata$registration,
+    origin_country = formattedMetadata$country,
+    last_state_vector = NULL, 
+    state_vector_history = NULL,
+    manufacturer_name = formattedMetadata$manufacturerName,
+    manufacturer_ICAO = formattedMetadata$manufacturerICAO,
+    model = formattedMetadata$model,
+    serial_number = formattedMetadata$serialNumber,
+    line_number = formattedMetadata$lineNumber,
+    ICAO_type_code = formattedMetadata$ICAOtypeCode,
+    ICAO_aircraft_class = formattedMetadata$ICAOaircraftClass,
+    owner = formattedMetadata$owner,
+    operator = formattedMetadata$operator,
+    operator_call_sign = formattedMetadata$operatorCallsign,
+    operator_ICAO = formattedMetadata$operatorICAO,
+    operator_IATA = formattedMetadata$operatorIATA,
+    first_flight_date = formattedMetadata$firstFlightDate,
+    category_description = formattedMetadata$categoryDescription
+  )
+  return(openSkiesAircraftResult)
 }
 
 
@@ -63,7 +84,6 @@ getAirportMetadata <- function(airport) {
     GPS_code = formattedMetadata$GPSCode
   )
   return(openSkiesAirportResult)
-  return(formattedMetadata)
 }
 
 getRouteMetadata <- function(route) {
