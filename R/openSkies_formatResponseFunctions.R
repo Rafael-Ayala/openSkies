@@ -3,17 +3,17 @@ formatFlightsListResponse <- function(responseList) {
                                                               "callSign"=trimws(flight$callsign),
                                                               "departureAirport"=flight$estDepartureAirport,
                                                               "arrivalAirport"=flight$estArrivalAirport,
-                                                              "departureTime"=as.POSIXct(flight$firstSeen, origin="1970-01-01"),
-                                                              "arrivalTime"=as.POSIXct(flight$lastSeen, origin="1970-01-01")))
+                                                              "departureTime"=as.POSIXct(flight$firstSeen, origin="1970-01-01", tz=Sys.timezone()),
+                                                              "arrivalTime"=as.POSIXct(flight$lastSeen, origin="1970-01-01", tz=Sys.timezone())))
 }
 
 formatStateVectorsResponse <- function(responseList) {
   formattedList <- lapply(responseList$states, function(stateVector) list("ICAO24"=stateVector[[1]],
                                                                           "callSign"=trimws(stateVector[[2]]),
                                                                           "originCountry"=stateVector[[3]],
-                                                                          "requestedTime"=as.POSIXct(responseList$time, origin="1970-01-01"),
-                                                                          "lastPositionUpdateTime"=if(!is.null(stateVector[[4]])) as.POSIXct(stateVector[[4]], origin="1970-01-01") else NULL,
-                                                                          "lastAnyUpdateTime"=if(!is.null(stateVector[[5]])) as.POSIXct(stateVector[[5]], origin="1970-01-01") else NULL,
+                                                                          "requestedTime"=as.POSIXct(responseList$time, origin="1970-01-01", tz=Sys.timezone()),
+                                                                          "lastPositionUpdateTime"=if(!is.null(stateVector[[4]])) as.POSIXct(stateVector[[4]], origin="1970-01-01", tz=Sys.timezone()) else NULL,
+                                                                          "lastAnyUpdateTime"=if(!is.null(stateVector[[5]])) as.POSIXct(stateVector[[5]], origin="1970-01-01", tz=Sys.timezone()) else NULL,
                                                                           "longitude"=stateVector[[6]],
                                                                           "latitude"=stateVector[[7]],
                                                                           "baroAltitude"=stateVector[[8]],

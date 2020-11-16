@@ -252,8 +252,8 @@ openSkiesFlight <- R6Class(
     },
     print = function(...) {
       cat("Flight performed by aircraft with ICAO 24-bit address ", self$ICAO24, "\n", sep = "")
-      cat("Take-off time: ", self$departure_time, "\n", sep ="")
-      cat("Landing time:  ", self$arrival_time, sep = "")
+      cat("Take-off time: ", as.character(self$departure_time), " ", Sys.timezone(), "\n", sep ="")
+      cat("Landing time:  ", as.character(self$arrival_time), " ", Sys.timezone(), sep = "")
       invisible(self)
     }
   )

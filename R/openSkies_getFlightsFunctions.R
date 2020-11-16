@@ -24,7 +24,8 @@ getAirportArrivals <- function(airport, startTime, endTime, timeZone=Sys.timezon
     return(NULL)
   }
   arrivalsList <- formatFlightsListResponse(content(response))
-  return(arrivalsList)
+  arrivalsOpenSkiesFlights <- lapply(arrivalsList, listToOpenSkiesFlight)
+  return(arrivalsOpenSkiesFlights)
 }
 
 
@@ -54,7 +55,8 @@ getAirportDepartures <- function(airport, startTime, endTime, timeZone=Sys.timez
     return(NULL)
   }
   departuresList <- formatFlightsListResponse(content(response))
-  return(departuresList)
+  departuresOpenSkiesFlights <- lapply(departuresList, listToOpenSkiesFlight)
+  return(departuresOpenSkiesFlights)
 }
 
 getAircraftFlights <- function(aircraft, startTime, endTime, timeZone=Sys.timezone(),
@@ -82,8 +84,9 @@ getAircraftFlights <- function(aircraft, startTime, endTime, timeZone=Sys.timezo
                     aircraft", initial="", prefix="\n"))
     return(NULL)
   } 
-  flightsList <- formatFlightsListResponse(content(response))
-  return(flightsList)
+  aircraftFlightsList <- formatFlightsListResponse(content(response))
+  aircraftOpenSkiesFlights <- lapply(aircraftFlightsList, listToOpenSkiesFlight)
+  return(aircraftOpenSkiesFlights)
 }
 
 getIntervalFlights <- function(startTime, endTime, timeZone=Sys.timezone(),
@@ -108,6 +111,7 @@ getIntervalFlights <- function(startTime, endTime, timeZone=Sys.timezone(),
     message("No flights found for the specified interval")
     return(NULL)
   } 
-  flightsList <- formatFlightsListResponse(content(response))
-  return(flightsList)
+  intervalFlightsList <- formatFlightsListResponse(content(response))
+  intervalOpenSkiesFlights <- lapply(intervalFlightsList, listToOpenSkiesFlight)
+  return(intervalOpenSkiesFlights)
 }

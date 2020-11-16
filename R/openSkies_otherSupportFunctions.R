@@ -37,3 +37,25 @@ getMapLimits <- function(longitudes, latitudes, paddingFactor) {
   )
   return(mapLimits)
 }
+
+listToOpenSkiesFlight <- function(flightDataList) {
+  openSkiesFlightObject <- openSkiesFlight$new(
+    ICAO24 = flightDataList$ICAO24,
+    call_sign = flightDataList$callSign,
+    origin_airport = flightDataList$departureAirport,
+    destination_airport = flightDataList$arrivalAirport,
+    departure_time = flightDataList$departureTime,
+    arrival_time = flightDataList$arrivalTime
+  )
+}
+
+listToOpenSkiesStateVector <- function(stateVectorList) {
+  openSkiesStateVectorObject <- openSkiesStateVector$new(
+    ICAO24 = stateVectorList$airacraft, 
+    call_sign= stateVectorList$, origin_country=NULL, requested_time=NULL,
+    last_position_update_time=NULL, last_any_update_time=NULL,
+    longitude, latitude, baro_altitude=NULL, geo_altitude=NULL,
+    on_ground=NULL, velocity=NULL, true_track=NULL, vertical_rate=NULL,
+    squawk=NULL, special_purpose_indicator=FALSE, position_source=NULL
+  )
+}
