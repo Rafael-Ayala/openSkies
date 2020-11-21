@@ -39,3 +39,14 @@ checkCoordinate <- function(coordinateValue, coordinateName) {
     stop(paste("The provided ", coordinateName, " is not valid.", sep=""))
   }
 }
+
+checkOpenSkiesStateVectorSet <- function(x, checkTimeSeries=FALSE) {
+  if(class(x)[1] != "openSkiesStateVectorSet") {
+    stop(strwrap(paste(deparse(substitute(x)), " is not an openSkiesStateVectorSet object", sep="")),
+         initial="", prefix="\n")
+  }
+  if(checkTimeSeries & !(x$time_series)) {
+    stop(strwrap("The provided openSkiesStateVectorSet object does not represent
+                 a time series for a single aircraft", initial="", prefix="\n"))
+  }
+}

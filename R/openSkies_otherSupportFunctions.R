@@ -23,10 +23,10 @@ generateTimePoints <- function(startTime, endTime, timeZone, timeResolution) {
 }
 
 getMapLimits <- function(longitudes, latitudes, paddingFactor) {
-  minLon <- min(unlist(longitudes))
-  maxLon <- max(unlist(longitudes))
-  minLat <- min(unlist(latitudes))
-  maxLat <- max(unlist(latitudes))
+  minLon <- min(na.omit(unlist(longitudes)))
+  maxLon <- max(na.omit(unlist(longitudes)))
+  minLat <- min(na.omit(unlist(latitudes)))
+  maxLat <- max(na.omit(unlist(latitudes)))
   width <- maxLon - minLon
   height <- maxLat - minLat
   mapLimits <- c(
@@ -51,11 +51,22 @@ listToOpenSkiesFlight <- function(flightDataList) {
 
 listToOpenSkiesStateVector <- function(stateVectorList) {
   openSkiesStateVectorObject <- openSkiesStateVector$new(
-    ICAO24 = stateVectorList$airacraft, 
-    call_sign= stateVectorList$, origin_country=NULL, requested_time=NULL,
-    last_position_update_time=NULL, last_any_update_time=NULL,
-    longitude, latitude, baro_altitude=NULL, geo_altitude=NULL,
-    on_ground=NULL, velocity=NULL, true_track=NULL, vertical_rate=NULL,
-    squawk=NULL, special_purpose_indicator=FALSE, position_source=NULL
+    ICAO24 = stateVectorList$ICAO24, 
+    call_sign= stateVectorList$callSign, 
+    origin_country = stateVectorList$originCountry, 
+    requested_time = stateVectorList$requestedTime,
+    last_position_update_time = stateVectorList$lastPositionUpdateTime, 
+    last_any_update_time = stateVectorList$lastAnyUpdateTime,
+    longitude = stateVectorList$longitude, 
+    latitude = stateVectorList$latitude, 
+    baro_altitude = stateVectorList$baroAltitude,
+    geo_altitude = stateVectorList$geoAltitude,
+    on_ground = stateVectorList$onGround, 
+    velocity = stateVectorList$velocity, 
+    true_track = stateVectorList$trueTrack, 
+    vertical_rate = stateVectorList$verticalRate,
+    squawk = stateVectorList$squawk, 
+    special_purpose_indicator = stateVectorList$specialPurposeIndicator, 
+    position_source = stateVectorList$positionSource
   )
 }

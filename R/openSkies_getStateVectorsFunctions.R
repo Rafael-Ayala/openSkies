@@ -66,9 +66,15 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
                      location and interval."), initial="", prefix="\n")
     return(NULL)
   } 
-  formattedStateVectors <- formatStateVectorsResponse(content(response))
-  if(length(formattedStateVectors)==1) formattedStateVectors <- unlist(formattedStateVectors, recursive=FALSE)
-  return(formattedStateVectors)
+  formattedStateVectorsList <- formatStateVectorsResponse(content(response))
+  openSkiesStateVectorsList <- lapply(formattedStateVectorsList, listToOpenSkiesStateVector)
+  if(length(openSkiesStateVectorsList) > 1){
+    openSkiesStateVectorsResult <- openSkiesStateVectorSet$new(
+      state_vectors = openSkiesStateVectorsList)
+  } else if(length(openSkiesStateVectorsList) == 1) {
+    openSkiesStateVectorsResult <- openSkiesStateVectorsList[[1]]
+  }
+  return(openSkiesStateVectorsResult)
 }
 
 getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone=Sys.timezone(),
@@ -109,7 +115,10 @@ getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone
       stateVectorsSeries[[i]] <- NULL
       next
     }
-    stateVectorsSeries[[i]] <- unlist(formatStateVectorsResponse(content(response)), recursive=FALSE)
+    stateVectorsSeries[[i]] <- listToOpenSkiesStateVector(unlist(formatStateVectorsResponse(content(response)), recursive=FALSE))
   }
-  return(stateVectorsSeries)
+  openSkiesStateVectorsSeries <- openSkiesStateVectorSet$new(
+    state_vectors = stateVectorsSeries,
+    time_series = TRUE)
+  return(openSkiesStateVectorsSeries)
 }

@@ -114,14 +114,27 @@ openSkiesStateVectorSet <- R6Class(
     state_vectors = list(),
     time_series = logical(),
     initialize = function(state_vectors_list, time_series=FALSE) {
-      stopifnot(all(sapply(state_vectors_list, class)) == "openSkiesStateVector",
-                length(state_vectors_list < 1))
+      stopifnot(all(sapply(state_vectors_list, class)[1,] == "openSkiesStateVector"),
+                length(state_vectors_list) > 1)
       self$state_vectors <- state_vectors_list
       self$time_series <- time_series
     },
     add_state_vector = function(state_vector) {
-      self$state_vectors <- append(self$state_vectors, sate_vector)
+      stopifnot(class(state_vector)[1] == "openSkiesStateVector")
+      self$state_vectors <- append(self$state_vectors, state_vector)
       invisible(self)
+    },
+    get_values = function(field) {
+      if(!(field %in% c("ICAO24", "call_sign", "origin_country", "requested_time",
+                        "last_position_update_time", "last_any_update_time",
+                        "longitude", "latitude", "baro_altitude", "geo_altitude",
+                        "on_ground", "velocity", "true_track", "vertical_rate",
+                        "squawk", "special_purpose_indicator", "position_source"))){
+        stop(paste(field, " is not a valid openSkiesStateVector field name", sep=""))
+      }
+      values <- lapply(as.list(self$state_vectors), "[[", field)
+      values[sapply(values, function(x) length(x)==0L)] <- NA
+      return(unlist(values))
     }
   )
 )
