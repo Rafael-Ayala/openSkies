@@ -1,10 +1,10 @@
 NZ <- 15
 
-hexToBits <- function(y) {
-  stopifnot((nchar(y) %% 2) == 0)
-  if (substr(y, 1, 2) == "0x")
-    y <- substr(y, 3, nchar(y))
-  as.vector(sapply(seq_len(nchar(y)/2), function(x) rev(rawToBits(as.raw(as.numeric(paste0("0x", substr(y, (x-1)*2+1, x*2), "")))))))
+hexToBits <- function(hex) {
+  stopifnot((nchar(hex) %% 2) == 0)
+  if (substr(hex, 1, 2) == "0x")
+    hex <- substr(hex, 3, nchar(hex))
+  as.vector(sapply(seq_len(nchar(hex)/2), function(x) rev(rawToBits(as.raw(as.numeric(paste0("0x", substr(hex, (x-1)*2+1, x*2), "")))))))
 }
 
 bitsToInt <- function(bits) {
@@ -38,6 +38,11 @@ NL <- function(lat){
 }
 
 decodeCPR <- function(cprLatEven, cprLonEven, cprLatOdd, cprLonOdd, isAirborne=TRUE){
+  cprLatEven = cprLatEven / 131072
+  cprLonEven = cprLonEven / 131072
+  cprLatOdd = cprLatOdd / 131072
+  cprLonOdd = cprLonOdd / 131072
+  
   j <- floor(59 * cprLatEven - 60 * cprLatOdd + 0.5)
   dLatEven <- 360/(4*NZ)
   dLatOdd <- 360/(4*NZ-1)
@@ -170,10 +175,10 @@ decodeAirbornePositionMessage <- function(bits){
   f <- bitsToInt(data[22])
   message$data$f <- f
   
-  lat_cpr <- bitsToInt(data[23:39])/131072
+  lat_cpr <- bitsToInt(data[23:39])
   message$data$lat_cpr <- lat_cpr
   
-  lon_cpr <- bitsToInt(data[40:56])/131072
+  lon_cpr <- bitsToInt(data[40:56])
   message$data$lon_cpr <- lon_cpr
   
   
@@ -188,7 +193,7 @@ decodeAirbornePositionMessage <- function(bits){
       message$data$lat <- positions[1]
       message$data$lon <- positions[2]
     }
-    lastEvenAirbornePosition <- message
+    lastEvenPosition <<- message
   } else {
     if(!is.null(lastEvenPosition) &&
        lastEvenPosition$df == df &&
@@ -200,7 +205,7 @@ decodeAirbornePositionMessage <- function(bits){
       message$data$lat <- positions[3]
       message$data$lon <- positions[4]
     }
-    lastOddAirbornePosition <- message
+    lastOddPosition <<- message
   }
   
   return(message)
@@ -238,10 +243,10 @@ decodeGroundPositionMessage <- function(bits){
   f <- bitsToInt(data[22])
   message$data$f <- f
   
-  lat_cpr <- bitsToInt(data[23:39])/131072
+  lat_cpr <- bitsToInt(data[23:39])
   message$data$lat_cpr <- lat_cpr
   
-  lon_cpr <- bitsToInt(data[40:56])/131072
+  lon_cpr <- bitsToInt(data[40:56])
   message$data$lon_cpr <- lon_cpr
   
   
@@ -472,10 +477,10 @@ decodeMessage <- function(bits){
   return(message)
 }
 
-decodeMessagesList <- function(messagesList){
-  decodedMessages <- vector("list", length(messagesList))
-  for(i in 1:length(messagesList)){
-    bits <- messagesList[[i]]
+decodeMessages <- function(messages){
+  decodedMessages <- vector("list", length(messages))
+  for(i in 1:length(messages)){
+    bits <- messages[[i]]
     tc <- bitsToInt(bits[33:37])
     
     if(tc > 4 && tc <= 8){
@@ -512,10 +517,10 @@ decodeMessagesList <- function(messagesList){
       f <- bitsToInt(data[22])
       decodedMessages[[i]]$data$f <- f
       
-      lat_cpr <- bitsToInt(data[23:39])/131072
+      lat_cpr <- bitsToInt(data[23:39])
       decodedMessages[[i]]$data$lat_cpr <- lat_cpr
       
-      lon_cpr <- bitsToInt(data[40:56])/131072
+      lon_cpr <- bitsToInt(data[40:56])
       decodedMessages[[i]]$data$lon_cpr <- lon_cpr
       
       if(f == 0){
@@ -591,10 +596,10 @@ decodeMessagesList <- function(messagesList){
       f <- bitsToInt(data[22])
       decodedMessages[[i]]$data$f <- f
       
-      lat_cpr <- bitsToInt(data[23:39])/131072
+      lat_cpr <- bitsToInt(data[23:39])
       decodedMessages[[i]]$data$lat_cpr <- lat_cpr
       
-      lon_cpr <- bitsToInt(data[40:56])/131072
+      lon_cpr <- bitsToInt(data[40:56])
       decodedMessages[[i]]$data$lon_cpr <- lon_cpr
       
       if(f == 0){
@@ -641,4 +646,3 @@ decodeMessagesList <- function(messagesList){
   
   return(decodedMessages)
 }
-
