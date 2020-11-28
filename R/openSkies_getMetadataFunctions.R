@@ -6,7 +6,17 @@ getAircraftMetadata <- function(aircraft) {
   jsonResponse <- FALSE
   attemptCount <- 0
   while(!jsonResponse) {
-    response <- GET(paste(openskyApiRootURL, "metadata/aircraft/icao/", aircraft, sep=""))
+    response <- tryCatch({
+      GET(paste(openskyApiRootURL, "metadata/aircraft/icao/", aircraft, sep=""),
+          timeout(300))
+    },
+    error = function(e) e
+    )
+    if(inherits(response, "error")) {
+      message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+      return(NULL)
+    }
     jsonResponse <- grepl("json", headers(response)$`content-type`)
     if(attemptCount > 100) {
       message(strwrap("Resource not currently available. Please try again 
@@ -50,8 +60,18 @@ getAirportMetadata <- function(airport) {
   jsonResponse <- FALSE
   attemptCount <- 0
   while(!jsonResponse) {
-    response <- GET(paste(openskyApiRootURL, "airports", sep=""),
-                    query=list(icao=airport))
+    response <- tryCatch({
+      GET(paste(openskyApiRootURL, "airports", sep=""),
+          query=list(icao=airport),
+          timeout(300))
+    },
+    error = function(e) e
+    )
+    if(inherits(response, "error")) {
+      message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+      return(NULL)
+    }
     jsonResponse <- grepl("json", headers(response)$`content-type`)
     if(attemptCount > 100) {
       message(strwrap("Resource not currently available. Please try again 
@@ -91,8 +111,18 @@ getRouteMetadata <- function(route) {
   jsonResponse <- FALSE
   attemptCount <- 0
   while(!jsonResponse) {
-    response <- GET(paste(openskyApiRootURL, "routes", sep=""),
-                    query=list(callsign=route))
+    response <- tryCatch({
+      GET(paste(openskyApiRootURL, "routes", sep=""),
+          query=list(callsign=route),
+          timeout(300))
+    },
+    error = function(e) e
+    )
+    if(inherits(response, "error")) {
+      message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+      return(NULL)
+    }
     jsonResponse <- grepl("json", headers(response)$`content-type`)
     if(attemptCount > 100) {
       message(strwrap("Resource not currently available. Please try again 

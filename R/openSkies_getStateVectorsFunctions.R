@@ -51,9 +51,19 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
   jsonResponse <- FALSE
   attemptCount <- 0
   while(!jsonResponse) {
-    response <- GET(paste(openskyApiRootURL, "states/all", sep="" ),
-                    query=queryParameters,
-                    if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    response <- tryCatch({
+      GET(paste(openskyApiRootURL, "states/all", sep="" ),
+          query=queryParameters,
+          timeout(300),
+          if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    },
+    error = function(e) e
+    )
+    if(inherits(response, "error")) {
+      message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+      return(NULL)
+    }
     jsonResponse <- grepl("json", headers(response)$`content-type`)
     if(attemptCount > 100) {
       message(strwrap("Resource not currently available. Please try again 
@@ -98,10 +108,20 @@ getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone
     jsonResponse <- FALSE
     attemptCount <- 0
     while(!jsonResponse) {
-      response <- GET(paste(openskyApiRootURL, "states/all", sep="" ),
-                      query=list(icao24=aircraft,
-                                 time=timePoints[i]),
-                      if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+      response <- tryCatch({
+        GET(paste(openskyApiRootURL, "states/all", sep="" ),
+            query=list(icao24=aircraft,
+                       time=timePoints[i]),
+            timeout(300),
+            if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+      },
+      error = function(e) e
+      )
+      if(inherits(response, "error")) {
+        message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+        return(NULL)
+      }
       jsonResponse <- grepl("json", headers(response)$`content-type`)
       if(attemptCount > 100) {
         message(strwrap("Resource not currently available. Please try again 
