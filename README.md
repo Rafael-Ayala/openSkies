@@ -1,6 +1,6 @@
 # openSkies
 <!-- badges: start -->
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/devtools)](https://cran.r-project.org/package=devtools)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/openSkies)](https://cran.r-project.org/package=openSkies)
 <!-- badges: end -->
 
 openSkies provides a set of tools to retrieve, analyze and plot flight
