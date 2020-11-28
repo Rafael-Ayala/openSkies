@@ -4,8 +4,7 @@
 <!-- badges: end -->
 
 openSkies provides a set of tools to retrieve, analyze and plot flight
-information data. It includes a client interface to the [OpenSky API] 
-(https://opensky-network.org). 
+information data. It includes a client interface to the [OpenSky API] (https://opensky-network.org). 
 
 ## Installation
 
