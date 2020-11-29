@@ -1,20 +1,20 @@
 \name{plotRoute}
 \alias{plotRoute}
-\title{Plot a single aircraft given as a list of state vectors
+\title{Plot a single aircraft route
 }
 \description{
-Draws a given route on a ggmap object. The route must be given as a list of
-state vectors, each represented by a list with at least longitude and latitude
-fields.
+Draws a given route on a ggmap object. The route must be given as an object of 
+class \code{\link{openSkiesStateVectorSet}} with field \code{time_series=TRUE}.
 }
 \usage{
-plotRoute(stateVectors, pathColor="blue", ggmapObject=NULL, plotResult=TRUE, 
+plotRoute(stateVectorSet, pathColor="blue", ggmapObject=NULL, plotResult=TRUE, 
           paddingFactor=0.2, lineSize=1, lineAlpha=0.5, pointSize=0.3, 
           pointAlpha=0.8, arrowLength=0.3)
 }
 \arguments{
-  \item{stateVectors}{list of state vectors. Each state vector must be 
-  represented by a list with, at least, fields "longitude" and "latitude".
+  \item{stateVectorSet}{object of class \code{\link{openSkiesStateVectorSet}} with
+  field \code{time_series=TRUE} with positional information of an aircraft
+  along different timepoints.
   }
   \item{pathColor}{color of the path and points that will be used to draw the 
   route. Must be a value accepted by ggmap's color attributes.

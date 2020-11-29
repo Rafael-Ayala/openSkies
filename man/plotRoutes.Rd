@@ -1,20 +1,21 @@
 \name{plotRoutes}
 \alias{plotRoutes}
-\title{Plot several aircraft routes given as a list of lists of state vectors
+\title{Plot several aircraft routes
 }
 \description{
 Draws the given routes on a ggmap object. The routes must be given as a list of 
-lists of state vectors, each represented by a list with at least longitude and 
-latitude fields.
+objects of class \code{\link{openSkiesStateVectorSet}}, all of them with field 
+\code{time_series=TRUE}.
 }
 \usage{
-plotRoutes(stateVectorsList, pathColors="blue", ggmapObject=NULL, 
+plotRoutes(stateVectorSetList, pathColors="blue", ggmapObject=NULL, 
 plotResult=TRUE, paddingFactor=0.2, lineSize=1, lineAlpha=0.5, pointSize=0.3, 
 pointAlpha=0.8, arrowLength=0.3)
 }
 \arguments{
-  \item{stateVectorsList}{list of lists of state vectors. Each state vector must 
-  be represented by a list with, at least, fields "longitude" and "latitude".
+  \item{stateVectorSetList}{list of objects of class \code{\link{openSkiesStateVectorSet}}
+  with field \code{time_series=TRUE}, each of them containing positional 
+  information of given aircraft along different timepoints.
   }
   \item{pathColors}{vector with the colors of the paths and points that will be 
   used to draw the routes. If the number of routes is greater than the number of 
