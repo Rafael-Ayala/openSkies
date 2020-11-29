@@ -124,7 +124,7 @@ openSkiesStateVectorSet <- R6Class(
       self$state_vectors <- append(self$state_vectors, state_vector)
       invisible(self)
     },
-    get_values = function(field) {
+    get_values = function(field, removeNAs=FALSE) {
       if(!(field %in% c("ICAO24", "call_sign", "origin_country", "requested_time",
                         "last_position_update_time", "last_any_update_time",
                         "longitude", "latitude", "baro_altitude", "geo_altitude",
@@ -133,8 +133,67 @@ openSkiesStateVectorSet <- R6Class(
         stop(paste(field, " is not a valid openSkiesStateVector field name", sep=""))
       }
       values <- lapply(as.list(self$state_vectors), "[[", field)
-      values[sapply(values, function(x) length(x)==0L)] <- NA
+      if(removeNAs){
+        values = values[sapply(values, function(x) length(x)!=0L)]
+      } else {
+        values[sapply(values, function(x) length(x)==0L)] <- NA
+      }
       return(unlist(values))
+    },
+    get_uniform_interpolation = function(n, fields, method="fmm") {
+      result <- NULL
+      for(field in fields){
+        if(!(field %in% c("requested_time", "last_position_update_time", "last_any_update_time",
+                          "longitude", "latitude", "baro_altitude", "geo_altitude",
+                          "on_ground", "velocity", "true_track", "vertical_rate"))){
+          stop(paste(field, " is not a valid numeric openSkiesStateVector field name", sep=""))
+        }
+        values <- self$get_values(field, removeNAs=TRUE)
+        if(grepl("time", field)){
+          values <- unlist(lapply(values, function(t) as.POSIXct(t, origin="1970-1-1", tz = Sys.timezone())))
+        }
+        if(method == "linear"){
+          values <- approx(values, n=n)$y
+        } else {
+          values <- spline(values, method=method, n=n)$y
+        }
+        if(is.null(result)){
+          result <- data.frame(values)
+          colnames(result)[1] <- field
+        } else {
+          result[[field]] <- values
+        }
+      }
+      return(result)
+    },
+    get_time_points_interpolation = function(fields, time_field, timestamps, method="fmm") {
+       result <- NULL
+       times <- self$get_values(time_field, removeNAs=TRUE)
+       times <- unlist(lapply(times, function(t) as.POSIXct(t, origin="1970-1-1", tz = Sys.timezone())))
+       for(field in fields){
+         if(!(field %in% c("requested_time", "last_position_update_time", "last_any_update_time",
+                           "longitude", "latitude", "baro_altitude", "geo_altitude",
+                           "on_ground", "velocity", "true_track", "vertical_rate"))){
+           stop(paste(field, " is not a valid numeric openSkiesStateVector field name", sep=""))
+         }
+         values <- self$get_values(field, removeNAs=TRUE)
+         if(grepl("time", field)){
+           values <- unlist(lapply(values, function(t) as.POSIXct(t, origin="1970-1-1", tz = Sys.timezone())))
+         }
+         if(method == "linear"){
+           fun <- approxfun(times, values)
+         } else {
+           fun <- splinefun(times, values, method=method)
+         }
+         values = fun(timestamps)
+         if(is.null(result)){
+           result <- data.frame(values)
+           colnames(result)[1] <- field
+         } else {
+           result[[field]] <- values
+         }
+       }
+       return(result)
     }
   )
 )
@@ -271,5 +330,3 @@ openSkiesFlight <- R6Class(
     }
   )
 )
-
-
