@@ -18,6 +18,7 @@ getRouteMetadata(route)
 \value{
 An object of class \code{\link{openSkiesRoute}}. See the \code{\link{openSkiesRoute}}
 documentation for details on the fields for the class.
+}
 \references{
 https://en.wikipedia.org/wiki/Flight_number
 }
