@@ -92,7 +92,7 @@ getAircraftFlights <- function(aircraft, startTime, endTime, timeZone=Sys.timezo
           query=list(icao24=aircraft,
                      begin=stringToEpochs(startTime, timeZone),
                      end=stringToEpochs(endTime, timeZone)),
-          timezone(300),
+          timeout(300),
           if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
     },
     error = function(e) e
