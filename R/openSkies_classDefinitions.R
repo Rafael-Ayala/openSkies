@@ -305,8 +305,8 @@ openSkiesFlight <- R6Class(
   public = list(
     ICAO24 = character(),
     call_sign = character(),
-    origin_airport = character(), #Should be an openSkiesAirport object
-    destination_airport = character(), #Should be an openSkiesAirport object
+    origin_airport = character(), #Could be an openSkiesAirport object (future)
+    destination_airport = character(), #Could be an openSkiesAirport object (future)
     departure_time = character(),
     arrival_time = character(),
     initialize = function(ICAO24,

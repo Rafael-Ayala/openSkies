@@ -38,27 +38,10 @@ getAirportArrivals(airport, startTime, endTime, timeZone=Sys.timezone(),
   }
 }
 \value{
-A nested list where each element of the top-level list represents a flight that
-landed at the specified airport during the specified time interval. Each of the 
-top-level list elements is a list in itself, containing the following elements 
-that provide information about the flight:
-  \item{ICAO24 }{ICAO 24-bit aicraft address associated to the aircraft in
-  hexadecimal format
-  }
-  \item{callSign }{Call sign assigned to the aircraft. Can be NULL if no call
-  sign is received. If the aircraft transmitted multiple call signs during the
-  flight, the most frequent is returned
-  }
-  \item{departureAirport }{ICAO code of the airport from which the aicraft
-  departed. Can be NULL if the airport could not be identified
-  }
-  \item{arrivalAirport }{ICAO code of the airport at which the aicraft arrived.
-  Matches the requested airport
-  }
-  \item{departureTime }{Estimated time of departure for the flight
-  }
-  \item{arrivalTime }{Estimated time of arrival for the flight
-  }
+A list of objects of class \code{\link{openSkiesFlight}}, where each object
+represents a flight that that landed at the specified airport during the 
+specified time interval. See the \code{\link{openSkiesFlight}} documentation 
+for details on the fields for the class.
 }
 \references{
 https://opensky-network.org/apidoc/rest.html

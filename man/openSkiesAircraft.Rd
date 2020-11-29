@@ -75,11 +75,11 @@ openSkiesAircraft
 
 \describe{
   \item{
-    \code{add_state_vector(state_vector)}}{
-     This method adds a new state vector to the openSkiesAircraft object, which
-     will be set as the new \code{last_state_vector} and will be added to
-     \code{state_vector_history}. \code{state_vector} should be an
-     \code{\link{openSkiesStateVector}} object
+    \code{get_values(field, removeNAs=FALSE)}}{
+     This method retrieves the value of \code{field} for all the state vectors
+     stored in the \code{openSkiesStateVectorSet} object. If \code{removeNAs=TRUE}
+     (by default, \code{removeNAs=FALSE}), missing values are removed from the
+     output. Otherwise, NA is returned in place of missing items.
    }
 }
 }

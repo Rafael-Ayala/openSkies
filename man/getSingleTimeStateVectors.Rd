@@ -71,57 +71,12 @@ getSingleTimeStateVectors(aircraft=NULL, time=NULL, timeZone=Sys.timezone(),
   }
 }
 \value{
-A nested list where each element of the top-level list represents a state vector 
-that was received at the specified time point. Each of the top-level list 
-elements is a list in itself, containing the following elements that provide 
-information about the aircraft whose transponder emitted the information:
-  \item{ICAO24 }{ICAO 24-bit aicraft address associated to the aircraft that
-  whose transponder emitted the state vector
-  }
-  \item{callSign }{Call sign assigned to the aircraft. Can be NULL if no call
-  sign is received. If the aircraft transmitted multiple call signs during the
-  flight, the most frequent is returned
-  }
-  \item{originCountry }{Country of origin of the aircraft, inferred from the 
-  ICAO 24-bit address
-  }
-  \item{requestedTime }{Time point for which the state vector was requested
-  }
-  \item{lastPositionUpdateTime }{Time at which the last position update for
-  the aircraft was received, or NULL if no position update has been received in
-  the past 15 s
-  }
-  \item{lastAnyUpdateTime }{Time at which the last update (of any type) for
-  the aircraft was received
-  }
-  \item{longitude }{Longitude value for the position of the aircraft
-  }
-  \item{latitude }{Latitude value for the position of the aircraft
-  }
-  \item{baroAltitude }{Barometric altitude of the aircraft in meters
-  }
-  \item{geoAltitude }{Geometric altitude of the aircraft in meters
-  }
-  \item{onGround }{Boolean indicating if the aircraft is at a surface position
-  }
-  \item{velocity }{Velocity of the aircraft over the ground in meters/second
-  }
-  \item{trueTrack }{True track angle in degrees of the current aircraft course.
-  Measured clockwise from the North (0º)
-  }
-  \item{verticalRate }{Vertical movement rate of the aircraft in meters/second.
-  Positive means the aircraft is climbing, and negative means it is descending
-  }
-  \item{squawk }{Squawk code for the aircraft transponder
-  }
-  \item{specialPurposeIndicator }{Boolean indicating if the transponder of the
-  aircraft has emitted a Special Purpose Indicator pulse 
-  }
-  \item{positionSource }{Source of the position information for this state
-  vector. Can be ADS-B (Automatic Dependent Surveillance–Broadcast), ASTERIX
-  (All Purpose Structured Eurocontrol Surveillance Information Exchange) or 
-  MLAT (Multilateration)
-  }
+If a single state vector matching the query conditions is found, an
+\code{\link{openSkiesStateVector}} object.
+If multiple state vectors matching the query conditions are found,
+an \code{\link{openSkiesStateVectorSet}} object with field \code{time_series=FALSE}.
+For details on the information stored in state vectors, see the documentation for
+\code{\link{openSkiesStateVector}} and \code{\link{openSkiesStateVectorSet}}.
 }
 \references{
 https://opensky-network.org/apidoc/rest.html

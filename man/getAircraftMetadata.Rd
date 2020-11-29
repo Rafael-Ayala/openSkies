@@ -17,47 +17,8 @@ getAircraftMetadata(aircraft)
   }
 }
 \value{
-A list with the following elements that provide information about the aircraft:
-  \item{ICAO24 }{ICAO 24-bit aicraft address associated to the aircraft in
-  hexadecimal format
-  }
-  \item{registration }{Aircraft registration code, also called tail number
-  }
-  \item{country }{Country where the aircraft is registered
-  }
-  \item{manufacturerName }{Manufacturer of the aircraft
-  }
-  \item{manufacturerICAO }{ICAO code of the manufacturer of the aircraft
-  }
-  \item{model }{Aircraft model
-  }
-  \item{serialNumber }{Serial number of the aircraft
-  }
-  \item{lineNumber }{Usually only provided for Boeing aircrafts. Line numbers
-  specify the order in which airframes of a particular product line where 
-  assembled
-  }
-  \item{ICAOtypeCode }{ICAO code for the model of aircraft
-  }
-  \item{ICAOaircraftClass }{ICAO code for the type of aircraft. ICAO aircraft
-  classes provide more general groups than ICAO type codes
-  }
-  \item{owner }{Registered aircraft owner
-  }
-  \item{operator }{Aircraft operator
-  }
-  \item{operatorCallsign }{Callsign of the aircraft operator
-  }
-  \item{operatorICAO }{ICAO code of the aircraft operator
-  }
-  \item{operatorIATA }{IATA code of the aircraft operator
-  }
-  \item{firstFlightDate }{Date where the first flight for the aircraft was
-  registered. Usually not available
-  }
-  \item{categoryDescription }{Physical information about the aircraft provided
-  by the ADS-B emitter unit. Not always available 
-  }
+An object of class \code{\link{openSkiesAircraft}}. See the \code{\link{openSkiesAirport}}
+documentation for details on the fields for the class.
 }
 \references{
 https://www.icao.int/publications/doc8643/pages/search.aspx

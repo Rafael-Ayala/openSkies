@@ -16,18 +16,8 @@ getRouteMetadata(route)
   }
 }
 \value{
-A list with the following elements that provide information about the route:
-  \item{callSign }{Call sign of the route
-  }
-  \item{originAirportICAO }{ICAO 4-letter code of the airport of origin
-  }
-  \item{destinationAirportICAO }{ICAO 4-letter code of the airport of origin
-  }
-  \item{operatorIATA }{IATA code for the operator of the route
-  }
-  \item{flightNumber }{Flight number for the route
-  }
-}
+An object of class \code{\link{openSkiesRoute}}. See the \code{\link{openSkiesRoute}}
+documentation for details on the fields for the class.
 \references{
 https://en.wikipedia.org/wiki/Flight_number
 }
