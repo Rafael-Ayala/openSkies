@@ -30,7 +30,7 @@ checkTrue(length(getAirportDeparturesTest) == 35 | is.null(getAirportDeparturesT
 
 ## Test getAircraftFlights
 
-checkTrue(getAircraftFlightsTest[[5]]$arrivalAirport == "LEZL" | is.null(getAircraftFlightsTest))
+checkTrue(getAircraftFlightsTest[[5]]$destination_airport == "LEZL" | is.null(getAircraftFlightsTest))
 
 ## Test getIntervalFlights
 
