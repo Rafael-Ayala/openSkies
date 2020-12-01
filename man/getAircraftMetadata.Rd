@@ -28,7 +28,7 @@ https://www.eurocontrol.int/sites/default/files/content/documents/nm/asterix/arc
 \examples{
 # Obtain metadata for the aircraft with ICAO 24-bit address 3922e2 
 
-if(interactive){
+if(interactive()){
 getAircraftMetadata("3922e2")
 }
 }

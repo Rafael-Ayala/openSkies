@@ -1,11 +1,9 @@
 adsbDecoder <- R6Class(
   "decoder",
   public = list(
-    NZ = numeric(),
     lastEvenPosition = list(),
     lastOddPosition = list(),
     initialize = function(){
-      self$NZ <- 15
       self$lastEvenPosition <- NULL
       self$lastOddPosition <- NULL
     },
@@ -34,7 +32,7 @@ adsbDecoder <- R6Class(
         res <- 1
       } else {
         epsilon <- 1e-10
-        x <- 1 - (1-cos(pi/(2*self$NZ))) / (cos(pi/180*lat)**2)
+        x <- 1 - (1-cos(pi/(2*private$NZ))) / (cos(pi/180*lat)**2)
         if(abs(x-round(x)) <= epsilon){
           x <- round(x)
         }
@@ -49,8 +47,8 @@ adsbDecoder <- R6Class(
       cprLonOdd = cprLonOdd / 131072
       
       j <- floor(59 * cprLatEven - 60 * cprLatOdd + 0.5)
-      dLatEven <- 360/(4*self$NZ)
-      dLatOdd <- 360/(4*self$NZ-1)
+      dLatEven <- 360/(4*private$NZ)
+      dLatOdd <- 360/(4*private$NZ-1)
       if(!isAirborne){
         dLatEven <- dLatEven / 4
         dLatOdd <- dLatOdd / 4
@@ -634,13 +632,17 @@ adsbDecoder <- R6Class(
           }
           
         } else {
-          decodedMessages[[i]] <- decodeMessage(bits)
+          decodedMessages[[i]] <- self$decodeMessage(bits)
         }
       }
       
       return(decodedMessages)
     }
+  ), 
+  private = list(
+    NZ = 15
   )
 )
 
-adsbDec <- adsbDecoder$new()
+
+ADSBDecoder <- adsbDecoder$new()

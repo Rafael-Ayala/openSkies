@@ -91,7 +91,7 @@ minLongitude=5.9962, maxLongitude=10.5226)
 # Obtain the state vector for aircraft with ICAO 24-bit address 403003 for
 # the 8th of October, 2020 at 16:50 London time.
 
-if(interactive){
+if(interactive()){
 getSingleTimeStateVectors(aircraft="403003", time="2020-10-08 16:50:00", 
 timeZone="Europe/London")
 }

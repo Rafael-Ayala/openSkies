@@ -37,7 +37,7 @@ openSkiesRoute
 # Create an openSkiesRoute object corresponding to the American Airlines route
 # with callsign AAL683
 
-if(interactive){
+if(interactive()){
 test_route <- getRouteMetadata("AAL683")
 test_route
 }

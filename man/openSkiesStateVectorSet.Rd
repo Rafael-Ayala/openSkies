@@ -56,7 +56,7 @@ openSkiesStateVectorSet
 # address 403003 for the 8th of October, 2020 between 16:50 and 16:53 (London
 # time), with a time resolution of 1 minute.
 
-if(interactive){
+if(interactive()){
 test_stateVectorSet <- getAircraftStateVectorsSeries("403003", startTime="2020-10-08 16:50:00", 
 endTime="2020-10-08 16:52:00", timeZone="Europe/London", timeResolution=60)
 test_stateVectorSet

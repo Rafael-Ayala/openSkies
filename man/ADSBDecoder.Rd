@@ -1,16 +1,16 @@
-\name{adsbDecoder}
-\alias{adsbDecoder}
-\title{An \code{\link{R6Class}} object representing a decoder used to decode ADS-B v2
-messages}
+\name{ADSBDecoder}
+\alias{ADSBDecoder}
+\title{An object of class \code{adsbDecoder} object representing a decoder used 
+to decode ADS-B v2 messages}
 \description{
-\code{\link{R6Class}} object representing a decoder used to decode ADS-B v2 messages. Provides 
-methods for decoding a single message or a batch. Additionally, it includes methods for transforming
-hex strings into bits vectors and decoding some individual fields. Decoded messages are returned as
-lists with each decoded field.
-For ease of use, an already created instance, \code{adsbDec}, can be used out of the box.
+\code{\link{R6Class}} object of class \code{adsbDecoder} representing a decoder 
+used to decode ADS-B v2 messages. Provides methods for decoding a single message 
+or a batch. Additionally, it includes methods for transforming hex strings into 
+bits vectors and decoding some individual fields. Decoded messages are returned 
+as lists with each decoded field.
 }
 \usage{
-adsbDecoder
+ADSBDecoder
 }
 \section{Fields}{
 
@@ -65,16 +65,13 @@ status.
 # The two first messages contain the airborne position.
 # The third one, the aircraft identification
 
-adsbDec <- adsbDecoderClass$new()
+msg0 <- ADSBDecoder$hexToBits("8D40621D58C386435CC412692AD6")
+msg1 <- ADSBDecoder$hexToBits("8D40621D58C382D690C8AC2863A7")
+msg2 <- ADSBDecoder$hexToBits("8D4840D6202CC371C32CE0576098")
 
-msg0 <- adsbDecoder$hexToBits("8D40621D58C386435CC412692AD6")
-msg1 <- adsbDecoder$hexToBits("8D40621D58C382D690C8AC2863A7")
-msg2 <- adsbDecoder$hexToBits("8D4840D6202CC371C32CE0576098")
+decoded0 <- ADSBDecoder$decodeMessage(msg0)
+decoded1 <- ADSBDecoder$decodeMessage(msg1)
+decoded2 <- ADSBDecoder$decodeMessage(msg2)
 
-decoded0 <- adsbDecoder$decodeMessage(msg0)
-decoded1 <- adsbDecoder$decodeMessage(msg1)
-decoded2 <- adsbDecoder$decodeMessage(msg2)
-
-msgs <- sapply(list(msg0, msg1, msg2), hexToBits, simplify=FALSE)
-decodedAll <- adsbDec$decodeMessages(msgs)
+decodedAll <- ADSBDecoder$decodeMessages(list(msg0, msg1, msg2))
 }

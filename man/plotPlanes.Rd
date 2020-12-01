@@ -37,7 +37,7 @@ A ggmap object with added paths and points representing the route.
 # Plot the position of aircrafts currently flying over an area covering 
 # Switzerland.
 
-if(interactive){
+if(interactive()){
 vectors <- getSingleTimeStateVectors(minLatitude=45.8389, maxLatitude=47.8229, 
                                 minLongitude=5.9962, maxLongitude=10.5226)
 

@@ -25,7 +25,7 @@ https://en.wikipedia.org/wiki/Flight_number
 \examples{
 # Obtain metadata for the route with call sign AAL683
 
-if(interactive){
+if(interactive()){
 getRouteMetadata("AAL683")
 }
 }

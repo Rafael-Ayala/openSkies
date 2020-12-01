@@ -50,7 +50,7 @@ https://opensky-network.org/apidoc/rest.html
 # Obtain a list with information for all the flights that departed from Seville
 # Airport on the 25th of July, 2019 between 9 AM and 11 AM, local time.
 
-if(interactive){
+if(interactive()){
 getAirportDepartures(airport="LEZL", startTime="2019-07-25 09:00:00", 
 endTime="2019-07-25 11:00:00", timeZone="Europe/Madrid")
 }

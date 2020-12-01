@@ -51,7 +51,7 @@ A ggmap object with added paths and points representing the route.
 # Plot the route followed by the aircraft with ICAO address 4ca7b3 
 # during the 4th of November, 2020.
 
-if(interactive){
+if(interactive()){
 vectors <- getAircraftStateVectorsSeries(aircraft="4ca7b3", 
 startTime="2020-11-04 10:30:00", endTime="2020-11-04 12:00:00", 
 timeZone="Europe/London", timeResolution=300)

@@ -89,7 +89,7 @@ openSkiesAircraft
 # Create an openSkiesAircraft object corresponding to the aircraft with
 # ICAO 24-bit address 3922e2
 
-if(interactive){
+if(interactive()){
 test_aircraft <- getAircraftMetadata("3922e2")
 test_aircraft
 }
