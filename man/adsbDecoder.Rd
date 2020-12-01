@@ -77,3 +77,4 @@ decoded2 <- adsbDecoder$decodeMessage(msg2)
 
 msgs <- sapply(list(msg0, msg1, msg2), hexToBits, simplify=FALSE)
 decodedAll <- adsbDec$decodeMessages(msgs)
+}

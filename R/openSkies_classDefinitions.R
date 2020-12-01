@@ -108,6 +108,34 @@ openSkiesStateVector <- R6Class(
   )
 )
 
+unwrapAngles <- function(angles, usingRadians=FALSE) {
+  newAngles = c(angles[0])
+  loops = 0
+  if(usingRadians){
+    threshold = pi
+    halfValue = pi
+  } else {
+    threshold = 180
+    halfValue = 180
+  }
+  angles = angles %% (2 * halfValue)
+  for (i in 2:length(angles)){
+    angle1 = angles[i-1]
+    angle2 = angles[i]
+    diff = angle2 - angle1
+    # Counter-clockwise loop
+    if(angle1>halfValue && angle2<halfValue && diff <= -threshold){
+      loops = loops + 1
+    # Clockwise loop
+    } else if(angle2>halfValue && angle1<halfValue && diff >= threshold){
+      loops = loops - 1
+    }
+    newAngle = angle2 + loops * (2*halfValue)
+    newAngles = c(newAngles, newAngle)
+  }
+  return(newAngles)
+}
+
 openSkiesStateVectorSet <- R6Class(
   "openSkiesStateVectorSet",
   public = list(
@@ -124,7 +152,7 @@ openSkiesStateVectorSet <- R6Class(
       self$state_vectors <- append(self$state_vectors, state_vector)
       invisible(self)
     },
-    get_values = function(field, removeNAs=FALSE) {
+    get_values = function(field, removeNAs=FALSE, unwrapAngles=FALSE) {
       if(!(field %in% c("ICAO24", "call_sign", "origin_country", "requested_time",
                         "last_position_update_time", "last_any_update_time",
                         "longitude", "latitude", "baro_altitude", "geo_altitude",
@@ -138,6 +166,12 @@ openSkiesStateVectorSet <- R6Class(
       } else {
         values[sapply(values, function(x) length(x)==0L)] <- NA
       }
+      
+      if(field %in% c("true_track")){
+        if(unwrapAngles){
+          values = unwrapAngles(values)
+        }
+      }
       return(unlist(values))
     },
     get_uniform_interpolation = function(n, fields, method="fmm") {
@@ -148,7 +182,7 @@ openSkiesStateVectorSet <- R6Class(
                           "on_ground", "velocity", "true_track", "vertical_rate"))){
           stop(paste(field, " is not a valid numeric openSkiesStateVector field name", sep=""))
         }
-        values <- self$get_values(field, removeNAs=TRUE)
+        values <- self$get_values(field, removeNAs=TRUE, unwrapAngles=TRUE)
         if(grepl("time", field)){
           values <- unlist(lapply(values, function(t) as.POSIXct(t, origin="1970-1-1", tz = Sys.timezone())))
         }
@@ -168,7 +202,7 @@ openSkiesStateVectorSet <- R6Class(
     },
     get_time_points_interpolation = function(fields, time_field, timestamps, method="fmm") {
        result <- NULL
-       times <- self$get_values(time_field, removeNAs=TRUE)
+       times <- self$get_values(time_field, removeNAs=TRUE, unwrapAngles=TRUE)
        times <- unlist(lapply(times, function(t) as.POSIXct(t, origin="1970-1-1", tz = Sys.timezone())))
        for(field in fields){
          if(!(field %in% c("requested_time", "last_position_update_time", "last_any_update_time",

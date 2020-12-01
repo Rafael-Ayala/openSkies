@@ -642,3 +642,5 @@ adsbDecoder <- R6Class(
     }
   )
 )
+
+adsbDec <- adsbDecoder$new()
