@@ -30,8 +30,8 @@ plotRoute <- function(stateVectorSet, pathColor="blue", ggmapObject=NULL,
 
 plotRoutes <- function(stateVectorSetList, pathColors="blue", ggmapObject=NULL, 
                        plotResult=TRUE, paddingFactor=0.2, lineSize=1, 
-                       lineAlpha=0.5, pointSize=0.3, pointAlpha=0.8,
-                       arrowLength=0.3) {
+                       lineAlpha=0.5, pointSize=0.3, pointAlpha=0.8, includeArrows=FALSE,
+                       arrowLength=0.3, manualColors=TRUE) {
   for (stateVectorSet in stateVectorSetList) {
     checkOpenSkiesStateVectorSet(stateVectorSet, checkTimeSeries=TRUE)
   }
@@ -58,18 +58,29 @@ plotRoutes <- function(stateVectorSetList, pathColors="blue", ggmapObject=NULL,
       data <- rbind(data, newData)
     }
   }
-  ggmapObject <- ggmapObject +
-    geom_segment(data=data, aes(x=replace(lon, breakPoints, NA),
-                                y=replace(lat, breakPoints, NA), 
-                                xend=c(replace(lon, breakPoints+1, NA)[-1], NA), 
-                                yend=c(replace(lat, breakPoints+1, NA)[-1], NA), 
-                                color=pathColor), 
-                 size=lineSize, 
-                 alpha=lineAlpha, 
-                 arrow=arrow(length=unit(arrowLength, 'cm')),
-                 na.rm=TRUE) + 
-    geom_point(data=data, aes(x=lon, y=lat, color=pathColor), size=pointSize, alpha=pointAlpha) +
-    scale_color_manual(values=pathColors)
+  if(includeArrows){
+    ggmapObject <- ggmapObject +
+      geom_segment(data=data, aes(x=replace(lon, breakPoints, NA),
+                                  y=replace(lat, breakPoints, NA), 
+                                  xend=c(replace(lon, breakPoints+1, NA)[-1], NA), 
+                                  yend=c(replace(lat, breakPoints+1, NA)[-1], NA), 
+                                  color=as.factor(pathColor)), 
+                   size=lineSize, 
+                   alpha=lineAlpha, 
+                   arrow=arrow(length=unit(arrowLength, 'cm')),
+                   na.rm=TRUE)
+  } else {
+    ggmapObject <- ggmapObject +
+      geom_path(data=data, aes(x=lon, y=lat, group=group, color=as.factor(pathColor)),
+                size=lineSize,
+                alpha=lineAlpha,
+                na.rm=TRUE)
+  }
+  ggmapObject <- ggmapObject + 
+    geom_point(data=data, aes(x=lon, y=lat, color=as.factor(pathColor)), size=pointSize, alpha=pointAlpha)
+  if(manualColors){
+    ggmapObject <- ggmapObject +  scale_color_manual(values=pathColors)
+  }
   if(plotResult){
     ggmapObject
   }
