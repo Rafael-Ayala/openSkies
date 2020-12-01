@@ -15,8 +15,3 @@ getFeatures <- function(stateVectorSetList, resamplingSize=15) {
   }
 }
 
-
-for(i in 1916:2150){
-  vectors = readRDS(paste0("StateVectors/", i, ".rds"))[2]
-  print(vectors$state_vectors)
-}
