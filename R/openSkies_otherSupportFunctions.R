@@ -98,3 +98,15 @@ unwrapAngles <- function(angles, usingRadians=FALSE) {
   }
   return(newAngles)
 }
+
+groupByFunction <- function(elements, groupingFunction){
+  groups <- list()
+  for(element in elements){
+    key <- as.character(groupingFunction(element))
+    if(is.null(groups[[key]])){
+      groups[[key]] <- list()
+    }
+    groups[[key]][[length(groups[[key]])+1]] <- element
+  }
+  return(groups)
+}

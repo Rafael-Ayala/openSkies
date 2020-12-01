@@ -134,17 +134,18 @@ openSkiesStateVectorSet <- R6Class(
       }
       values <- lapply(as.list(self$state_vectors), "[[", field)
       if(removeNAs){
-        values = values[sapply(values, function(x) length(x)!=0L)]
+        values <- values[sapply(values, function(x) length(x)!=0L)]
       } else {
         values[sapply(values, function(x) length(x)==0L)] <- NA
       }
-      
+      values <- unlist(values)
       if(field %in% c("true_track")){
         if(unwrapAngles){
-          values = unwrapAngles(values)
+          values <- unwrapAngles(values)
         }
       }
-      return(unlist(values))
+      
+      return(values)
     },
     get_uniform_interpolation = function(n, fields, method="fmm") {
       result <- NULL
