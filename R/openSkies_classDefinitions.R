@@ -108,34 +108,6 @@ openSkiesStateVector <- R6Class(
   )
 )
 
-unwrapAngles <- function(angles, usingRadians=FALSE) {
-  newAngles = c(angles[0])
-  loops = 0
-  if(usingRadians){
-    threshold = pi
-    halfValue = pi
-  } else {
-    threshold = 180
-    halfValue = 180
-  }
-  angles = angles %% (2 * halfValue)
-  for (i in 2:length(angles)){
-    angle1 = angles[i-1]
-    angle2 = angles[i]
-    diff = angle2 - angle1
-    # Counter-clockwise loop
-    if(angle1>halfValue && angle2<halfValue && diff <= -threshold){
-      loops = loops + 1
-    # Clockwise loop
-    } else if(angle2>halfValue && angle1<halfValue && diff >= threshold){
-      loops = loops - 1
-    }
-    newAngle = angle2 + loops * (2*halfValue)
-    newAngles = c(newAngles, newAngle)
-  }
-  return(newAngles)
-}
-
 openSkiesStateVectorSet <- R6Class(
   "openSkiesStateVectorSet",
   public = list(
