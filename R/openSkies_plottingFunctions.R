@@ -52,7 +52,11 @@ plotRoutes <- function(stateVectorSetList, pathColors="blue", ggmapObject=NULL,
     breakPoints[i] <- nrow(data)
     lat <- na.omit(latitudes[[i]])
     lon <- na.omit(longitudes[[i]])
-    pathColor <- pathColors[[i %% length(pathColors) + 1]]
+    colorIndex <- i
+    while(colorIndex>length(pathColors)){
+      colorIndex <- colorIndex - length(pathColors)
+    }
+    pathColor <- pathColors[[colorIndex]]
     if (!is.null(lat)){
       newData <- data.frame(lat=lat, lon=lon, group=i, pathColor=pathColor)
       data <- rbind(data, newData)
