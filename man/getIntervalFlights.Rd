@@ -52,5 +52,7 @@ endTime="2019-11-16 10:00:00", timeZone="Europe/London")
 
 # Count the number of registered flights.
 
+if(interactive){
 length(flights)
+}
 }

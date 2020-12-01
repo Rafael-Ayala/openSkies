@@ -60,6 +60,9 @@ openSkiesAirport
 \examples{
 
 # Create an openSkiesAirport object corresponding to Sevilla Airport
+
+if(interactive){
 test_airport <- getAirportMetadata("LEZL")
 test_airport
+}
 }

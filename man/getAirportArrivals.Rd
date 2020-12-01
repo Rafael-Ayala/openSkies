@@ -51,6 +51,8 @@ https://opensky-network.org/apidoc/rest.html
 # International Airport on the 29th of January, 2018 between 12 PM and 1 PM,
 # local time.
 
+if(interactive){
 getAirportArrivals(airport="EDDF", startTime="2018-01-29 12:00:00", 
 endTime="2018-01-29 13:00:00", timeZone="Europe/Berlin")
+}
 }

@@ -43,7 +43,9 @@ openSkiesFlight
 # landed at Frankfurt International Airport on the 29th of January, 2018 between 
 # 12 PM and 1 PM
 
+if(interactive){
 test_flights <- getAirportArrivals(airport="EDDF", startTime="2018-01-29 12:00:00", 
 endTime="2018-01-29 13:00:00", timeZone="Europe/Berlin")
 test_flights
+}
 }

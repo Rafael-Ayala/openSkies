@@ -57,7 +57,7 @@ https://opensky-network.org/apidoc/rest
 # Plot the routes followed by two aircrafts departing from Sevilla airport the
 # 4th of November, 2020.
 
-\donttest{
+if(interactive){
 vectors1=getAircraftStateVectorsSeries(aircraft="345107", 
 startTime="2020-11-04 11:55:00", endTime="2020-11-04 13:10:00", 
 timeZone="Europe/London", timeResolution=300)

@@ -50,6 +50,8 @@ https://opensky-network.org/apidoc/rest.html
 # Obtain a list with information for all the flights registered for the aircraft
 # with ICAO 24-bit address 346190 during the 26th of July, 2019.
 
+if(interactive){
 getAircraftFlights("346190", startTime="2019-07-26 00:00:00", 
 endTime="2019-07-26 23:59:59", timeZone="Europe/Madrid")
+}
 }

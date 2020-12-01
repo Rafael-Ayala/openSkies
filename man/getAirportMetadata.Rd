@@ -25,5 +25,7 @@ https://en.wikipedia.org/wiki/List_of_airports_by_IATA_and_ICAO_code
 \examples{
 # Obtain metadata for the airport with ICAO code LEZL
 
+if(interactive){
 getAirportMetadata("LEZL")
+}
 }
