@@ -18,6 +18,11 @@ getAircraftMetadata <- function(aircraft) {
       return(NULL)
     }
     jsonResponse <- grepl("json", headers(response)$`content-type`)
+    if(length(jsonResponse) == 0) {
+      message(strwrap("No metadata for the aircraft with the provided ICAO24 address 
+                     is available.", initial="", prefix="\n"))
+      return(NULL)
+    }
     if(attemptCount > 100) {
       message(strwrap("Resource not currently available. Please try again 
                        later.", initial="", prefix="\n"))
