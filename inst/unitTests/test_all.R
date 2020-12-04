@@ -30,7 +30,7 @@ checkTrue(length(getAirportDeparturesTest) == 35 | is.null(getAirportDeparturesT
 
 ## Test getAircraftFlights
 
-checkTrue(getAircraftFlightsTest[[5]]$destination_airport == "LEZL" | is.null(getAircraftFlightsTest))
+checkTrue(identical(getAircraftFlightsTest[[5]]$destination_airport, "LEZL") | is.null(getAircraftFlightsTest))
 
 ## Test getIntervalFlights
 
@@ -38,8 +38,8 @@ checkTrue(length(getIntervalFlightsTest) == 514 | is.null(getIntervalFlightsTest
 
 ## Test getSingleTimeStateVectors
 
-checkTrue(getSingleTimeStateVectorsTest$velocity == 30.26 | is.null(getSingleTimeStateVectorsTest))
+checkTrue(identical(getSingleTimeStateVectorsTest$velocity, 30.26) | is.null(getSingleTimeStateVectorsTest))
 
 ## Test getAircraftMetadata
 
-checkTrue(getAircraftMetadataTest$ICAO24 == "3922e2" | is.null(getAircraftMetadataTest))
+checkTrue(identical(getAircraftMetadataTest$ICAO24, "3922e2") | is.null(getAircraftMetadataTest))

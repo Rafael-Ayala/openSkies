@@ -113,17 +113,39 @@ openSkiesStateVectorSet <- R6Class(
   public = list(
     state_vectors = list(),
     time_series = logical(),
-    initialize = function(state_vectors_list, time_series=FALSE) {
+    segments_categories = NULL,
+    initialize = function(state_vectors_list, time_series=FALSE, segments_categories=NULL) {
       stopifnot(all(sapply(state_vectors_list, class)[1,] == "openSkiesStateVector"),
                 length(state_vectors_list) > 1)
       self$state_vectors <- state_vectors_list
       self$time_series <- time_series
+      self$segments_categories <- segments_categories
     },
     add_state_vector = function(state_vector) {
       stopifnot(class(state_vector)[1] == "openSkiesStateVector")
       self$state_vectors <- append(self$state_vectors, state_vector)
       invisible(self)
     },
+    # categorize_segments = function() {
+    #   if(!self$time_series) {
+    #     stop("This openSkiesStateVectorSet is not a time series", sep="")
+    #   }
+    #   categories <- vector("character", length=length(self$state_vectors))
+    #   vertical_rates <- self$get_values("vertical_rate")
+    #   geo_altitudes <- self$get_values("geo_altitude")
+    #   vertical_rates[is.na(vertical_rates)] <- 0
+    #   for (i in 1:length(self$state_vectors)) {
+    #     if(abs(vertical_rates[i]) < 1) {
+    #       categories[i] <- "Cruise"
+    #     } else if(vertical_rates[i] > 0) {
+    #       categories[i] <- "Take-off"
+    #     } else if(vertical_rates[i] < 0) {
+    #       categories[i] <- "Landing"
+    #     }
+    #   }
+    #   self$segments_categories <- categories
+    #   invisible(self)
+    # },
     get_values = function(field, removeNAs=FALSE, unwrapAngles=FALSE) {
       if(!(field %in% c("ICAO24", "call_sign", "origin_country", "requested_time",
                         "last_position_update_time", "last_any_update_time",
@@ -144,7 +166,6 @@ openSkiesStateVectorSet <- R6Class(
           values <- unwrapAngles(values)
         }
       }
-      
       return(values)
     },
     get_uniform_interpolation = function(n, fields, method="fmm") {
