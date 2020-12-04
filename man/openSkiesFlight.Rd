@@ -23,6 +23,10 @@ openSkiesFlight
   \item{\code{call_sign}}{String with callsign under which the flight was
   performed
   }
+  \item{\code{state_vectors}}{Object of class \code{\link{openSkiesStateVectorSet}}
+  with field \code{time_series = TRUE} containing the state vectors received
+  from the aircraft during the flight
+  }
   \item{\code{origin_airport}}{String with the ICAO 4-letter code of the airport
   of origin
   }
