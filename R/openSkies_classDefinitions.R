@@ -351,7 +351,28 @@ openSkiesFlight <- R6Class(
       self$destination_airport <- destination_airport
       self$departure_time <- departure_time
       self$arrival_time <- arrival_time
+      self$state_vectors <- state_vectors
     },
+    get_moment_state_vector = function(time, includeFuture = TRUE){
+      nearest <- NULL
+      smallestDifference <- NULL
+      for(stateVector in self$state_vectors$state_vectors){
+        if(!is.null(stateVector$last_any_update_time)){
+          difference <- time - stateVector$last_any_update_time
+          if(is.null(nearest)){
+            nearest <- stateVector
+            smallestDifference <- difference
+          } else {
+            if(difference>0 || includeFuture){
+              if(abs(difference) < smallestDifference){
+                nearest <- stateVector
+                smallestDifference <- abs(difference)
+              }
+            }
+          }
+        }
+      }
+      return(nearest)  },
     print = function(...) {
       cat("Flight performed by aircraft with ICAO 24-bit address ", self$ICAO24, "\n", sep = "")
       cat("Take-off time: ", as.character(self$departure_time), " ", Sys.timezone(), "\n", sep ="")
