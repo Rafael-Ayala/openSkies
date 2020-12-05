@@ -12,10 +12,10 @@ getVectorSetFeatures <- function(stateVectorSet, resamplingSize=15, method="fmm"
   return(features)
 }
 
-getFeatures <- function(stateVectorSetList, resamplingSize=15, scale=TRUE) {
+getVectorSetListFeatures <- function(stateVectorSetList, resamplingSize=15, scale=TRUE, useAngles=FALSE) {
   featuresMatrix <- list()
   for(stateVectorSet in stateVectorSetList){
-    features <- getVectorSetFeatures(stateVectorSet, resamplingSize)
+    features <- getVectorSetFeatures(stateVectorSet, resamplingSize, useAngles=useAngles)
     featuresMatrix[[length(featuresMatrix)+1]] = features
   }
   featuresMatrix <- do.call(rbind, featuresMatrix)
@@ -25,8 +25,7 @@ getFeatures <- function(stateVectorSetList, resamplingSize=15, scale=TRUE) {
   return(featuresMatrix)
 }
 
-clusterRoutesDBSCAN <- function(stateVectorSetList, eps=0.5, resamplingSize=15, scale=TRUE) {
-  features <- getFeatures(stateVectorSetList, resamplingSize, scale)
-  res <- dbscan(features, eps)
+clusterRoutesDBSCAN <- function(featuresMatrix, eps=0.5) {
+  res <- dbscan(featuresMatrix, eps)
   return(res)
 }

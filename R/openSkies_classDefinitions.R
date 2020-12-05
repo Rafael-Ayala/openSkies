@@ -168,6 +168,20 @@ openSkiesStateVectorSet <- R6Class(
       }
       return(values)
     },
+    get_differentials = function(field, removeNAs=FALSE, unwrapAngles) {
+      if(!(field %in% c("requested_time", "last_position_update_time", "last_any_update_time",
+                        "longitude", "latitude", "baro_altitude", "geo_altitude",
+                        "on_ground", "velocity", "true_track", "vertical_rate"))){
+        stop(paste(field, " is not a valid numeric openSkiesStateVector field name", sep=""))
+      }
+      diffs <- NULL
+      values <- self$get_values(field, removeNAs, unwrapAngles)
+      for(i in 2:length(values)){
+        diff <- values[[i]] - values[[i-1]]
+        diffs <- c(diffs, diff)
+      }
+      return(diffs)
+    }
     get_uniform_interpolation = function(n, fields, method="fmm") {
       result <- NULL
       for(field in fields){
@@ -372,7 +386,14 @@ openSkiesFlight <- R6Class(
           }
         }
       }
-      return(nearest)  },
+      return(nearest)  
+    },
+    get_duration = function(){
+      departureTipe <- as.POSIXct(self$departure_time, origin="1970-1-1", tz = Sys.timezone())
+      arrivalTime <- as.POSIXct(self$arrival_time, origin="1970-1-1", tz = Sys.timezone())
+      duration <- arrivalTime - departureTime
+      return(duration)
+    }
     print = function(...) {
       cat("Flight performed by aircraft with ICAO 24-bit address ", self$ICAO24, "\n", sep = "")
       cat("Take-off time: ", as.character(self$departure_time), " ", Sys.timezone(), "\n", sep ="")
