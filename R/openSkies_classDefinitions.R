@@ -393,6 +393,31 @@ openSkiesFlight <- R6Class(
       arrivalTime <- as.POSIXct(self$arrival_time, origin="1970-1-1", tz = Sys.timezone())
       duration <- arrivalTime - departureTime
       return(duration)
+    },
+    distance_to_flight = function(flight, numberSamples, samplesAggregationMethod="concatenated", useAngles=FALSE){
+      if(!(samplesAggregationMethod %in% c("concatenated", "average"))){
+        stop(paste(sanokesAggregationMethod, " is not a valid aggregation method.", sep=""))
+      }
+      features1 = getVectorSetFeatures(self$state_vectors, useAngles=useAngles)
+      features2 = getVectorSetFeatures(flight$state_vectors, useAngles=useAngles)
+      if(samplesAggregationMethod == "concatenated"){
+        distance = dist(rbind(features1, features2))
+      } else if(samplesAggregationMethod == "average"){
+        if(useAngles){
+          numFeatures = 3
+        } else {
+          numFeatures = 2
+        }
+        numPoints = length(features1)/numFeatures
+        distancesSum = 0
+        for (i in 1:numPoints) {
+          point1 = features1[(i-1)*numFeatures+1:i*numFeatures]
+          point2 = features1[(i-1)*numFeatures+1:i*numFeatures]
+          distancesSum = distancesSum + dist(rbind(point1, point2))
+        }
+        distance = distancesSum / numPoints
+      }
+      return(distances)
     }
     print = function(...) {
       cat("Flight performed by aircraft with ICAO 24-bit address ", self$ICAO24, "\n", sep = "")
