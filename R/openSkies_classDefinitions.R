@@ -394,12 +394,12 @@ openSkiesFlight <- R6Class(
       duration <- arrivalTime - departureTime
       return(duration)
     },
-    distance_to_flight = function(flight, numberSamples, samplesAggregationMethod="concatenated", useAngles=FALSE){
+    distance_to_flight = function(flight, numberSamples=15, samplesAggregationMethod="concatenated", method="euclidean", useAngles=FALSE){
       if(!(samplesAggregationMethod %in% c("concatenated", "average"))){
-        stop(paste(sanokesAggregationMethod, " is not a valid aggregation method.", sep=""))
+        stop(paste(samplesAggregationMethod, " is not a valid aggregation method.", sep=""))
       }
-      features1 = getVectorSetFeatures(self$state_vectors, useAngles=useAngles)
-      features2 = getVectorSetFeatures(flight$state_vectors, useAngles=useAngles)
+      features1 = getVectorSetFeatures(self$state_vectors, resamplingSize=numberSamples, useAngles=useAngles)
+      features2 = getVectorSetFeatures(flight$state_vectors, resamplingSize=numberSamples, useAngles=useAngles)
       if(samplesAggregationMethod == "concatenated"){
         distance = dist(rbind(features1, features2))
       } else if(samplesAggregationMethod == "average"){
@@ -411,13 +411,13 @@ openSkiesFlight <- R6Class(
         numPoints = length(features1)/numFeatures
         distancesSum = 0
         for (i in 1:numPoints) {
-          point1 = features1[(i-1)*numFeatures+1:i*numFeatures]
-          point2 = features1[(i-1)*numFeatures+1:i*numFeatures]
-          distancesSum = distancesSum + dist(rbind(point1, point2))
+          point1 = features1[((i-1)*numFeatures+1):(i*numFeatures)]
+          point2 = features2[((i-1)*numFeatures+1):(i*numFeatures)]
+          distancesSum = distancesSum + dist(rbind(point1, point2))[[1]]
         }
         distance = distancesSum / numPoints
       }
-      return(distances)
+      return(distance)
     },
     print = function(...) {
       cat("Flight performed by aircraft with ICAO 24-bit address ", self$ICAO24, "\n", sep = "")

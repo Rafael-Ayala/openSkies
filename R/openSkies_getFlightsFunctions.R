@@ -80,10 +80,13 @@ getAirportDepartures <- function(airport, startTime, endTime, timeZone=Sys.timez
 }
 
 getAircraftFlights <- function(aircraft, startTime, endTime, timeZone=Sys.timezone(),
-                               username=NULL, password=NULL) {
+                               username=NULL, password=NULL, includeStateVectors=FALSE, timeResolution=NULL) {
   checkICAO24(aircraft)
   checkTime(startTime)
   checkTime(endTime)
+  if(includeStateVectors && is.null(timeResolution)){
+    stop("Time resolution must be provided when requesting state vectors.")
+  }
   jsonResponse <- FALSE
   attemptCount <- 0
   while(!jsonResponse) {
@@ -116,6 +119,13 @@ getAircraftFlights <- function(aircraft, startTime, endTime, timeZone=Sys.timezo
   } 
   aircraftFlightsList <- formatFlightsListResponse(content(response))
   aircraftOpenSkiesFlights <- lapply(aircraftFlightsList, listToOpenSkiesFlight)
+  if(includeStateVectors)
+  for(i in 1:length(aircraftOpenSkiesFlights)){
+    departureTime <- aircraftOpenSkiesFlights[[i]]$departure_time
+    arrivalTime <- aircraftOpenSkiesFlights[[i]]$arrival_time
+    stateVectors <- getAircraftStateVectorsSeries(aircraft, departureTime, arrivalTime, timeZone, timeResolution, username, password)
+    aircraftOpenSkiesFlights[[i]]$state_vectors <- stateVectors
+  }
   return(aircraftOpenSkiesFlights)
 }
 
