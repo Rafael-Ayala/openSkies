@@ -168,20 +168,20 @@ openSkiesStateVectorSet <- R6Class(
       }
       return(values)
     },
-    get_differentials = function(field, removeNAs=FALSE, unwrapAngles) {
-      if(!(field %in% c("requested_time", "last_position_update_time", "last_any_update_time",
-                        "longitude", "latitude", "baro_altitude", "geo_altitude",
-                        "on_ground", "velocity", "true_track", "vertical_rate"))){
-        stop(paste(field, " is not a valid numeric openSkiesStateVector field name", sep=""))
-      }
-      diffs <- NULL
-      values <- self$get_values(field, removeNAs, unwrapAngles)
-      for(i in 2:length(values)){
-        diff <- values[[i]] - values[[i-1]]
-        diffs <- c(diffs, diff)
-      }
-      return(diffs)
-    },
+    # get_differentials = function(field, removeNAs=FALSE, unwrapAngles) {
+    #   if(!(field %in% c("requested_time", "last_position_update_time", "last_any_update_time",
+    #                     "longitude", "latitude", "baro_altitude", "geo_altitude",
+    #                     "on_ground", "velocity", "true_track", "vertical_rate"))){
+    #     stop(paste(field, " is not a valid numeric openSkiesStateVector field name", sep=""))
+    #   }
+    #   diffs <- NULL
+    #   values <- self$get_values(field, removeNAs, unwrapAngles)
+    #   for(i in 2:length(values)){
+    #     diff <- values[[i]] - values[[i-1]]
+    #     diffs <- c(diffs, diff)
+    #   }
+    #   return(diffs)
+    # },
     get_uniform_interpolation = function(n, fields, method="fmm") {
       result <- NULL
       for(field in fields){
@@ -236,6 +236,46 @@ openSkiesStateVectorSet <- R6Class(
          }
        }
        return(result)
+    },
+    sort_by_field = function(field){
+      self$state_vectors <- self$state_vectors[order(self$get_values(field))]
+      invisible(self)
+    },
+    split_into_flights = function(timeOnLandThreshold = 300){
+      flights = list()
+      aircraft_groups = groupByFunction(self$state_vectors, function(x) x$ICAO24)
+      for(group in aircraft_groups) {
+        vectorSet = openSkiesStateVectorSet$new(
+          state_vectors_list = group,
+          time_series = TRUE
+        )
+        vectorSet$sort_by_field("last_any_update_time")
+        timeDiffs = c(0, diff(vectorSet$get_values("last_any_update_time")))
+        firstFlightIndex = 1
+        timeOnLand = 0
+        firstOnAirFlag = FALSE
+        for(i in 1:length(vectorSet$state_vectors)) {
+          stateVector = vectorSet$state_vectors[[i]]
+          if(!firstOnAirFlag & !stateVector$on_ground){
+            firstOnAirFlag = TRUE
+          }
+          if(stateVector$on_ground) {
+            timeOnLand = timeOnLand + timeDiffs[i]
+          }
+          if((timeOnLand >= timeOnLandThreshold & firstOnAirFlag) | i==length(vectorSet$state_vectors)) {
+            flightStateVectors = openSkiesStateVectorSet$new(
+              state_vectors_list = vectorSet$stateVectors[firstFlightIndex:i],
+              time_series = TRUE
+            )
+            flight = openSkiesFlight$new(
+              ICAO24 = stateVector$ICAO24,
+              call_sign = stateVector$call_sign,
+              state_vectors = flightStateVectors,
+            )
+            
+          }
+        }
+      }
     }
   )
 )
@@ -423,6 +463,39 @@ openSkiesFlight <- R6Class(
       cat("Flight performed by aircraft with ICAO 24-bit address ", self$ICAO24, "\n", sep = "")
       cat("Take-off time: ", as.character(self$departure_time), " ", Sys.timezone(), "\n", sep ="")
       cat("Landing time:  ", as.character(self$arrival_time), " ", Sys.timezone(), sep = "")
+      invisible(self)
+    }
+  )
+)
+
+
+openSkiesAirspace <- R6Class(
+  "openSkiesAirspace",
+  public = list(
+    max_latitude = double(),
+    min_latitude = double(),
+    max_longitude = double(),
+    min_longitude = double(),
+    current_aircrafts = list(), 
+    flights = list(),
+    initialize = function(max_latitude,
+                          min_latitude,
+                          max_longitude,
+                          min_longitude,
+                          current_aircrafts = NULL, 
+                          flights = NULL) {
+      self$max_latitude <- max_latitude
+      self$min_latitude <- min_latitude
+      self$max_longitude <- max_longitude
+      self$min_longitude <- min_longitude
+      self$current_aircrafts <- current_aircrafts
+      self$flights <- flights
+    },
+    print = function(...) {
+      cat("Airspace contained between latitudes ", self$min_latitude, " and ", self$max_latitude, ", \n", sep = "")
+      cat("longitudes ", self$min_longitude, " and ", self$max_longitude, "\n", sep ="")
+      cat("The airspace contains  ", length(self$current_planes), " planes \n", sep = "")
+      cat(length(self$flights), " flights logged over the airspace", sep="")
       invisible(self)
     }
   )

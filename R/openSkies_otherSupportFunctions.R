@@ -110,3 +110,8 @@ groupByFunction <- function(elements, groupingFunction){
   }
   return(groups)
 }
+
+generateEnclosingAirspace <- function(elements, groupingFunction){
+  
+  
+}
