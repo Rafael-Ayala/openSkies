@@ -99,10 +99,18 @@ unwrapAngles <- function(angles, usingRadians=FALSE) {
   return(newAngles)
 }
 
-groupByFunction <- function(elements, groupingFunction){
+groupByFunction <- function(elements, groupingFunction, includeNull=FALSE, nullKeyName="unclassified"){
   groups <- list()
   for(element in elements){
-    key <- as.character(groupingFunction(element))
+    key <- groupingFunction(element)
+    if(is.null(key)){
+      if(includeNull) {
+        key <- nullKeyName  
+      } else {
+        next
+      }
+    }
+    key <- as.character(key)
     if(is.null(groups[[key]])){
       groups[[key]] <- list()
     }

@@ -254,28 +254,52 @@ openSkiesStateVectorSet <- R6Class(
         firstFlightIndex = 1
         timeOnLand = 0
         firstOnAirFlag = FALSE
+        firstOnAirIndex = 0
+        lastOnAirFlag = FALSE
+        lastOnAirIndex = 0
         for(i in 1:length(vectorSet$state_vectors)) {
           stateVector = vectorSet$state_vectors[[i]]
-          if(!firstOnAirFlag & !stateVector$on_ground){
+          if(!firstOnAirFlag & !stateVector$on_ground) {
             firstOnAirFlag = TRUE
+            firstOnAirIndex = i
+            accGroundTime = 0
+            for(j in i:firstFlightIndex) {
+              accGroundTime = accGroundTime + timeDiffs[j]
+              if(accGroundTime >= timeOnLandThreshold) {
+                firstFlightIndex = j
+              }
+            }
+          }
+          if(!lastOnAirFlag & firstOnAirFlag & stateVector$on_ground) {
+            lastOnAirFlag = TRUE
+            lastOnAirIndex = i-1
           }
           if(stateVector$on_ground) {
             timeOnLand = timeOnLand + timeDiffs[i]
           }
           if((timeOnLand >= timeOnLandThreshold & firstOnAirFlag) | i==length(vectorSet$state_vectors)) {
             flightStateVectors = openSkiesStateVectorSet$new(
-              state_vectors_list = vectorSet$stateVectors[firstFlightIndex:i],
+              state_vectors_list = vectorSet$state_vectors[firstFlightIndex:i],
               time_series = TRUE
             )
+            departureTime = as.character(vectorSet$get_values("last_any_update_time")[firstOnAirIndex])
+            arrivalTime = as.character(vectorSet$get_values("last_any_update_time")[lastOnAirIndex])
             flight = openSkiesFlight$new(
               ICAO24 = stateVector$ICAO24,
               call_sign = stateVector$call_sign,
               state_vectors = flightStateVectors,
+              departure_time = departureTime,
+              arrival_time = arrivalTime
             )
-            
+            flights = append(flights, flight)
+            timeOnLand = 0
+            firstOnAirFlag = FALSE
+            lastOnAirFlag = FALSE
+            firstFlightIndex = i+1
           }
         }
       }
+      return(flights)
     }
   )
 )
