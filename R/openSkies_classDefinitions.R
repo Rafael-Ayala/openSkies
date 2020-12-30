@@ -238,10 +238,10 @@ openSkiesStateVectorSet <- R6Class(
        return(result)
     },
     sort_by_field = function(field){
-      self$state_vectors <- self$state_vectors[order(self$get_values(field))]
+      self$state_vectors <- self$state_vectors[order(self$get_values(field,removeNAs = TRUE))]
       invisible(self)
     },
-    split_into_flights = function(timeOnLandThreshold = 300){
+    split_into_flights = function(timeOnLandThreshold = 300, timeDiffThreshold = 1800){
       flights = list()
       aircraft_groups = groupByFunction(self$state_vectors, function(x) x$ICAO24)
       for(group in aircraft_groups) {
@@ -276,14 +276,21 @@ openSkiesStateVectorSet <- R6Class(
           }
           if(stateVector$on_ground) {
             timeOnLand = timeOnLand + timeDiffs[i]
+          } else {
+            timeOnLand = 0
+            lastOnAirFlag = FALSE
           }
-          if((timeOnLand >= timeOnLandThreshold & firstOnAirFlag) | i==length(vectorSet$state_vectors)) {
+          if((timeOnLand >= timeOnLandThreshold & firstOnAirFlag) | i==length(vectorSet$state_vectors) | timeDiffs[i] >= timeDiffThreshold) {
+            if(timeDiffs[i] >= timeDiffThreshold) {
+              lastOnAirIndex = i-1
+              i = i-1
+            }
             flightStateVectors = openSkiesStateVectorSet$new(
               state_vectors_list = vectorSet$state_vectors[firstFlightIndex:i],
               time_series = TRUE
             )
-            departureTime = as.character(vectorSet$get_values("last_any_update_time")[firstOnAirIndex])
-            arrivalTime = as.character(vectorSet$get_values("last_any_update_time")[lastOnAirIndex])
+            departureTime = as.character(as.POSIXct(vectorSet$get_values("last_any_update_time")[firstOnAirIndex], origin="1970-01-01", tz=Sys.timezone()))
+            arrivalTime = as.character(as.POSIXct(vectorSet$get_values("last_any_update_time")[lastOnAirIndex], origin="1970-01-01", tz=Sys.timezone()))
             flight = openSkiesFlight$new(
               ICAO24 = stateVector$ICAO24,
               call_sign = stateVector$call_sign,
@@ -295,7 +302,9 @@ openSkiesStateVectorSet <- R6Class(
             timeOnLand = 0
             firstOnAirFlag = FALSE
             lastOnAirFlag = FALSE
-            firstFlightIndex = i+1
+            if(timeDiffs[i] < timeDiffThreshold){
+              firstFlightIndex = i+1
+            }
           }
         }
       }
