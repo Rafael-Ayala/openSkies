@@ -36,6 +36,13 @@ getAircraftFlights(aircraft, startTime, endTime, timeZone=Sys.timezone(),
   \item{password}{optional string with the password to use for authentication
   for the OpenSky API. By default, no authentication is performed.
   }
+  \item{includeStateVectors}{logical indicating if the set of state vectors for
+  each flight should also be retrieved. By default, state vectors are not
+  retrieved.
+  }
+  \item{timeResolution}{time resolution in seconds with which state vectors
+  should be retrieved if \code{includeStateVectors=TRUE}.
+  }
 }
 \value{
 A list of objects of class \code{\link{openSkiesFlight}}, where each object

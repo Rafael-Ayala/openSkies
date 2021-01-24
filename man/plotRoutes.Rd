@@ -10,7 +10,7 @@ objects of class \code{\link{openSkiesStateVectorSet}}, all of them with field
 \usage{
 plotRoutes(stateVectorSetList, pathColors="blue", ggmapObject=NULL, 
 plotResult=TRUE, paddingFactor=0.2, lineSize=1, lineAlpha=0.5, pointSize=0.3, 
-pointAlpha=0.8, arrowLength=0.3)
+pointAlpha=0.8, includeArrows=FALSE, arrowLength=0.3, manualColors=TRUE)
 }
 \arguments{
   \item{stateVectorSetList}{list of objects of class \code{\link{openSkiesStateVectorSet}}
@@ -44,7 +44,15 @@ pointAlpha=0.8, arrowLength=0.3)
   }
   \item{pointAlpha}{opacity of the points of the routes in the plot.
   }
+  \item{includeArrows}{logical indicating if arrows showing the direction of
+  the flight should be added to the plot. The default value of FALSE can 
+  speed up the generation of the plot considerably when a large amount of
+  routes are plotted.
+  }
   \item{arrowLength}{length of the segment arrows in centimeters.
+  }
+  \item{manualColors}{logical indicating if the provided colors should be
+  used for the plot. By default, TRUE.
   }
 }
 \value{

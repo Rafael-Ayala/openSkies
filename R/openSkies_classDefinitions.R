@@ -290,7 +290,10 @@ openSkiesStateVectorSet <- R6Class(
               time_series = TRUE
             )
             departureTime = as.character(as.POSIXct(vectorSet$get_values("last_any_update_time")[firstOnAirIndex], origin="1970-01-01", tz=Sys.timezone()))
-            arrivalTime = as.character(as.POSIXct(vectorSet$get_values("last_any_update_time")[lastOnAirIndex], origin="1970-01-01", tz=Sys.timezone()))
+            arrivalTime = if(lastOnAirIndex==0 | lastOnAirIndex < firstOnAirIndex) {
+              "Unknown" } else {
+                as.character(as.POSIXct(vectorSet$get_values("last_any_update_time")[lastOnAirIndex], origin="1970-01-01", tz=Sys.timezone()))
+              }
             flight = openSkiesFlight$new(
               ICAO24 = stateVector$ICAO24,
               call_sign = stateVector$call_sign,
@@ -474,7 +477,7 @@ openSkiesFlight <- R6Class(
       features1 = getVectorSetFeatures(self$state_vectors, resamplingSize=numberSamples, useAngles=useAngles)
       features2 = getVectorSetFeatures(flight$state_vectors, resamplingSize=numberSamples, useAngles=useAngles)
       if(samplesAggregationMethod == "concatenated"){
-        distance = dist(rbind(features1, features2))
+        distance = dist(rbind(features1, features2), method)
       } else if(samplesAggregationMethod == "average"){
         if(useAngles){
           numFeatures = 3
@@ -495,41 +498,41 @@ openSkiesFlight <- R6Class(
     print = function(...) {
       cat("Flight performed by aircraft with ICAO 24-bit address ", self$ICAO24, "\n", sep = "")
       cat("Take-off time: ", as.character(self$departure_time), " ", Sys.timezone(), "\n", sep ="")
-      cat("Landing time:  ", as.character(self$arrival_time), " ", Sys.timezone(), sep = "")
+      cat("Landing time:  ", as.character(self$arrival_time), " ", if(as.character(self$arrival_time) != "Unknown") {Sys.timezone()}, sep = "")
       invisible(self)
     }
   )
 )
 
-
-openSkiesAirspace <- R6Class(
-  "openSkiesAirspace",
-  public = list(
-    max_latitude = double(),
-    min_latitude = double(),
-    max_longitude = double(),
-    min_longitude = double(),
-    current_aircrafts = list(), 
-    flights = list(),
-    initialize = function(max_latitude,
-                          min_latitude,
-                          max_longitude,
-                          min_longitude,
-                          current_aircrafts = NULL, 
-                          flights = NULL) {
-      self$max_latitude <- max_latitude
-      self$min_latitude <- min_latitude
-      self$max_longitude <- max_longitude
-      self$min_longitude <- min_longitude
-      self$current_aircrafts <- current_aircrafts
-      self$flights <- flights
-    },
-    print = function(...) {
-      cat("Airspace contained between latitudes ", self$min_latitude, " and ", self$max_latitude, ", \n", sep = "")
-      cat("longitudes ", self$min_longitude, " and ", self$max_longitude, "\n", sep ="")
-      cat("The airspace contains  ", length(self$current_planes), " planes \n", sep = "")
-      cat(length(self$flights), " flights logged over the airspace", sep="")
-      invisible(self)
-    }
-  )
-)
+# FUTURE
+# openSkiesAirspace <- R6Class(
+#   "openSkiesAirspace",
+#   public = list(
+#     max_latitude = double(),
+#     min_latitude = double(),
+#     max_longitude = double(),
+#     min_longitude = double(),
+#     current_aircrafts = list(), 
+#     flights = list(),
+#     initialize = function(max_latitude,
+#                           min_latitude,
+#                           max_longitude,
+#                           min_longitude,
+#                           current_aircrafts = NULL, 
+#                           flights = NULL) {
+#       self$max_latitude <- max_latitude
+#       self$min_latitude <- min_latitude
+#       self$max_longitude <- max_longitude
+#       self$min_longitude <- min_longitude
+#       self$current_aircrafts <- current_aircrafts
+#       self$flights <- flights
+#     },
+#     print = function(...) {
+#       cat("Airspace contained between latitudes ", self$min_latitude, " and ", self$max_latitude, ", \n", sep = "")
+#       cat("longitudes ", self$min_longitude, " and ", self$max_longitude, "\n", sep ="")
+#       cat("The airspace contains  ", length(self$current_planes), " planes \n", sep = "")
+#       cat(length(self$flights), " flights logged over the airspace", sep="")
+#       invisible(self)
+#     }
+#   )
+# )

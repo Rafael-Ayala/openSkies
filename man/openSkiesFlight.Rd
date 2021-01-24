@@ -41,6 +41,42 @@ openSkiesFlight
   }
 }}
 
+
+\section{Methods}{
+
+\describe{
+  \item{
+    \code{get_moment_state_vector(time, includeFuture = TRUE)}}{
+     This method retrieves the state vector closest with the timestamp closest
+     to the provided time, which must be supplied as a date-time string. In the 
+     default behaviour, \code{includeFuture=TRUE} and the retrieved vector will 
+     be the one with the closest timestamp, regardless of if this is earlier or
+     later than the provided time. If \code{includeFuture=FALSE}, the closest
+     earlier state vector will be retrieved.
+   },
+   \item{
+    \code{get_duration()}}{
+     This method returns the duration of the flight in seconds
+   },
+   \item{
+    \code{distance_to_flight(flight, numberSamples=15, 
+                             samplesAggregationMethod="concatenated", 
+                             method="euclidean", useAngles=FALSE)}}{
+     This method calculates the distance to the provided flight, which must be 
+     another object of class openSkiesFlight. Both openSkiesFlight objects
+     will be resampled to the number of points specified by 
+     \code{numberSamples}. If \code{samplesAggregationMethod="concatenated"},
+     a vector of values indicating the distance between the flights at each
+     point is returned. If \code{samplesAggregationMethod="average"}, the
+     average distance is returned. By default, \code{method="euclidean"} and
+     euclidean distances are calculated. Other possible values of \code{method}
+     are all values accepted by \code{\link{dist}}. By default, 
+     \code{useAngles=FALSE}, and track angles are not included in the features
+     vectors used to calculate distances.
+   }
+}
+}
+
 \examples{
 
 # Create a list of openSkiesFlight objects corresponding to all the flights that 

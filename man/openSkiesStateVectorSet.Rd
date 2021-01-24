@@ -46,6 +46,15 @@ openSkiesStateVectorSet
      "linear" will result in linear interpolation, while "fmm", "periodic", or "natural" will result
      in different types of spline interpolation.
    }
+   \item{
+    \code{get_time_points_interpolation(fields, time_field, timestamps, method="fmm")}}{
+     This method obtains a data frame with an interpolation of the specified fields along the
+     route represented by the state vector set across the specified timestamps. \code{fields}
+     should be a character vector with the name of the fields that will be interpolated.
+     Only numeric fields are accepted. \code{method} represents the interpolation method.
+     "linear" will result in linear interpolation, while "fmm", "periodic", or "natural" will result
+     in different types of spline interpolation.
+   }
 }
 }
 
