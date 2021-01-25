@@ -80,7 +80,8 @@ getAirportDepartures <- function(airport, startTime, endTime, timeZone=Sys.timez
 }
 
 getAircraftFlights <- function(aircraft, startTime, endTime, timeZone=Sys.timezone(),
-                               username=NULL, password=NULL, includeStateVectors=FALSE, timeResolution=NULL) {
+                               username=NULL, password=NULL, includeStateVectors=FALSE, 
+                               timeResolution=NULL) {
   checkICAO24(aircraft)
   checkTime(startTime)
   checkTime(endTime)

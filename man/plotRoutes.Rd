@@ -10,17 +10,19 @@ objects of class \code{\link{openSkiesStateVectorSet}}, all of them with field
 \usage{
 plotRoutes(stateVectorSetList, pathColors="blue", ggmapObject=NULL, 
 plotResult=TRUE, paddingFactor=0.2, lineSize=1, lineAlpha=0.5, pointSize=0.3, 
-pointAlpha=0.8, includeArrows=FALSE, arrowLength=0.3, manualColors=TRUE)
+pointAlpha=0.8, includeArrows=FALSE, arrowLength=0.3, literalColors=TRUE)
 }
 \arguments{
   \item{stateVectorSetList}{list of objects of class \code{\link{openSkiesStateVectorSet}}
   with field \code{time_series=TRUE}, each of them containing positional 
   information of given aircraft along different timepoints.
   }
-  \item{pathColors}{vector with the colors of the paths and points that will be 
-  used to draw the routes. If the number of routes is greater than the number of 
-  colors, these will be rotated. Each color must be a value accepted by ggmap's 
-  color attributes.
+  \item{pathColors}{If \code{literalColors=TRUE}, vector with the colors of the 
+  paths and points that will be used to draw the routes. If the number of routes 
+  is greater than the number of colors, these will be rotated. Each color must 
+  be a value accepted by ggmap's color attributes. Alternatively, if \code{literalColors=FALSE},
+  a factor defining a certain feature for each route, in which case a color will 
+  be assigned for each level of the factor.
   }
   \item{ggmapObject}{optional ggmap object on which the routes will be drawn. By 
   default, a new ggmap object will be created, covering the necessary space plus
@@ -51,8 +53,10 @@ pointAlpha=0.8, includeArrows=FALSE, arrowLength=0.3, manualColors=TRUE)
   }
   \item{arrowLength}{length of the segment arrows in centimeters.
   }
-  \item{manualColors}{logical indicating if the provided colors should be
-  used for the plot. By default, TRUE.
+  \item{literalColors}{logical indicating if the values provided through 
+  \code{pathColors} should be interpreted as color names/codes. By default, 
+  TRUE. If set to FALSE, \code{pathColors} will be interpreted as a factor,
+  and a color for each different value will be automatically assigned.
   }
 }
 \value{

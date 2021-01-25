@@ -36,7 +36,7 @@ openSkiesStateVectorSet
      will be set as the new \code{last_state_vector} and will be added to
      \code{state_vector_history}. \code{state_vector} should be an
      \code{\link{openSkiesStateVector}} object
-   },
+   }
    \item{
     \code{get_uniform_interpolation(n, fields, method="fmm")}}{
      This method obtains a data frame with an interpolation of the specified fields along the
@@ -53,7 +53,31 @@ openSkiesStateVectorSet
      should be a character vector with the name of the fields that will be interpolated.
      Only numeric fields are accepted. \code{method} represents the interpolation method.
      "linear" will result in linear interpolation, while "fmm", "periodic", or "natural" will result
-     in different types of spline interpolation.
+     in different types of spline interpolation. \code{time_field} indicates the
+     name of the field of the openSkiesStateVectorSet object from which the 
+     timestamps of the original state vectors will be retrieved. Possible values
+     are \code{c("requested_time", "last_position_update_time", "last_any_update_time")}.
+     The time points at which the interpolations should be calculated should be
+     provided as a vector through the \code{timestamps} argument.
+   }
+   \item{
+    \code{sort_by_field(field, decreasing=FALSE)}}{
+     This method sorts the state vectors of the openSkiesStateVectorSet object
+     by the values of the field provided through \code{field}. By default,
+     \code{decreasing=FALSE} and the state vectors will be sorted by increasing 
+     order of \code{field}. If \code{decreasing=TRUE}, decreasing order will be
+     used.
+   }
+   \item{
+    \code{split_into_flights(timeOnLandThreshold=300, timeDiffThreshold=1800)}}{
+     This method automatically detects different flights contained in the
+     openSkiesStateVectorSet object and returns a list of objects of class
+     \code{\link{openSkiesFlight}}. Separate flights are detected based on two
+     conditions: either the aircraft staying on ground for a given amount of
+     time, or the aircraft not sending any status update for a given period. The
+     thresholds are controlled, respectively, through the \code{timeOnLandThreshold}
+     and \code{timeDiffThreshold} arguments. In both cases, the value should be
+     provided in seconds.
    }
 }
 }

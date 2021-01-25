@@ -10,7 +10,8 @@ that can be unambiguously converted to POSIXct (such as YYYY-MM-DD HH:MM:SS).
 }
 \usage{
 getAircraftFlights(aircraft, startTime, endTime, timeZone=Sys.timezone(), 
-                   username=NULL, password=NULL)
+                   username=NULL, password=NULL, includeStateVectors=FALSE, 
+                   timeResolution=NULL)
 }
 \arguments{
   \item{aircraft}{string with the ICAO 24-bit address of an aircraft (for 

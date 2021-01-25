@@ -104,6 +104,14 @@ openSkiesStateVector <- R6Class(
       self$squawk = squawk
       self$special_purpose_indicator = special_purpose_indicator
       self$position_source = position_source
+    }, 
+    print = function(...) {
+        cat("State vector for aircraft with ICAO24", self$ICAO24, "\n", sep = "")
+        cat("Requested time: ", as.character(self$requested_time), " ", 
+            Sys.timezone(), "\n", sep ="")
+        cat("Last status update at: ", as.character(self$last_any_update_time), 
+            " ", Sys.timezone(), "\n", sep ="")
+        invisible(self)
     }
   )
 )
@@ -237,8 +245,9 @@ openSkiesStateVectorSet <- R6Class(
        }
        return(result)
     },
-    sort_by_field = function(field){
-      self$state_vectors <- self$state_vectors[order(self$get_values(field,removeNAs = TRUE))]
+    sort_by_field = function(field, decreasing=FALSE){
+      self$state_vectors <- self$state_vectors[order(self$get_values(field,removeNAs = TRUE), 
+                                                     decreasing=decreasing)]
       invisible(self)
     },
     split_into_flights = function(timeOnLandThreshold = 300, timeDiffThreshold = 1800){

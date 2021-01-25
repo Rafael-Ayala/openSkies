@@ -1,9 +1,13 @@
-Changes in version 1.0.0 (2020-11-12)
+Changes in version 1.0.0 (2021-01-25)
++ Major update to the provided functionalities and data structures 
 + Aircraft metadata can now be retrieved with getAircraftMetadata
 + Airport metadata can now be retrieved with getAirportMetadata
 + Route metadata can now be retrieved with getRouteMetadata
 + One or more routes can now be plotted with plotRoute and plotRoutes
 + Location of aircrafts can now be plotted with plotPlanes
++ System of R6 classes for aircraft location data established
++ R6 classes include additional methods for performing relevant operations
++ Clustering analysis of trajectories can now be performed with clusterRoutesDBSCAN
 
 Changes in version 0.99.4 (2020-11-11)
 + Added additional checks to results of queries

@@ -160,6 +160,15 @@ getAircraftStateVectorsSeries("403003", startTime = "2020-10-08 16:50:00",
                               timeZone="Europe/London", timeResolution=60)
 ```
 
+# System of R6 classes for aviation data
+
+openSkies also aims to establish standard data structures for the analysis of
+aviation data. To that extent, a set of R6 classes is defined. The classes
+defined so far include openSkiesAirport, openSkiesAircraft, openSkiesFlight,
+openSkiesRoute, openSkiesStateVector and openSkiesStateVectorSet. For a 
+detailed description of each class and their available methods, please check
+the manual of the package.
+
 # References
 
 https://opensky-network.org/

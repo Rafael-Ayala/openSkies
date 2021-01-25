@@ -31,7 +31,10 @@ plotRoute <- function(stateVectorSet, pathColor="blue", ggmapObject=NULL,
 plotRoutes <- function(stateVectorSetList, pathColors="blue", ggmapObject=NULL, 
                        plotResult=TRUE, paddingFactor=0.2, lineSize=1, 
                        lineAlpha=0.5, pointSize=0.3, pointAlpha=0.8, includeArrows=FALSE,
-                       arrowLength=0.3, manualColors=TRUE) {
+                       arrowLength=0.3, literalColors=TRUE) {
+  if (length(stateVectorSetList) < 2) {
+      stop("A list with at least 2 openSkiesStateVectorSet objects should be provided")
+  }
   for (stateVectorSet in stateVectorSetList) {
     checkOpenSkiesStateVectorSet(stateVectorSet, checkTimeSeries=TRUE)
   }
@@ -81,8 +84,9 @@ plotRoutes <- function(stateVectorSetList, pathColors="blue", ggmapObject=NULL,
                 na.rm=TRUE)
   }
   ggmapObject <- ggmapObject + 
-    geom_point(data=data, aes(x=lon, y=lat, color=as.factor(pathColor)), size=pointSize, alpha=pointAlpha)
-  if(manualColors){
+    geom_point(data=data, aes(x=lon, y=lat, color=as.factor(pathColor)), size=pointSize, alpha=pointAlpha) +
+    if(literalColors == TRUE) {theme(legend.position = "none")} else {theme(legend.title = element_blank())}
+  if(literalColors){
     ggmapObject <- ggmapObject +  scale_color_manual(values=pathColors)
   }
   if(plotResult){
