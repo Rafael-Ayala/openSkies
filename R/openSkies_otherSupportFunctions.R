@@ -177,14 +177,6 @@ runImpalaQuery <- function(query, username, password){
   return(data_matrix)
 }
 
-hclustK <- function(featuresMatrix, k, ...){
-  return(list(cluster=cutree(hclust(dist(featuresMatrix), ...), k)))
-}
-
-agnesK <- function(featuresMatrix, k, ...){
-  return(list(cluster=cutree(agnes(featuresMatrix, ...), k)))
-}
-
 generateEnclosingAirspace <- function(elements, groupingFunction){
   
   
