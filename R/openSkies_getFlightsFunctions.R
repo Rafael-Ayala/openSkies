@@ -81,7 +81,7 @@ getAirportDepartures <- function(airport, startTime, endTime, timeZone=Sys.timez
 
 getAircraftFlights <- function(aircraft, startTime, endTime, timeZone=Sys.timezone(),
                                username=NULL, password=NULL, includeStateVectors=FALSE, 
-                               timeResolution=NULL) {
+                               timeResolution=NULL, useImpalaShell=FALSE) {
   checkICAO24(aircraft)
   checkTime(startTime)
   checkTime(endTime)
@@ -124,7 +124,7 @@ getAircraftFlights <- function(aircraft, startTime, endTime, timeZone=Sys.timezo
   for(i in 1:length(aircraftOpenSkiesFlights)){
     departureTime <- aircraftOpenSkiesFlights[[i]]$departure_time
     arrivalTime <- aircraftOpenSkiesFlights[[i]]$arrival_time
-    stateVectors <- getAircraftStateVectorsSeries(aircraft, departureTime, arrivalTime, timeZone, timeResolution, username, password)
+    stateVectors <- getAircraftStateVectorsSeries(aircraft, departureTime, arrivalTime, timeZone, timeResolution, username, password, useImpalaShell)
     aircraftOpenSkiesFlights[[i]]$state_vectors <- stateVectors
   }
   return(aircraftOpenSkiesFlights)

@@ -7,6 +7,35 @@ formatFlightsListResponse <- function(responseList) {
                                                               "arrivalTime"=as.POSIXct(flight$lastSeen, origin="1970-01-01", tz=Sys.timezone())))
 }
 
+formatStateVectorsResponseImpala <- function(responseMatrix) {
+  formattedList <- list()
+  for(i in 1:nrow(responseMatrix)){
+    row <- responseMatrix[i,]
+    parsedRow <- list(
+                      "ICAO24"=if(row["icao24"]!="NULL") row["icao24"] else NULL,
+                      "callSign"=if(row["callsign"]!="NULL") row["callsign"] else NULL,
+                      "lastPositionUpdateTime"=if(row["lastposupdate"]!="NULL") as.POSIXct(as.numeric(row["lastposupdate"]), origin="1970-01-01", tz=Sys.timezone()) else NULL,
+                      "lastAnyUpdateTime"=if(row["lastcontact"]!="NULL") as.POSIXct(as.numeric(row["lastcontact"]), origin="1970-01-01", tz=Sys.timezone()) else NULL,
+                      "longitude"=if(row["lon"]!="NULL") as.numeric(row["lon"]) else NULL,
+                      "latitude"=if(row["lat"]!="NULL") as.numeric(row["lat"]) else NULL,
+                      "baroAltitude"=if(row["baroaltitude"]!="NULL") as.numeric(row["baroaltitude"]) else NULL,
+                      "geoAltitude"=if(row["geoaltitude"]!="NULL") as.numeric(row["geoaltitude"]) else NULL,
+                      "onGround"=if(row["onground"]!="NULL") as.logical(row["onground"]) else NULL,
+                      "velocity"=if(row["velocity"]!="NULL") as.numeric(row["velocity"]) else NULL,
+                      "verticalRate"=if(row["vertrate"]!="NULL") as.numeric(row["vertrate"]) else NULL,
+                      "squawk"=if(row["squawk"]!="NULL") row["squawk"] else NULL,
+                      "specialPurposeIndicator"=if(row["spi"]!="NULL") as.logical(row["spi"]) else NULL,
+                      "originCountry"=NULL,
+                      "requestedTime"=NULL,
+                      "trueTrack"=NULL,
+                      "positionSource"=NULL
+                      )
+    formattedList[[i]] <- parsedRow
+    
+  }
+  return(formattedList)
+}
+
 formatStateVectorsResponse <- function(responseList) {
   formattedList <- lapply(responseList$states, function(stateVector) list("ICAO24"=stateVector[[1]],
                                                                           "callSign"=trimws(stateVector[[2]]),

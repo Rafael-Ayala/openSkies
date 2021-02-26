@@ -119,6 +119,72 @@ groupByFunction <- function(elements, groupingFunction, includeNull=FALSE, nullK
   return(groups)
 }
 
+secondsToHour <- function(seconds){
+  return(seconds - (seconds %% 3600))
+}
+
+makeImpalaQueryStateVectorsSingleTime <- function(aircraft=NULL, time=NULL, timeZone=Sys.timezone(),
+                            minLatitude=NULL, maxLatitude=NULL, minLongitude=NULL,
+                            maxLongitude=NULL){
+  timeSeconds <- stringToEpochs(time, timeZone)
+  hour <- secondsToHour(timeSeconds)
+  query <- paste0("SELECT * FROM state_vectors_data4 WHERE hour=", hour, " AND time=", timeSeconds)
+  if(!is.null(aircraft)){
+    query <- paste0(query, " AND icao24='", aircraft, "'")
+  }
+  if(!is.null(minLatitude)){
+    query <- paste0(query, " AND lat>=", minLatitude)
+  }
+  if(!is.null(maxLatitude)){
+    query <- paste0(query, " AND lat<=", maxLatitude)
+  }
+  if(!is.null(minLongitude)){
+    query <- paste0(query, " AND lon>=", minLongitude)
+  }
+  if(!is.null(maxLongitude)){
+    query <- paste0(query, " AND lon<=", maxLongitude)
+  }
+  
+  return(query)
+}
+
+makeImpalaQueryStateVectorsTimeSeries <- function(aircraft, timePoints){
+  hours <- paste0('(',paste(unique(unlist(lapply(timePoints, secondsToHour))), collapse=','),')')
+  times <- paste0('(',paste(timePoints, collapse=','),')')
+  query <- paste0("SELECT * FROM state_vectors_data4 WHERE hour IN ", hours, " AND time IN ", times)
+  if(!is.null(aircraft)){
+    query <- paste0(query, " AND icao24='", aircraft, "'")
+  }
+  query <- paste0(query, " ORDER BY time")
+  return(query)
+}
+
+runImpalaQuery <- function(query, username, password){
+  session <- ssh_connect(paste(username,"@data.opensky-network.org:2230"), passwd=password)
+  lines <- rawToChar(ssh_exec_internal(session,paste("-q ", query))$stdout)
+  lines <- unlist(strsplit(lines, '\n'))
+  colnames_line <- lines[2]
+  colnames_line <- gsub("^.|.$", "", colnames_line)
+  columnNames <- unlist(strsplit(colnames_line, '|', fixed=TRUE))
+  columnNames <- trimws(columnNames)
+  data_lines <- lines[4:(length(lines)-1)]
+  data_lines <- gsub("^.|.$", "", data_lines)
+  split_data_lines <- strsplit(data_lines, '|', fixed=TRUE)
+  trimmed_data_lines <- lapply(split_data_lines, trimws)
+  data_matrix <- matrix(unlist(trimmed_data_lines), ncol=length(columnNames), byrow=TRUE)
+  colnames(data_matrix) <- columnNames
+  ssh_disconnect(session)
+  return(data_matrix)
+}
+
+hclustK <- function(featuresMatrix, k, ...){
+  return(list(cluster=cutree(hclust(dist(featuresMatrix), ...), k)))
+}
+
+agnesK <- function(featuresMatrix, k, ...){
+  return(list(cluster=cutree(agnes(featuresMatrix, ...), k)))
+}
+
 generateEnclosingAirspace <- function(elements, groupingFunction){
   
   

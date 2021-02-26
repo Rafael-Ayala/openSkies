@@ -1,6 +1,6 @@
 getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.timezone(),
                                       minLatitude=NULL, maxLatitude=NULL, minLongitude=NULL,
-                                      maxLongitude=NULL, username=NULL, password=NULL) {
+                                      maxLongitude=NULL, username=NULL, password=NULL, useImpalaShell=FALSE) {
   if(!is.null(aircraft)) {
     checkICAO24(aircraft)
   }
@@ -43,52 +43,67 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
       }
     }
   }
-  queryParameters <- c(makeAircraftsQueryList(aircraft),
-                       time=if(!is.null(time)) stringToEpochs(time, timeZone) else NULL,
-                       lamin=minLatitude, lomin=minLongitude,
-                       lamax=maxLatitude, lomax=maxLongitude)
-  queryParameters <- as.list(queryParameters[lengths(queryParameters) != 0])
-  jsonResponse <- FALSE
-  attemptCount <- 0
-  while(!jsonResponse) {
-    response <- tryCatch({
-      GET(paste(openskyApiRootURL, "states/all", sep="" ),
-          query=queryParameters,
-          timeout(300),
-          if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
-    },
-    error = function(e) e
-    )
-    if(inherits(response, "error")) {
-      message(strwrap("Resource not currently available. Please try again 
-                       later.", initial="", prefix="\n"))
-      return(NULL)
+  if(useImpalaShell){
+    query <- makeImpalaQueryStateVectorsSingleTime(aircraft, time, timeZone, minLatitude, maxLatitude, minLongitude, maxLongitude)
+    results <- runImpalaQuery(query, username, password)
+    parsedResults <- formatStateVectorsResponseImpala(results)
+    openSkiesStateVectorsList <- lapply(parsedResults, listToOpenSkiesStateVector)
+    if(length(openSkiesStateVectorsList)>1){
+      openSkiesStateVectorsResult <- openSkiesStateVectorsResult <- openSkiesStateVectorSet$new(
+        state_vectors = openSkiesStateVectorsList)
+    } else {
+      openSkiesStateVectorsResult <- openSkiesStateVectorsList[[1]]
     }
-    jsonResponse <- grepl("json", headers(response)$`content-type`)
-    if(attemptCount > 100) {
-      message(strwrap("Resource not currently available. Please try again 
-                       later.", initial="", prefix="\n"))
-      return(NULL)
+    return(openSkiesStateVectorsResult)
+    
+  }else{
+    queryParameters <- c(makeAircraftsQueryList(aircraft),
+                         time=if(!is.null(time)) stringToEpochs(time, timeZone) else NULL,
+                         lamin=minLatitude, lomin=minLongitude,
+                         lamax=maxLatitude, lomax=maxLongitude)
+    queryParameters <- as.list(queryParameters[lengths(queryParameters) != 0])
+    jsonResponse <- FALSE
+    attemptCount <- 0
+    while(!jsonResponse) {
+      response <- tryCatch({
+        GET(paste(openskyApiRootURL, "states/all", sep="" ),
+            query=queryParameters,
+            timeout(300),
+            if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+      },
+      error = function(e) e
+      )
+      if(inherits(response, "error")) {
+        message(strwrap("Resource not currently available. Please try again 
+                         later.", initial="", prefix="\n"))
+        return(NULL)
+      }
+      jsonResponse <- grepl("json", headers(response)$`content-type`)
+      if(attemptCount > 100) {
+        message(strwrap("Resource not currently available. Please try again 
+                         later.", initial="", prefix="\n"))
+        return(NULL)
+      }
     }
+    if(status_code(response) != 200) {
+      message(strwrap("No state vectors found for the specified aircrafts, 
+                       location and interval."), initial="", prefix="\n")
+      return(NULL)
+    } 
+    formattedStateVectorsList <- formatStateVectorsResponse(content(response))
+    openSkiesStateVectorsList <- lapply(formattedStateVectorsList, listToOpenSkiesStateVector)
+    if(length(openSkiesStateVectorsList) > 1){
+      openSkiesStateVectorsResult <- openSkiesStateVectorSet$new(
+        state_vectors = openSkiesStateVectorsList)
+    } else if(length(openSkiesStateVectorsList) == 1) {
+      openSkiesStateVectorsResult <- openSkiesStateVectorsList[[1]]
+    }
+    return(openSkiesStateVectorsResult)
   }
-  if(status_code(response) != 200) {
-    message(strwrap("No state vectors found for the specified aircrafts, 
-                     location and interval."), initial="", prefix="\n")
-    return(NULL)
-  } 
-  formattedStateVectorsList <- formatStateVectorsResponse(content(response))
-  openSkiesStateVectorsList <- lapply(formattedStateVectorsList, listToOpenSkiesStateVector)
-  if(length(openSkiesStateVectorsList) > 1){
-    openSkiesStateVectorsResult <- openSkiesStateVectorSet$new(
-      state_vectors = openSkiesStateVectorsList)
-  } else if(length(openSkiesStateVectorsList) == 1) {
-    openSkiesStateVectorsResult <- openSkiesStateVectorsList[[1]]
-  }
-  return(openSkiesStateVectorsResult)
 }
 
 getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone=Sys.timezone(),
-                                          timeResolution, username=NULL, password=NULL) {
+                                          timeResolution, username=NULL, password=NULL, useImpalaShell=FALSE) {
   if(timeResolution < 10) {
     if(is.null(username) | is.null(password)) {
       timeResolution <- 10
@@ -103,42 +118,57 @@ getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone
     }
   }
   timePoints <- generateTimePoints(startTime, endTime, timeZone, timeResolution)
-  stateVectorsSeries <- vector(mode="list", length=length(timePoints))
-  for(i in seq_len(length(timePoints))) {
-    jsonResponse <- FALSE
-    attemptCount <- 0
-    while(!jsonResponse) {
-      response <- tryCatch({
-        GET(paste(openskyApiRootURL, "states/all", sep="" ),
-            query=list(icao24=aircraft,
-                       time=timePoints[i]),
-            timeout(300),
-            if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
-      },
-      error = function(e) e
-      )
-      if(inherits(response, "error")) {
-        message(strwrap("Resource not currently available. Please try again 
-                       later.", initial="", prefix="\n"))
-        return(NULL)
-      }
-      jsonResponse <- grepl("json", headers(response)$`content-type`)
-      if(attemptCount > 100) {
-        message(strwrap("Resource not currently available. Please try again 
-                       later.", initial="", prefix="\n"))
-        return(NULL)
-      }
-    }
-    if(status_code(response) != 200) {
+  if(useImpalaShell){
+    query <- makeImpalaQueryStateVectorsTimeSeries(aircraft, timePoints)
+    results <- runImpalaQuery(query, username, password)
+    parsedResults <- formatStateVectorsResponseImpala(results)
+    openSkiesStateVectorsList <- lapply(parsedResults, listToOpenSkiesStateVector)
+    if(length(openSkiesStateVectorsList) < length(timePoints)){
       message(strwrap("No state vectors found for part of the specified 
-                       interval."), initial="", prefix="\n")
-      stateVectorsSeries[[i]] <- NULL
-      next
+                         interval."), initial="", prefix="\n")
     }
-    stateVectorsSeries[[i]] <- listToOpenSkiesStateVector(unlist(formatStateVectorsResponse(content(response)), recursive=FALSE))
+    openSkiesStateVectorsSeries <- openSkiesStateVectorSet$new(
+      state_vectors = openSkiesStateVectorsList,
+      time_series = TRUE)
+    return(openSkiesStateVectorsSeries)
+  } else {
+    stateVectorsSeries <- vector(mode="list", length=length(timePoints))
+    for(i in seq_len(length(timePoints))) {
+      jsonResponse <- FALSE
+      attemptCount <- 0
+      while(!jsonResponse) {
+        response <- tryCatch({
+          GET(paste(openskyApiRootURL, "states/all", sep="" ),
+              query=list(icao24=aircraft,
+                         time=timePoints[i]),
+              timeout(300),
+              if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+        },
+        error = function(e) e
+        )
+        if(inherits(response, "error")) {
+          message(strwrap("Resource not currently available. Please try again 
+                         later.", initial="", prefix="\n"))
+          return(NULL)
+        }
+        jsonResponse <- grepl("json", headers(response)$`content-type`)
+        if(attemptCount > 100) {
+          message(strwrap("Resource not currently available. Please try again 
+                         later.", initial="", prefix="\n"))
+          return(NULL)
+        }
+      }
+      if(status_code(response) != 200) {
+        message(strwrap("No state vectors found for part of the specified 
+                         interval."), initial="", prefix="\n")
+        stateVectorsSeries[[i]] <- NULL
+        next
+      }
+      stateVectorsSeries[[i]] <- listToOpenSkiesStateVector(unlist(formatStateVectorsResponse(content(response)), recursive=FALSE))
+    }
+    openSkiesStateVectorsSeries <- openSkiesStateVectorSet$new(
+      state_vectors = stateVectorsSeries,
+      time_series = TRUE)
+    return(openSkiesStateVectorsSeries)
   }
-  openSkiesStateVectorsSeries <- openSkiesStateVectorSet$new(
-    state_vectors = stateVectorsSeries,
-    time_series = TRUE)
-  return(openSkiesStateVectorsSeries)
 }
