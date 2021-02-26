@@ -1,28 +1,36 @@
-\name{clusterRoutesDBSCAN}
-\alias{clusterRoutesDBSCAN}
+\name{clusterRoutes}
+\alias{clusterRoutes}
 \title{Cluster aircraft trajectories based on positional features
 }
 \description{
 Performs clustering of aircraft trajectories positional based on their positional
-features with the DBSCAN method. Features should be provided as a features matrix
-as returned by \code{\link{getVectorSetListFeatures}}. 
+features with several available methods. The input should be either a list of \code{\link{openSkiesStateVectorSet}}
+or an already computed features matrix as returned by \code{\link{getVectorSetListFeatures}}. 
+If the input is a list of vector sets, features will be computed with default settings.
 }
 \usage{
 clusterRoutesDBSCAN(featuresMatrix, eps=0.5, ...)
 }
 \arguments{
-  \item{featuresMatrix}{matrix of positional features extracted from a list of
+  \item{input}{input to be clustered, given as either a list of \code{\link{openSkiesStateVectorSet}}, or a
+  matrix of positional features extracted from a list of
   \code{\link{openSkiesStateVectorSet}} objects with \code{\link{getVectorSetListFeatures}},
   that will be used to identify clusters.
   }
-  \item{eps}{size of the epsilon neighborhood to be passed to \code{\link{dbscan}}.
+  \item{method}{clustering method that will be applied to the positional features.
+  Accepted methods are: dbscan, kmeans, hclust, fanny, clara, agnes}
+  \item{eps}{Size of the epsilon neighborhood to be passed to \code{\link{dbscan}.This argument is 
+  only used if the selected clustering method is dbscan.}.
   }
-  \item{...}{additional arguments accepted by \code{\link{dbscan}}.
+  \item{numberClusters}{number of expected clusters. If NULL or a value lesser than 2 is passed,
+  the number of clusters will be estimated. This argument is only used if the selected clustering
+  method is kmeans, hclust, fanny, clara, or agnes}
+  \item{...}{additional arguments accepted by the selected clustering method}.
   }
 }
 \value{
-An object of class 'dbscan_fast' with clustering results. For additional details, 
-see the documentation of \code{\link{dbscan}}.
+An object with clustering results, containing at least a "cluster". For additional details, 
+see the documentation of \code{\link{cluster}}.
 }
 \examples{
 if(interactive()){
@@ -74,7 +82,7 @@ features_matrix=getVectorSetListFeatures(vectors_list, scale=TRUE, useAngles=FAL
 
 ## Perform clustering
 
-clustering=clusterRoutesDBSCAN(features_matrix, eps=5)
+clustering=clusterRoutes(features_matrix, "dbscan", eps=5)
 
 ## Display clustering results with flights colored by assigned cluster
 
