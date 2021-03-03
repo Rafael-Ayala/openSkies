@@ -33,6 +33,18 @@ getIntervalFlights(startTime, endTime, timeZone=Sys.timezone(), username=NULL,
   \item{password}{optional string with the password to use for authentication
   for the OpenSky API. By default, no authentication is performed.
   }
+  \item{includeStateVectors}{logical indicating if the set of state vectors for
+  each flight should also be retrieved. By default, state vectors are not
+  retrieved.
+  }
+  \item{timeResolution}{time resolution in seconds with which state vectors
+  should be retrieved if \code{includeStateVectors=TRUE}.
+  }
+  \item{useImpalaShell}{logical indicating whether or not to use the OpenSky
+  impala shell instead of the API to retrieve state vectors if \code{includeStateVectors=TRUE}. If used, the provided 
+  username and password are used for the ssh connection. By default, the impala shell
+  is not used.
+  }
 }
 \value{
 A list of objects of class \code{\link{openSkiesFlight}}, where each object

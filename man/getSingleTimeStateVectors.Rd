@@ -69,6 +69,11 @@ getSingleTimeStateVectors(aircraft=NULL, time=NULL, timeZone=Sys.timezone(),
   \item{password}{optional string with the password to use for authentication
   for the OpenSky API. By default, no authentication is performed.
   }
+  \item{useImpalaShell}{logical indicating whether or not to use the OpenSky
+  impala shell instead of the API to retrieve state vectors. If used, the provided 
+  username and password are used for the ssh connection. By default, the impala shell
+  is not used.
+  }
 }
 \value{
 If a single state vector matching the query conditions is found, an
