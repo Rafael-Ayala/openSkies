@@ -111,7 +111,7 @@ getAirportMetadata <- function(airport) {
   return(openSkiesAirportResult)
 }
 
-getRouteMetadata <- function(route) {
+getRouteMetadata <- function(route, includeAirports=FALSE) {
   checkCallSign(route)
   jsonResponse <- FALSE
   attemptCount <- 0
@@ -148,5 +148,17 @@ getRouteMetadata <- function(route) {
     operator_IATA = formattedMetadata$operatorIATA,
     flight_number = formattedMetadata$flightNumber
   )
+  if(includeAirports){
+    originAirportICAO <- openSkiesRouteResult$origin_airport
+    destinationAirportICAO <- openSkiesRouteResult$destination_airport
+    if(!is.null(originAirportICAO)){
+      originAirport <- getAirportMetadata(originAirportICAO)
+      openSkiesRouteResult$origin_airport <- originAirport
+    }
+    if(!is.null(destinationAirportICAO)){
+      destinationAirport <- getAirportMetadata(destinationAirportICAO)
+      openSkiesRouteResult$destination_airport <- destinationAirport
+    }
+  }
   return(openSkiesRouteResult)
 }

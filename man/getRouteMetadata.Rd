@@ -14,6 +14,10 @@ getRouteMetadata(route)
   \item{route}{string with the call sign of a route (for example, "AAL683" for 
   American Airlines flight number 683.
   }
+  \item{includeAirports}{logical indicating if the data about the origin and destination
+  airports of the route should also be retrieved. If not, only the ICAO24 code of the airports will be
+  included.
+  }
 }
 \value{
 An object of class \code{\link{openSkiesRoute}}. See the \code{\link{openSkiesRoute}}
