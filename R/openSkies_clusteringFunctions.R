@@ -45,15 +45,15 @@ clusterRoutesDBSCAN <- function(featuresMatrix, eps=0.5, ...) {
 clusterRoutesNumberClusters <- function(featuresMatrix, numberClusters, method="kmeans", ...) {
   if(is.null(numberClusters) || numberClusters <= 1){
     if(method=="kmeans"){
-      cg <- clusGap(featuresMatrix, kmeans, K.max=nrow(featuresMatrix)-1)
+      cg <- clusGap(featuresMatrix, kmeans, K.max=nrow(featuresMatrix)/2-1)
     } else if(method=="hclust"){
-      cg <- clusGap(featuresMatrix, hclustK, K.max=nrow(featuresMatrix)-1)
+      cg <- clusGap(featuresMatrix, hclustK, K.max=nrow(featuresMatrix)/2-1)
     } else if(method=="fanny"){
       cg <- clusGap(featuresMatrix, fanny, K.max=nrow(featuresMatrix)/2-1)
     } else if(method=="clara"){
-      cg <- clusGap(featuresMatrix, clara, K.max=nrow(featuresMatrix)-1)
+      cg <- clusGap(featuresMatrix, clara, K.max=nrow(featuresMatrix)/2-1)
     } else if(method=="agnes"){
-      cg <- clusGap(featuresMatrix, agnesK, K.max=nrow(featuresMatrix)-1)
+      cg <- clusGap(featuresMatrix, agnesK, K.max=nrow(featuresMatrix)/2-1)
     }
     numberClusters <- maxSE(f = cg$Tab[, "gap"], SE.f = cg$Tab[, "SE.sim"])
   }

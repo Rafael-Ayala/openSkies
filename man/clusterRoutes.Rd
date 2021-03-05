@@ -9,7 +9,7 @@ or an already computed features matrix as returned by \code{\link{getVectorSetLi
 If the input is a list of vector sets, features will be computed with default settings.
 }
 \usage{
-clusterRoutesDBSCAN(featuresMatrix, eps=0.5, ...)
+clusterRoutes(featuresMatrix, method="dbscan", eps=0.5, numberClusters=NULL, ...)
 }
 \arguments{
   \item{input}{input to be clustered, given as either a list of \code{\link{openSkiesStateVectorSet}}, or a

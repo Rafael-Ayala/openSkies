@@ -48,7 +48,7 @@ getAirportArrivals(airport, startTime, endTime, timeZone=Sys.timezone(),
   username and password are used for the ssh connection. By default, the impala shell
   is not used.
   }
-  \item{includeAirports}{logical indicating if the data about the origin and destination
+  \item{includeAirportsMetadata}{logical indicating if the data about the origin and destination
   airports of each flight should also be retrieved. If not, only the ICAO24 code of the airports will be
   included.
   }
