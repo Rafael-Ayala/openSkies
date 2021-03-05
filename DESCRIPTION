@@ -1,7 +1,7 @@
 Package: openSkies
 Type: Package
 Title: An R Package to Retrieve, Analyze and Visualize Air Traffic Data
-Version: 1.0.0
+Version: 1.1.0
 Date: 2021-01-25
 Author: Rafael Ayala, Daniel Ayala, David Ruiz, Aleix Sellés, Lara Sellés Vidal
 Maintainer: Rafael Ayala <r.ayala14@imperial.ac.uk>
