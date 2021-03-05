@@ -6,7 +6,7 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
   }
   if(!is.null(time)){
     checkTime(time)
-  }
+  } 
   if(!is.null(minLatitude)) {
     checkCoordinate(minLatitude, "minimum latitude")
   }
@@ -33,7 +33,7 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
                         time will be retrieved.", initial="", prefix="\n"))
       }
     }
-  } else if(!is.null(time)) {
+  } else if((!is.null(time)) & !useImpalaShell) {
     if(secondsFromCurrentTime(time, timeZone) >= 3600) {
       if(is.null(aircraft) | length(aircraft) > 1) {
         stop(strwrap("Historical data for multiple aircrafts older than 1 hour ago
@@ -44,6 +44,9 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
     }
   }
   if(useImpalaShell){
+    if(is.null(time)) {
+      time <- Sys.time()
+    }
     query <- makeImpalaQueryStateVectorsSingleTime(aircraft, time, timeZone, minLatitude, maxLatitude, minLongitude, maxLongitude)
     results <- runImpalaQuery(query, username, password)
     parsedResults <- formatStateVectorsResponseImpala(results)

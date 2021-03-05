@@ -111,7 +111,7 @@ getAirportMetadata <- function(airport) {
   return(openSkiesAirportResult)
 }
 
-getRouteMetadata <- function(route, includeAirports=FALSE) {
+getRouteMetadata <- function(route, includeAirportsMetadata=FALSE) {
   checkCallSign(route)
   jsonResponse <- FALSE
   attemptCount <- 0
@@ -148,7 +148,7 @@ getRouteMetadata <- function(route, includeAirports=FALSE) {
     operator_IATA = formattedMetadata$operatorIATA,
     flight_number = formattedMetadata$flightNumber
   )
-  if(includeAirports){
+  if(includeAirportsMetadata){
     originAirportICAO <- openSkiesRouteResult$origin_airport
     destinationAirportICAO <- openSkiesRouteResult$destination_airport
     if(!is.null(originAirportICAO)){

@@ -27,7 +27,7 @@ formatStateVectorsResponseImpala <- function(responseMatrix) {
                       "specialPurposeIndicator"=if(row["spi"]!="NULL") as.logical(row["spi"]) else NULL,
                       "originCountry"=NULL,
                       "requestedTime"=NULL,
-                      "trueTrack"=NULL,
+                      "trueTrack"=if(row["heading"]!="NULL") as.numeric(row["heading"]) else NULL,
                       "positionSource"=NULL
                       )
     formattedList[[i]] <- parsedRow
