@@ -8,7 +8,7 @@ airports of origin and destination, the operator IATA code and the flight
 number.
 }
 \usage{
-getRouteMetadata(route)
+getRouteMetadata(route, includeAirportsMetadata=FALSE)
 }
 \arguments{
   \item{route}{string with the call sign of a route (for example, "AAL683" for 

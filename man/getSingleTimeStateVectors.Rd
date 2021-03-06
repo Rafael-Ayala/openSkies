@@ -25,7 +25,8 @@ data than can be accessed varies depending on if login details are provided:
 \usage{
 getSingleTimeStateVectors(aircraft=NULL, time=NULL, timeZone=Sys.timezone(),
                           minLatitude=NULL, maxLatitude=NULL, minLongitude=NULL,
-                          maxLongitude=NULL, username=NULL, password=NULL)
+                          maxLongitude=NULL, username=NULL, password=NULL,
+                          useImpalaShell=FALSE)
 }
 \arguments{
   \item{aircraft}{string with the ICAO 24-bit address of an aircraft (for 

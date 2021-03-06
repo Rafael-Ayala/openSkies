@@ -2,6 +2,7 @@ Changes in version 1.1.0 (2021-03-05)
 + State vectors can now be retrieved through the Impala shell
 + Multiple clustering algorithms for trajectories are now available
 + Airport metadata can now be embedded in several data structures
++ All functions retrieving flight instances can also retrieve associated state vectors
 
 Changes in version 1.0.0 (2021-01-25)
 + Major update to the provided functionalities and data structures 

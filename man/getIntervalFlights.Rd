@@ -10,7 +10,9 @@ YYYY-MM-DD HH:MM:SS).
 }
 \usage{
 getIntervalFlights(startTime, endTime, timeZone=Sys.timezone(), username=NULL, 
-                   password=NULL)
+                   password=NULL, includeStateVectors=FALSE, 
+                   timeResolution=NULL, useImpalaShell=FALSE, 
+                   includeAirportsMetadata=FALSE)
 }
 \arguments{
   \item{startTime}{date-time string indicating the starting time of the interval 

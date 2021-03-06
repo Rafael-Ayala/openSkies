@@ -18,7 +18,8 @@ users.
 \usage{
 getAircraftStateVectorsSeries(aircraft, startTime, endTime, 
                               timeZone=Sys.timezone(), timeResolution, 
-                              username=NULL, password=NULL)
+                              username=NULL, password=NULL,
+                              useImpalaShell=FALSE)
 }
 \arguments{
   \item{aircraft}{string with the ICAO 24-bit address of an aircraft (for 

@@ -10,7 +10,9 @@ that can be unambiguously converted to POSIXct (such as YYYY-MM-DD HH:MM:SS).
 }
 \usage{
 getAirportArrivals(airport, startTime, endTime, timeZone=Sys.timezone(), 
-                   username=NULL, password=NULL)
+                   username=NULL, password=NULL, includeStateVectors=FALSE, 
+                   timeResolution=NULL, useImpalaShell=FALSE, 
+                   includeAirportsMetadata=FALSE)
 }
 \arguments{
   \item{airport}{string with the ICAO identifier of an airport (for example,
