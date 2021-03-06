@@ -12,7 +12,7 @@ Acknowledgements: The development of this software is supported by the Spanish M
     (grant code PID2019-105471RB-I00) and the Regional Government of Andalusia (grant code P18-RT-1060).
 License: CC BY-NC 4.0
 Depends: grid
-Imports: httr, xml2, ggmap, ggplot2, magick, utils, stats, R6, dbscan, cluster
+Imports: httr, ssh, xml2, ggmap, ggplot2, magick, utils, stats, R6, dbscan, cluster
 Suggests: knitr, BiocStyle, RUnit, BiocGenerics
 VignetteBuilder: knitr
 NeedsCompilation: no
