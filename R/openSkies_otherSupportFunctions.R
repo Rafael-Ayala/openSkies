@@ -120,7 +120,8 @@ groupByFunction <- function(elements, groupingFunction, includeNull=FALSE, nullK
 }
 
 secondsToHour <- function(seconds){
-  return(seconds - (seconds %% 3600))
+  hour <- seconds - (seconds %% 3600)
+  return(hour)
 }
 
 makeImpalaQueryStateVectorsSingleTime <- function(aircraft=NULL, time=NULL, timeZone=Sys.timezone(),
