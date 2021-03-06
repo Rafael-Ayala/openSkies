@@ -26,7 +26,6 @@ clusterRoutes(featuresMatrix, method="dbscan", eps=0.5, numberClusters=NULL, ...
   the number of clusters will be estimated. This argument is only used if the selected clustering
   method is kmeans, hclust, fanny, clara, or agnes}
   \item{...}{additional arguments accepted by the selected clustering method}.
-  }
 }
 \value{
 An object with clustering results, containing at least a "cluster". For additional details, 
