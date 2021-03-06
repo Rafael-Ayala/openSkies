@@ -102,6 +102,7 @@ plotPlanes <- function(stateVectors, ggmapObject=NULL, plotResult=TRUE,
   latitudes <- stateVectors$get_values("latitude")
   aircrafts <- stateVectors$get_values("ICAO24")
   trueTracks <- stateVectors$get_values("true_track")
+  trueTracks[is.na(trueTracks)] <- 0
   if(length(longitudes) == 0 | length(latitudes) == 0) {
     stop(strwrap("Unable to plot location of aircrafts: no non-NULL state 
                   vectors available.", initial="", prefix="\n"))
