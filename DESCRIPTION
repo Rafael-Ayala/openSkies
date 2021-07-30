@@ -13,7 +13,7 @@ Acknowledgements: The development of this software is supported by the Spanish M
 License: CC BY-NC 4.0
 Depends: grid
 Imports: httr, ssh, xml2, ggmap, ggplot2, magick, utils, stats, R6, dbscan, cluster
-Suggests: knitr, BiocStyle, RUnit, BiocGenerics, rmarkdown
+Suggests: knitr, BiocStyle, RUnit, BiocGenerics, rmarkdown, markdown
 VignetteBuilder: knitr
 NeedsCompilation: no
 Encoding: UTF-8
