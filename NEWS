@@ -1,3 +1,7 @@
+Changes in version 1.1.2 (2021-07-30)
++ State vectors for a full time interval can now be retrieved through the Impala shell
++ Fixed bug resulting in errors when no results where returned by queries to the Impala shell 
+
 Changes in version 1.1.0 (2021-03-05)
 + State vectors can now be retrieved through the Impala shell
 + Multiple clustering algorithms for trajectories are now available

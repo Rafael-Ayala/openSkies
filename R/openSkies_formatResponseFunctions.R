@@ -78,7 +78,7 @@ formatAircraftMetadataResponse <- function(responseList) {
                         "operatorICAO"=responseList$operatorIcao,
                         "operatorIATA"=responseList$operatorIata,
                         "firstFlightDate"=responseList$firstFlightDate,
-                        "cattegoryDescription"=responseList$cattegoryDescription
+                        "cattegoryDescription"=responseList$categoryDescription
   )
   return(formattedList)
 }

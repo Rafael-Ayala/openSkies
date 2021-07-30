@@ -321,6 +321,14 @@ openSkiesStateVectorSet <- R6Class(
         }
       }
       return(flights)
+    }, 
+    print = function(...) {
+      cat("State vector set with", length(self$state_vectors), "state vectors\n", sep = "")
+      cat("Requested time: ", as.character(self$requested_time), " ", 
+          Sys.timezone(), "\n", sep ="")
+      cat("Last status update at: ", as.character(self$last_any_update_time), 
+          " ", Sys.timezone(), "\n", sep ="")
+      invisible(self)
     }
   )
 )

@@ -49,6 +49,11 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
     }
     query <- makeImpalaQueryStateVectorsSingleTime(aircraft, time, timeZone, minLatitude, maxLatitude, minLongitude, maxLongitude)
     results <- runImpalaQuery(query, username, password)
+    if(is.null(results)) {
+      message(strwrap("Query to the Impala shell did not yield any results.", 
+                      initial="", prefix="\n"))
+      return(NULL)
+    }
     parsedResults <- formatStateVectorsResponseImpala(results)
     openSkiesStateVectorsList <- lapply(parsedResults, listToOpenSkiesStateVector)
     if(length(openSkiesStateVectorsList)>1){
@@ -105,6 +110,46 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
   }
 }
 
+getIntervalStateVectors <- function(aircraft=NULL, startTime, endTime,timeZone=Sys.timezone(),
+                                    minLatitude=NULL, maxLatitude=NULL, minLongitude=NULL,
+                                    maxLongitude=NULL, username, password) {
+  if(!is.null(aircraft)) {
+    checkICAO24(aircraft)
+  }
+  checkTime(startTime)
+  checkTime(endTime)
+  if(!is.null(minLatitude)) {
+    checkCoordinate(minLatitude, "minimum latitude")
+  }
+  if(!is.null(maxLatitude)) {
+    checkCoordinate(maxLatitude, "maximum latitude")
+  }
+  if(!is.null(minLongitude)) {
+    checkCoordinate(minLongitude, "minimum longitude")
+  }
+  if(!is.null(maxLongitude)) {
+    checkCoordinate(maxLongitude, "maximum longitude")
+  }
+  query <- makeImpalaQueryStateVectorsInterval(aircraft, startTime, endTime,
+                                               timeZone, minLatitude, maxLatitude,
+                                               minLongitude, maxLongitude)
+  results <- runImpalaQuery(query, username, password)
+  if(is.null(results)) {
+    message(strwrap("Query to the Impala shell did not yield any results.", 
+                    initial="", prefix="\n"))
+    return(NULL)
+  }
+  parsedResults <- formatStateVectorsResponseImpala(results)
+  openSkiesStateVectorsList <- lapply(parsedResults, listToOpenSkiesStateVector)
+  if(length(openSkiesStateVectorsList)>1){
+    openSkiesStateVectorsResult <- openSkiesStateVectorsResult <- openSkiesStateVectorSet$new(
+      state_vectors = openSkiesStateVectorsList)
+  } else {
+    openSkiesStateVectorsResult <- openSkiesStateVectorsList[[1]]
+  }
+  return(openSkiesStateVectorsResult)
+}
+
 getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone=Sys.timezone(),
                                           timeResolution, username=NULL, password=NULL, useImpalaShell=FALSE) {
   if(timeResolution < 10) {
@@ -124,6 +169,11 @@ getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone
   if(useImpalaShell){
     query <- makeImpalaQueryStateVectorsTimeSeries(aircraft, timePoints)
     results <- runImpalaQuery(query, username, password)
+    if(is.null(results)) {
+      message(strwrap("Query to the Impala shell did not yield any results.", 
+                      initial="", prefix="\n"))
+      return(NULL)
+    }
     parsedResults <- formatStateVectorsResponseImpala(results)
     openSkiesStateVectorsList <- lapply(parsedResults, listToOpenSkiesStateVector)
     if(length(openSkiesStateVectorsList) < length(timePoints)){

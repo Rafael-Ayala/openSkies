@@ -160,9 +160,40 @@ makeImpalaQueryStateVectorsTimeSeries <- function(aircraft, timePoints){
   return(query)
 }
 
+makeImpalaQueryStateVectorsInterval <- function(aircraft, startTime, endTime,
+                              timeZone=Sys.timezone(), minLatitude=NULL, 
+                              maxLatitude=NULL, minLongitude=NULL, maxLongitude=NULL) {
+  startTimeSeconds <- stringToEpochs(startTime, timeZone)
+  endTimeSeconds <- stringToEpochs(endTime, timeZone)
+  startHour <- secondsToHour(startTimeSeconds)
+  endHour <- secondsToHour(endTimeSeconds)
+  query <- paste0("SELECT * FROM state_vectors_data4 WHERE hour>=", startHour,
+                  " AND hour<=", endHour, " AND time>=", startTimeSeconds,
+                  " AND time<=", endTimeSeconds)
+  if(!is.null(aircraft)){
+    query <- paste0(query, " AND icao24='", aircraft, "'")
+  }
+  if(!is.null(minLatitude)){
+    query <- paste0(query, " AND lat>=", minLatitude)
+  }
+  if(!is.null(maxLatitude)){
+    query <- paste0(query, " AND lat<=", maxLatitude)
+  }
+  if(!is.null(minLongitude)){
+    query <- paste0(query, " AND lon>=", minLongitude)
+  }
+  if(!is.null(maxLongitude)){
+    query <- paste0(query, " AND lon<=", maxLongitude)
+  }
+  return(query)
+}
+
 runImpalaQuery <- function(query, username, password){
   session <- ssh_connect(paste(username,"@data.opensky-network.org:2230"), passwd=password)
   lines <- rawToChar(ssh_exec_internal(session,paste("-q ", query))$stdout)
+  if(lines == "") {
+    return(NULL)
+  }
   lines <- unlist(strsplit(lines, '\n'))
   colnames_line <- lines[2]
   colnames_line <- gsub("^.|.$", "", colnames_line)
