@@ -106,7 +106,7 @@ openSkiesStateVector <- R6Class(
       self$position_source = position_source
     }, 
     print = function(...) {
-        cat("State vector for aircraft with ICAO24", self$ICAO24, "\n", sep = "")
+        cat("State vector for aircraft with ICAO24 ", self$ICAO24, "\n", sep = "")
         cat("Requested time: ", as.character(self$requested_time), " ", 
             Sys.timezone(), "\n", sep ="")
         cat("Last status update at: ", as.character(self$last_any_update_time), 
@@ -124,7 +124,7 @@ openSkiesStateVectorSet <- R6Class(
     segments_categories = NULL,
     initialize = function(state_vectors_list, time_series=FALSE, segments_categories=NULL) {
       stopifnot(all(sapply(state_vectors_list, class)[1,] == "openSkiesStateVector"),
-                length(state_vectors_list) > 1)
+                length(state_vectors_list) > 0)
       self$state_vectors <- state_vectors_list
       self$time_series <- time_series
       self$segments_categories <- segments_categories
@@ -323,7 +323,7 @@ openSkiesStateVectorSet <- R6Class(
       return(flights)
     }, 
     print = function(...) {
-      cat("State vector set with", length(self$state_vectors), "state vectors\n", sep = "")
+      cat("State vector set with ", length(self$state_vectors), "state vectors\n", sep = "")
       cat("Requested time: ", as.character(self$requested_time), " ", 
           Sys.timezone(), "\n", sep ="")
       cat("Last status update at: ", as.character(self$last_any_update_time), 
