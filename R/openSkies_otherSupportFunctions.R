@@ -206,7 +206,8 @@ runImpalaQuery <- function(query, username, password){
   if(length(trimmed_data_lines) > 1024) {
     extra_pages_number <- length(trimmed_data_lines) %/% 1024
     repeated_header_lines <- sequence(nvec=rep(4, extra_pages_number), 
-                                      from=(1:extra_pages_number)*1024 + 1)
+                                      from=(1:extra_pages_number)*1024 + 1
+                                            + seq(from=0, by=4, length=extra_pages_number))
     trimmed_data_lines <- trimmed_data_lines[-repeated_header_lines]
   }
   data_matrix <- matrix(unlist(trimmed_data_lines), ncol=length(columnNames), byrow=TRUE)
