@@ -1,6 +1,8 @@
 Changes in version 1.1.3 (2021-08-03)
 + Fixed a bug leading to wrong formatting of Imapala shell queries with more than 1024 hits
 + Fixed a bug causing split_into_flights method for openSkiesStateVectorSet objects to crash when flights with a single state vector were detected
++ Fixed minor formatting errors of print methods for R6 classes
++ More unit tests added
 
 Changes in version 1.1.2 (2021-07-30)
 + State vectors for a full time interval can now be retrieved through the Impala shell

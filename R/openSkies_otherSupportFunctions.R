@@ -216,7 +216,7 @@ runImpalaQuery <- function(query, username, password){
   return(data_matrix)
 }
 
-generateEnclosingAirspace <- function(elements, groupingFunction){
-  
-  
-}
+# generateEnclosingAirspace <- function(elements, groupingFunction){ TODO
+#   
+#   
+# }
