@@ -110,9 +110,16 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
   }
 }
 
-getIntervalStateVectors <- function(aircraft=NULL, startTime, endTime,timeZone=Sys.timezone(),
-                                    minLatitude=NULL, maxLatitude=NULL, minLongitude=NULL,
-                                    maxLongitude=NULL, username, password) {
+getIntervalStateVectors <- function(aircraft=NULL, startTime, endTime,
+                                    timeZone=Sys.timezone(), minLatitude=NULL, 
+                                    maxLatitude=NULL, minLongitude=NULL, maxLongitude=NULL,
+                                    minBaroAltitude=NULL, maxBaroAltitude=NULL,
+                                    minGeoAltitude=NULL, maxGeoAltitude=NULL,
+                                    minVelocity=NULL, maxVelocity=NULL,
+                                    minVerticalRate=NULL, maxVerticalRate=NULL,
+                                    callSignFilter=NULL, onGroundStatus=NULL,
+                                    squawkFilter=NULL, spiStatus=NULL, alertStatus=NULL,
+                                    username, password) {
   if(!is.null(aircraft)) {
     checkICAO24(aircraft)
   }
@@ -130,9 +137,54 @@ getIntervalStateVectors <- function(aircraft=NULL, startTime, endTime,timeZone=S
   if(!is.null(maxLongitude)) {
     checkCoordinate(maxLongitude, "maximum longitude")
   }
+  if(!is.null(minBaroAltitude) & !is.numeric(minBaroAltitude)) {
+    stop("Invalid minimum barometric altitude value provided")
+  }
+  if(!is.null(maxBaroAltitude) & !is.numeric(maxBaroAltitude)) {
+    stop("Invalid maximum barometric altitude value provided")
+  }
+  if(!is.null(minGeoAltitude) & !is.numeric(minGeoAltitude)) {
+    stop("Invalid minimum geometric altitude value provided")
+  }
+  if(!is.null(maxGeoAltitude) & !is.numeric(maxGeoAltitude)) {
+    stop("Invalid maximum geometric altitude value provided")
+  }
+  if(!is.null(minVelocity) & !is.numeric(minVelocity)) {
+    stop("Invalid minimum velocity value provided")
+  }
+  if(!is.null(maxVelocity) & !is.numeric(maxVelocity)) {
+    stop("Invalid maximum velocity value provided")
+  }
+  if(!is.null(minVerticalRate) & !is.numeric(minVerticalRate)) {
+    stop("Invalid minimum vertical rate value provided")
+  }
+  if(!is.null(maxVerticalRate) & !is.numeric(maxVerticalRate)) {
+    stop("Invalid maximum vertical rate value provided")
+  }
+  if(!is.null(callSignFilter) & !is.character(maxVerticalRate)) {
+    stop("Invalid callsign provided. Callsign should be provided as a string")
+  }
+  if(!is.null(onGroundStatus) & !is.logical(onGroundStatus)) {
+    stop("Invalid on ground status provided. Please provide a NULL, TRUE or FALSE value")
+  }
+  if(!is.null(squawkFilter)) {
+    checkSquawk(squawkFilter)
+  }
+  if(!is.null(spiStatus) & !is.logical(spiStatus)) {
+    stop("Invalid SPI status provided. Please provide a NULL, TRUE or FALSE value")
+  }
+  if(!is.null(alertStatus) & !is.logical(alertStatus)) {
+    stop("Invalid alert status provided. Please provide a NULL, TRUE or FALSE value")
+  }
   query <- makeImpalaQueryStateVectorsInterval(aircraft, startTime, endTime,
-                                               timeZone, minLatitude, maxLatitude,
-                                               minLongitude, maxLongitude)
+                                               timeZone, minLatitude, maxLatitude, 
+                                               minLongitude, maxLongitude,
+                                               minBaroAltitude, maxBaroAltitude,
+                                               minGeoAltitude, maxGeoAltitude,
+                                               minVelocity, maxVelocity,
+                                               minVerticalRate, maxVerticalRate,
+                                               callSignFilter, onGroundStatus,
+                                               squawkFilter, spiStatus, alertStatus)
   results <- runImpalaQuery(query, username, password)
   if(is.null(results)) {
     message(strwrap("Query to the Impala shell did not yield any results.", 

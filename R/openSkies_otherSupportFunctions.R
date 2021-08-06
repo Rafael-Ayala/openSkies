@@ -160,9 +160,15 @@ makeImpalaQueryStateVectorsTimeSeries <- function(aircraft, timePoints){
   return(query)
 }
 
-makeImpalaQueryStateVectorsInterval <- function(aircraft, startTime, endTime,
+makeImpalaQueryStateVectorsInterval <- function(aircraft=NULL, startTime, endTime,
                               timeZone=Sys.timezone(), minLatitude=NULL, 
-                              maxLatitude=NULL, minLongitude=NULL, maxLongitude=NULL) {
+                              maxLatitude=NULL, minLongitude=NULL, maxLongitude=NULL,
+                              minBaroAltitude=NULL, maxBaroAltitude=NULL,
+                              minGeoAltitude=NULL, maxGeoAltitude=NULL,
+                              minVelocity=NULL, maxVelocity=NULL,
+                              minVerticalRate=NULL, maxVerticalRate=NULL,
+                              callSignFilter=NULL, onGroundStatus=NULL,
+                              squawkFilter=NULL, spiStatus=NULL, alertStatus=NULL) {
   startTimeSeconds <- stringToEpochs(startTime, timeZone)
   endTimeSeconds <- stringToEpochs(endTime, timeZone)
   startHour <- secondsToHour(startTimeSeconds)
@@ -184,6 +190,45 @@ makeImpalaQueryStateVectorsInterval <- function(aircraft, startTime, endTime,
   }
   if(!is.null(maxLongitude)){
     query <- paste0(query, " AND lon<=", maxLongitude)
+  }
+  if(!is.null(minBaroAltitude)){
+    query <- paste0(query, " AND baroaltitude>=", minBaroAltitude)
+  }
+  if(!is.null(maxBaroAltitude)){
+    query <- paste0(query, " AND baroaltitude<=", maxBaroAltitude)
+  }
+  if(!is.null(minGeoAltitude)){
+    query <- paste0(query, " AND geoaltitude>=", minGeoAltitude)
+  }
+  if(!is.null(maxGeoAltitude)){
+    query <- paste0(query, " AND geoaltitude<=", maxGeoAltitude)
+  }
+  if(!is.null(minVelocity)){
+    query <- paste0(query, " AND velocity>=", minVelocity)
+  }
+  if(!is.null(maxVelocity)){
+    query <- paste0(query, " AND velocity<=", maxVelocity)
+  }
+  if(!is.null(minVerticalRate)){
+    query <- paste0(query, " AND vertrate>=", minVerticalRate)
+  }
+  if(!is.null(maxVerticalRate)){
+    query <- paste0(query, " AND vertrate<=", maxVerticalRate)
+  }
+  if(!is.null(callSignFilter)){
+    query <- paste0(query, ' AND callsign REGEXP "', paste(callSignFilter, collapse = "|"), '"')
+  }
+  if(!is.null(onGroundStatus)){
+    query <- paste0(query, ' AND (', if(!onGroundStatus) "NOT ", onGroundStatus, ")")
+  }
+  if(!is.null(squawkFilter)){
+    query <- paste0(query, ' AND squawk REGEXP "', paste(squawkFilter, collapse = "|"), '"')
+  }
+  if(!is.null(spiStatus)){
+    query <- paste0(query, ' AND (', if(!spiStatus) "NOT ", spiStatus, ")")
+  }
+  if(!is.null(alertStatus)){
+    query <- paste0(query, ' AND (', if(!alertStatus) "NOT ", alertStatus, ")")
   }
   return(query)
 }
