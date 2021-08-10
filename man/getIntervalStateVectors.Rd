@@ -16,9 +16,16 @@ shell, and therefore can only be used by registered users that have been granted
 access to the Impala shell.
 }
 \usage{
-getIntervalStateVectors(aircraft=NULL, startTime, endTime,timeZone=Sys.timezone(),
-                        minLatitude=NULL, maxLatitude=NULL, minLongitude=NULL,
-                        maxLongitude=NULL, username, password)
+getIntervalStateVectors(aircraft=NULL, startTime, endTime,
+                        timeZone=Sys.timezone(), minLatitude=NULL, 
+                        maxLatitude=NULL, minLongitude=NULL, maxLongitude=NULL,
+                        minBaroAltitude=NULL, maxBaroAltitude=NULL,
+                        minGeoAltitude=NULL, maxGeoAltitude=NULL,
+                        minVelocity=NULL, maxVelocity=NULL,
+                        minVerticalRate=NULL, maxVerticalRate=NULL,
+                        callSignFilter=NULL, onGroundStatus=NULL,
+                        squawkFilter=NULL, spiStatus=NULL, alertStatus=NULL,
+                        username, password)
 }
 \arguments{
   \item{aircraft}{string with the ICAO 24-bit address of an aircraft (for 
@@ -60,6 +67,71 @@ getIntervalStateVectors(aircraft=NULL, startTime, endTime,timeZone=Sys.timezone(
   and positive values denote east longitudes. By default, no filtering based on
   location is performed.
   }
+  \item{minBaroAltitude}{minimum barometric altitude to filter the retrieved 
+  state vectors. By default, no filtering based on barometric altitude is 
+  performed.
+  }
+  \item{maxBaroAltitude}{maximum barometric altitude to filter the retrieved 
+  state vectors. By default, no filtering based on barometric altitude is 
+  performed.
+  }
+  \item{minGeoAltitude}{minimum geometric altitude to filter the retrieved 
+  state vectors. By default, no filtering based on geometric altitude is 
+  performed. It should be noted that geometric altitude is included in state
+  vectors less frequently than barometric altitude.
+  }
+  \item{maxGeoAltitude}{maximum geometric altitude to filter the retrieved 
+  state vectors. By default, no filtering based on geometric altitude is 
+  performed. It should be noted that geometric altitude is included in state
+  vectors less frequently than barometric altitude.
+  }
+  \item{minVelocity}{minimum velocity to filter the retrieved state vectors. 
+  By default, no filtering based on velocity is performed.
+  }
+  \item{maxVelocity}{maximum velocity to filter the retrieved state vectors. 
+  By default, no filtering based on velocity is performed.
+  }
+  \item{minVerticalRate}{minimum vertical rate to filter the retrieved state 
+  vectors. Ascending aircrafts have positive vertical rate values, while
+  descending aircrafts have negative values. By default, no filtering based on 
+  vertical rate is performed.
+  }
+  \item{maxVerticalRate}{maximum vertical rate to filter the retrieved state 
+  vectors. Ascending aircrafts have positive vertical rate values, while
+  descending aircrafts have negative values. By default, no filtering based on 
+  vertical rate is performed.
+  }
+  \item{callSignFilter}{string or character vector specifying one or more call
+  signs that will be used to filter the results of the query, returning only
+  those that match the specified values. By default, no filtering based on 
+  call sign is performed.
+  }
+  \item{onGroundStatus}{logical indicating if the results should be filtered to
+  return only state vectors with an on_ground state of TRUE or FALSE (usually,
+  corresponding respectively to planes on air or on land). By default, no 
+  filtering based on on_ground status is performed.
+  }
+  \item{squawkFilter}{string or character vector specifying one or more squawk
+  codes that will be used to filter the results of the query, returning only
+  those that match the specified values. By default, no filtering based on 
+  call sign is performed. Each specified squawk code should be a 4-character
+  string, containing only digits from 0 to 7. It should be noted that the
+  meaning of most squawk codes is not universally defined. Only the three
+  following codes are applicable worldwide: 7500 (hijacked aircraft), 7600
+  (radio failure) and 7700 (emergency situation). For additional details, see
+  https://en.wikipedia.org/wiki/List_of_transponder_codes
+  }
+  \item{spiStatus}{logical indicating if the results should be filtered to
+  return only state vectors where the SPI (Special Purpose Identification) was
+  turned on (TRUE) or not (FALSE). By default, no filtering based on emission of
+  SPI pulse is performed. For details, see 
+  https://www.faa.gov/documentLibrary/media/Order/FAA_Order_6365.1A.pdf
+  }
+  \item{alertStatus}{logical indicating if the results should be filtered to
+  return only state vectors with the alert flag on (TRUE) or not (FALSE). By 
+  default, no filtering based on the alert flag is performed. For details, see
+  https://www.faa.gov/documentLibrary/media/Order/FAA_Order_6365.1A.pdf
+  }
   \item{username}{string with the username to use for authentication for the 
   OpenSky API. The user must have been granted access to the Impala shell.
   }
@@ -75,6 +147,8 @@ For details on the information stored in state vectors, see the documentation fo
 }
 \references{
 https://opensky-network.org/impala-guide
+https://en.wikipedia.org/wiki/List_of_transponder_codes
+https://www.faa.gov/documentLibrary/media/Order/FAA_Order_6365.1A.pdf
 }
 \examples{
 # Obtain a list with the state vectors for all aircrafts that flew over the city
