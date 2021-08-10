@@ -1,21 +1,26 @@
 Package: openSkies
 Type: Package
 Title: An R Package to Retrieve, Analyze and Visualize Air Traffic Data
-Version: 1.1.4
+Version: 1.1.5
 Date: 2021-XX-XX
 Author: Rafael Ayala, Daniel Ayala, David Ruiz, Aleix Sellés, Lara Sellés Vidal
 Maintainer: Rafael Ayala <rafael.ayala@oist.jp>
 Description: Provides functionalities and data structures to retrieve, analyze and visualize aviation 
     data. It includes a client interface to the 'OpenSky' API <https://opensky-network.org>. It allows 
     retrieval of flight information, as well as aircraft state vectors.
-Acknowledgements: The development of this software is supported by the Spanish Ministry of Science and Innovation
-    (grant code PID2019-105471RB-I00) and the Regional Government of Andalusia (grant code P18-RT-1060).
+Acknowledgements: The development of this software is supported by the
+        Spanish Ministry of Science and Innovation (grant code
+        PID2019-105471RB-I00) and the Regional Government of Andalusia
+        (grant code P18-RT-1060).
 License: CC BY-NC 4.0
 Depends: grid
-Imports: httr, ssh, xml2, ggmap, ggplot2, magick, utils, stats, R6, dbscan, cluster
+Imports: httr, ssh, xml2, ggmap, ggplot2, magick, utils, stats, R6,
+        dbscan, cluster
 Suggests: knitr, BiocStyle, RUnit, BiocGenerics, rmarkdown, markdown
 VignetteBuilder: knitr
 BugReports: https://github.com/Rafael-Ayala/openSkies/issues
 NeedsCompilation: no
 Encoding: UTF-8
 Repository: CRAN
+Packaged: 2021-08-05 03:26:30 UTC; rafael-ayala
+Date/Publication: 2021-08-06 09:10:02 UTC

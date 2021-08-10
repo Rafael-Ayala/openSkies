@@ -16,7 +16,7 @@ vignette: |
 
 
 ```{r setup, echo=FALSE}
-knitr::opts_chunk$set(message=FALSE, fig.path='figures/')
+knitr::opts_chunk$set(message=FALSE, fig.path='figures/', eval=FALSE)
 ```
 
 <!-- Title block -->

@@ -12,7 +12,7 @@ that can be unambiguously converted to POSIXct (such as YYYY-MM-DD HH:MM:SS).
 getAircraftFlights(aircraft, startTime, endTime, timeZone=Sys.timezone(), 
                    username=NULL, password=NULL, includeStateVectors=FALSE, 
                    timeResolution=NULL, useImpalaShell=FALSE, 
-                   includeAirportsMetadata=FALSE)
+                   includeAirportsMetadata=FALSE, timeOut=60, maxQueryAttempts=1)
 }
 \arguments{
   \item{aircraft}{string with the ICAO 24-bit address of an aircraft (for 
@@ -53,6 +53,16 @@ getAircraftFlights(aircraft, startTime, endTime, timeZone=Sys.timezone(),
   \item{includeAirportsMetadata}{logical indicating if the data about the origin and destination
   airports of each flight should also be retrieved. If not, only the ICAO24 code of the airports will be
   included.
+  }
+  \item{timeOut}{number of seconds after which the query will time out and return
+  a NULL result. In the default behavior, timeout will be reached after 60 seconds.
+  }
+  \item{maxQueryAttempts}{On rare occassions, queries to the OpenSky Network
+  live API can return malformed responses. This is the maximum number of attempts 
+  to obtain a properly formatted response when carrying out the requested query. 
+  It should be noted that the query will still terminate if a timeout is reached.
+  In the default behavior, a single attempt will be performed. It is not recommended
+  to change this to a very large number, since it can lead to long running times.
   }
 }
 \value{

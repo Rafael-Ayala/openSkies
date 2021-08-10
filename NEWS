@@ -1,3 +1,10 @@
+Changes in version 1.1.5 (2021-XX-XX)
++ Additional query filters have been added to getIntervalStateVectors()
+
+Changes in version 1.1.4 (2021-08-09)
++ Fixed the behaviour of functions accessing Internet resources to default to 60 seconds timeout
++ It is now possible to specify a timeout and a maximum number of query attempts for functions accessing the OpenSky Network live API
+
 Changes in version 1.1.3 (2021-08-03)
 + Fixed a bug leading to wrong formatting of Imapala shell queries with more than 1024 hits
 + Fixed a bug causing split_into_flights method for openSkiesStateVectorSet objects to crash when flights with a single state vector were detected

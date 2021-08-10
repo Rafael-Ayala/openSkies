@@ -161,14 +161,14 @@ makeImpalaQueryStateVectorsTimeSeries <- function(aircraft, timePoints){
 }
 
 makeImpalaQueryStateVectorsInterval <- function(aircraft=NULL, startTime, endTime,
-                              timeZone=Sys.timezone(), minLatitude=NULL, 
-                              maxLatitude=NULL, minLongitude=NULL, maxLongitude=NULL,
-                              minBaroAltitude=NULL, maxBaroAltitude=NULL,
-                              minGeoAltitude=NULL, maxGeoAltitude=NULL,
-                              minVelocity=NULL, maxVelocity=NULL,
-                              minVerticalRate=NULL, maxVerticalRate=NULL,
-                              callSignFilter=NULL, onGroundStatus=NULL,
-                              squawkFilter=NULL, spiStatus=NULL, alertStatus=NULL) {
+                                                timeZone=Sys.timezone(), minLatitude=NULL, 
+                                                maxLatitude=NULL, minLongitude=NULL, maxLongitude=NULL,
+                                                minBaroAltitude=NULL, maxBaroAltitude=NULL,
+                                                minGeoAltitude=NULL, maxGeoAltitude=NULL,
+                                                minVelocity=NULL, maxVelocity=NULL,
+                                                minVerticalRate=NULL, maxVerticalRate=NULL,
+                                                callSignFilter=NULL, onGroundStatus=NULL,
+                                                squawkFilter=NULL, spiStatus=NULL, alertStatus=NULL) {
   startTimeSeconds <- stringToEpochs(startTime, timeZone)
   endTimeSeconds <- stringToEpochs(endTime, timeZone)
   startHour <- secondsToHour(startTimeSeconds)

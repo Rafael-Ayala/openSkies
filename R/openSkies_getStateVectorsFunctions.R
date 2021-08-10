@@ -1,6 +1,7 @@
 getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.timezone(),
                                       minLatitude=NULL, maxLatitude=NULL, minLongitude=NULL,
-                                      maxLongitude=NULL, username=NULL, password=NULL, useImpalaShell=FALSE) {
+                                      maxLongitude=NULL, username=NULL, password=NULL, 
+                                      useImpalaShell=FALSE, timeOut=60, maxQueryAttempts=1) {
   if(!is.null(aircraft)) {
     checkICAO24(aircraft)
   }
@@ -73,10 +74,11 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
     jsonResponse <- FALSE
     attemptCount <- 0
     while(!jsonResponse) {
+      attemptCount <- attemptCount + 1
       response <- tryCatch({
         GET(paste(openskyApiRootURL, "states/all", sep="" ),
             query=queryParameters,
-            timeout(300),
+            timeout(timeOut),
             if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
       },
       error = function(e) e
@@ -87,7 +89,7 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
         return(NULL)
       }
       jsonResponse <- grepl("json", headers(response)$`content-type`)
-      if(attemptCount > 100) {
+      if(attemptCount >= maxQueryAttempts) {
         message(strwrap("Resource not currently available. Please try again 
                          later.", initial="", prefix="\n"))
         return(NULL)
@@ -203,7 +205,8 @@ getIntervalStateVectors <- function(aircraft=NULL, startTime, endTime,
 }
 
 getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone=Sys.timezone(),
-                                          timeResolution, username=NULL, password=NULL, useImpalaShell=FALSE) {
+                                          timeResolution, username=NULL, password=NULL, 
+                                          useImpalaShell=FALSE, timeOut=60, maxQueryAttempts=1) {
   if(timeResolution < 10) {
     if(is.null(username) | is.null(password)) {
       timeResolution <- 10
@@ -242,11 +245,12 @@ getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone
       jsonResponse <- FALSE
       attemptCount <- 0
       while(!jsonResponse) {
+        attemptCount <- attemptCount + 1
         response <- tryCatch({
           GET(paste(openskyApiRootURL, "states/all", sep="" ),
               query=list(icao24=aircraft,
                          time=timePoints[i]),
-              timeout(300),
+              timeout(timeOut),
               if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
         },
         error = function(e) e
@@ -257,7 +261,7 @@ getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone
           return(NULL)
         }
         jsonResponse <- grepl("json", headers(response)$`content-type`)
-        if(attemptCount > 100) {
+        if(attemptCount >= maxQueryAttempts) {
           message(strwrap("Resource not currently available. Please try again 
                          later.", initial="", prefix="\n"))
           return(NULL)

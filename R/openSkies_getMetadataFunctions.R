@@ -1,4 +1,4 @@
-getAircraftMetadata <- function(aircraft) {
+getAircraftMetadata <- function(aircraft, timeOut=60, maxQueryAttempts=1) {
   if(is.null(aircraft) | length(aircraft) > 1) {
     stop("Please provide one ICAO24 identifier.")
   }
@@ -6,9 +6,10 @@ getAircraftMetadata <- function(aircraft) {
   jsonResponse <- FALSE
   attemptCount <- 0
   while(!jsonResponse) {
+    attemptCount <- attemptCount + 1
     response <- tryCatch({
       GET(paste(openskyApiRootURL, "metadata/aircraft/icao/", aircraft, sep=""),
-          timeout(300))
+          timeout(timeOut))
     },
     error = function(e) e
     )
@@ -23,7 +24,7 @@ getAircraftMetadata <- function(aircraft) {
                      is available.", initial="", prefix="\n"))
       return(NULL)
     }
-    if(attemptCount > 100) {
+    if(attemptCount >= maxQueryAttempts) {
       message(strwrap("Resource not currently available. Please try again 
                        later.", initial="", prefix="\n"))
       return(NULL)
@@ -60,15 +61,16 @@ getAircraftMetadata <- function(aircraft) {
 }
 
 
-getAirportMetadata <- function(airport) {
+getAirportMetadata <- function(airport, timeOut=60, maxQueryAttempts=1) {
   checkAirport(airport)
   jsonResponse <- FALSE
   attemptCount <- 0
   while(!jsonResponse) {
+    attemptCount <- attemptCount + 1
     response <- tryCatch({
       GET(paste(openskyApiRootURL, "airports", sep=""),
           query=list(icao=airport),
-          timeout(300))
+          timeout(timeOut))
     },
     error = function(e) e
     )
@@ -78,7 +80,7 @@ getAirportMetadata <- function(airport) {
       return(NULL)
     }
     jsonResponse <- grepl("json", headers(response)$`content-type`)
-    if(attemptCount > 100) {
+    if(attemptCount >= maxQueryAttempts) {
       message(strwrap("Resource not currently available. Please try again 
                        later.", initial="", prefix="\n"))
       return(NULL)
@@ -111,15 +113,17 @@ getAirportMetadata <- function(airport) {
   return(openSkiesAirportResult)
 }
 
-getRouteMetadata <- function(route, includeAirportsMetadata=FALSE) {
+getRouteMetadata <- function(route, includeAirportsMetadata=FALSE, 
+                             timeOut=60, maxQueryAttempts=1) {
   checkCallSign(route)
   jsonResponse <- FALSE
   attemptCount <- 0
   while(!jsonResponse) {
+    attemptCount <- attemptCount + 1
     response <- tryCatch({
       GET(paste(openskyApiRootURL, "routes", sep=""),
           query=list(callsign=route),
-          timeout(300))
+          timeout(timeOut))
     },
     error = function(e) e
     )
@@ -129,7 +133,7 @@ getRouteMetadata <- function(route, includeAirportsMetadata=FALSE) {
       return(NULL)
     }
     jsonResponse <- grepl("json", headers(response)$`content-type`)
-    if(attemptCount > 100) {
+    if(attemptCount > maxQueryAttempts) {
       message(strwrap("Resource not currently available. Please try again 
                        later.", initial="", prefix="\n"))
       return(NULL)

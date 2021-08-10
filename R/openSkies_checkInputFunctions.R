@@ -54,7 +54,7 @@ checkOpenSkiesStateVectorSet <- function(x, checkTimeSeries=FALSE) {
 checkSquawk <- function(squawkCode) {
   if(!(is.character(squawkCode)
        & grepl("^[0-7][0-7][0-7][0-7]$", squawkCode))
-     ) {
+  ) {
     stop(strwrap("Invalid squawk code provided. Squawk codes should be provided
                  as 4-digit strings, with each digit ranging between 0 and 7", 
                  initial="", prefix="\n"))

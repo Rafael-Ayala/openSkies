@@ -26,7 +26,7 @@ data than can be accessed varies depending on if login details are provided:
 getSingleTimeStateVectors(aircraft=NULL, time=NULL, timeZone=Sys.timezone(),
                           minLatitude=NULL, maxLatitude=NULL, minLongitude=NULL,
                           maxLongitude=NULL, username=NULL, password=NULL,
-                          useImpalaShell=FALSE)
+                          useImpalaShell=FALSE, timeOut=60, maxQueryAttempts=1)
 }
 \arguments{
   \item{aircraft}{string with the ICAO 24-bit address of an aircraft (for 
@@ -74,6 +74,16 @@ getSingleTimeStateVectors(aircraft=NULL, time=NULL, timeZone=Sys.timezone(),
   impala shell instead of the API to retrieve state vectors. If used, the provided 
   username and password are used for the ssh connection. By default, the impala shell
   is not used.
+  }
+  \item{timeOut}{number of seconds after which the query will time out and return
+  a NULL result. In the default behavior, timeout will be reached after 60 seconds.
+  }
+  \item{maxQueryAttempts}{On rare occassions, queries to the OpenSky Network
+  live API can return malformed responses. This is the maximum number of attempts 
+  to obtain a properly formatted response when carrying out the requested query. 
+  It should be noted that the query will still terminate if a timeout is reached.
+  In the default behavior, a single attempt will be performed. It is not recommended
+  to change this to a very large number, since it can lead to long running times.
   }
 }
 \value{

@@ -9,11 +9,20 @@ owner, operator and country of registration, among others. A single aircraft
 must be specified using its ICAO 24-bit address.
 }
 \usage{
-getAircraftMetadata(aircraft)
+getAircraftMetadata(aircraft, timeOut=60, maxQueryAttempts=1)
 }
 \arguments{
   \item{aircraft}{string with the ICAO 24-bit address of an aircraft (for 
   example, \"3c6444\" for Lufthansa D-AIBD (Airbus A319).
+  }
+  \item{timeOut}{number of seconds after which the query will time out and return
+  a NULL result. In the default behavior, timeout will be reached after 60 seconds.
+  }
+  \item{maxQueryAttempts}{Maximum number of attempts that will be performed when
+  carrying out the requested query. Failed attempts include timeouts. In the
+  default behavior, a single attempt will be performed. It should be noted
+  that setting a large number of maximum attempts can lead to long running
+  times.
   }
 }
 \value{
