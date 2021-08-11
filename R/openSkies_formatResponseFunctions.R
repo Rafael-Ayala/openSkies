@@ -26,7 +26,7 @@ formatStateVectorsResponseImpala <- function(responseMatrix) {
                       "squawk"=if(row["squawk"]!="NULL") row["squawk"] else NULL,
                       "specialPurposeIndicator"=if(row["spi"]!="NULL") as.logical(row["spi"]) else NULL,
                       "originCountry"=NULL,
-                      "requestedTime"=NULL,
+                      "requestedTime"=if(row["time"]!="NULL") as.POSIXct(as.numeric(row["time"]), origin="1970-01-01", tz=Sys.timezone()) else NULL,
                       "trueTrack"=if(row["heading"]!="NULL") as.numeric(row["heading"]) else NULL,
                       "positionSource"=NULL
                       )
