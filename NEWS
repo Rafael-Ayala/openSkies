@@ -2,6 +2,7 @@ Changes in version 1.1.5 (2021-XX-XX)
 + Additional query filters have been added to getIntervalStateVectors()
 + Fixed a bug leading to wrong formatting of category description for aircraft metadata
 + Fixed a bug leading to unintended behavior of functions with maxQueryAttempts parameter, where 1 attempt less than specified was performed
++ Fixed a bug in plotRoutes leading to crashes in rare cases when the values of latitude, but not those of longitude, for an openSkiesStateVectorSet are NA
 
 Changes in version 1.1.4 (2021-08-09)
 + Fixed the behaviour of functions accessing Internet resources to default to 60 seconds timeout
