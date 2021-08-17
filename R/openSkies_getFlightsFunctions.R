@@ -29,7 +29,7 @@ getAirportArrivals <- function(airport, startTime, endTime, timeZone=Sys.timezon
       return(NULL)
     }
     jsonResponse <- grepl("json", headers(response)$`content-type`)
-    if(attemptCount >= maxQueryAttempts) {
+    if(attemptCount > maxQueryAttempts) {
       message(strwrap("Resource not currently available. Please try again 
                        later.", initial="", prefix="\n"))
       return(NULL)
@@ -99,7 +99,7 @@ getAirportDepartures <- function(airport, startTime, endTime, timeZone=Sys.timez
       return(NULL)
     }
     jsonResponse <- grepl("json", headers(response)$`content-type`)
-    if(attemptCount >= maxQueryAttempts) {
+    if(attemptCount > maxQueryAttempts) {
       message(strwrap("Resource not currently available. Please try again 
                        later.", initial="", prefix="\n"))
       return(NULL)
@@ -168,7 +168,7 @@ getAircraftFlights <- function(aircraft, startTime, endTime, timeZone=Sys.timezo
       return(NULL)
     }
     jsonResponse <- grepl("json", headers(response)$`content-type`)
-    if(attemptCount >= maxQueryAttempts) {
+    if(attemptCount > maxQueryAttempts) {
       message(strwrap("Resource not currently available. Please try again 
                        later.", initial="", prefix="\n"))
       return(NULL)
@@ -234,7 +234,7 @@ getIntervalFlights <- function(startTime, endTime, timeZone=Sys.timezone(),
       return(NULL)
     }
     jsonResponse <- grepl("json", headers(response)$`content-type`)
-    if(attemptCount >= maxQueryAttempts) {
+    if(attemptCount > maxQueryAttempts) {
       message(strwrap("Resource not currently available. Please try again 
                        later.", initial="", prefix="\n"))
       return(NULL)

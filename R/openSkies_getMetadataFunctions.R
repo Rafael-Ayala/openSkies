@@ -24,7 +24,7 @@ getAircraftMetadata <- function(aircraft, timeOut=60, maxQueryAttempts=1) {
                      is available.", initial="", prefix="\n"))
       return(NULL)
     }
-    if(attemptCount >= maxQueryAttempts) {
+    if(attemptCount > maxQueryAttempts) {
       message(strwrap("Resource not currently available. Please try again 
                        later.", initial="", prefix="\n"))
       return(NULL)
@@ -80,7 +80,7 @@ getAirportMetadata <- function(airport, timeOut=60, maxQueryAttempts=1) {
       return(NULL)
     }
     jsonResponse <- grepl("json", headers(response)$`content-type`)
-    if(attemptCount >= maxQueryAttempts) {
+    if(attemptCount > maxQueryAttempts) {
       message(strwrap("Resource not currently available. Please try again 
                        later.", initial="", prefix="\n"))
       return(NULL)

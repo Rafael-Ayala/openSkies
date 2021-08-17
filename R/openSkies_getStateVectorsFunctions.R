@@ -89,7 +89,7 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
         return(NULL)
       }
       jsonResponse <- grepl("json", headers(response)$`content-type`)
-      if(attemptCount >= maxQueryAttempts) {
+      if(attemptCount > maxQueryAttempts) {
         message(strwrap("Resource not currently available. Please try again 
                          later.", initial="", prefix="\n"))
         return(NULL)
@@ -261,7 +261,7 @@ getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone
           return(NULL)
         }
         jsonResponse <- grepl("json", headers(response)$`content-type`)
-        if(attemptCount >= maxQueryAttempts) {
+        if(attemptCount > maxQueryAttempts) {
           message(strwrap("Resource not currently available. Please try again 
                          later.", initial="", prefix="\n"))
           return(NULL)
