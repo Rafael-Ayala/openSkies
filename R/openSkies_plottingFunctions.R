@@ -9,6 +9,9 @@ plotRoute <- function(stateVectorSet, pathColor="blue", ggmapObject=NULL,
     stop(strwrap("Unable to plot route: no non-NULL state vectors available.", 
                  initial="", prefix="\n"))
   }
+  not_NA <- !is.na(latitudes) & !is.na(longitudes)
+  latitudes <- latitudes[not_NA]
+  longitudes <- longitudes[not_NA]
   data <- data.frame(lat=na.omit(latitudes), lon=na.omit(longitudes))
   if (is.null(ggmapObject)){
     limits <- getMapLimits(longitudes, latitudes, paddingFactor)
@@ -53,8 +56,12 @@ plotRoutes <- function(stateVectorSetList, pathColors="blue", ggmapObject=NULL,
   breakPoints <- numeric(length(stateVectorSetList))
   for (i in 1:length(stateVectorSetList)){
     breakPoints[i] <- nrow(data)
-    lat <- na.omit(latitudes[[i]])
-    lon <- na.omit(longitudes[[i]])
+    lat <- latitudes[[i]]
+    lon <- longitudes[[i]]
+    not_NA <- !is.na(lat) & !is.na(lon)
+    if(sum(not_NA) == 0) next
+    lat <- lat[not_NA]
+    lon <- lon[not_NA]
     colorIndex <- i
     while(colorIndex>length(pathColors)){
       colorIndex <- colorIndex - length(pathColors)
