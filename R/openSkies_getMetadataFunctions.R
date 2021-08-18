@@ -166,3 +166,49 @@ getRouteMetadata <- function(route, includeAirportsMetadata=FALSE,
   }
   return(openSkiesRouteResult)
 }
+
+getOSNCoverage <- function(time, timeZone=Sys.timezone(), timeOut=60,
+                           maxQueryAttempts=1) {
+  jsonResponse <- FALSE
+  attemptCount <- 0
+  while(!jsonResponse) {
+    attemptCount <- attemptCount + 1
+    response <- tryCatch({
+      GET(paste(openskyApiRootURL, "range/coverage", sep=""),
+          query=list(day=stringToEpochs(time, timeZone)),
+          timeout(timeOut))
+    },
+    error = function(e) e
+    )
+    if(inherits(response, "error")) {
+      message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+      return(NULL)
+    }
+    if(length(content(response)) == 0) {
+      message(strwrap("No coverage data of the OpenSky Network available for the
+                    requested date.", initial="", prefix="\n"))
+      return(NULL)
+    }
+    jsonResponse <- grepl("json", headers(response)$`content-type`)
+    if(attemptCount > maxQueryAttempts) {
+      message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+      return(NULL)
+    }
+  }
+  coverageTriples <- content(response)
+  if(status_code(response) != 200 | length(coverageTriples) == 0) {
+    message(strwrap("No coverage data of the OpenSky Network available for the
+                    requested date.", initial="", prefix="\n"))
+    return(NULL)
+  }
+  coverageDataFrame <- as.data.frame(matrix(
+    unlist(coverageTriples, recursive = TRUE, use.names = FALSE),
+    ncol = 3, byrow = TRUE
+  ))
+  coverageDataFrame <- coverageDataFrame[order(coverageDataFrame[,1], coverageDataFrame[,2]), ]
+  colnames(coverageDataFrame) <- c("latitude", "longitude", "altitude")
+  rownames(coverageDataFrame) <- NULL
+  return(coverageDataFrame)
+}
