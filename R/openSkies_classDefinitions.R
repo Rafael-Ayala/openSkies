@@ -321,7 +321,31 @@ openSkiesStateVectorSet <- R6Class(
         }
       }
       return(flights)
-    }, 
+    },
+    remove_redundants = function(updateType = "position") {
+      if(!self$time_series){
+        warning(strwrap("Method remove_redundants is intended to be used to remove
+                         state vectors of a time series without information update with
+                         respect to older state vectors, and therefore should only be applied
+                         to sets of state vectors that represent time series.", 
+                        initial="", prefix="\n"))
+      }
+      if(!(updateType %in% c("position", "any"))){
+        stop(strwrap(paste(samplesAggregationMethod, 
+                           " is not a valid update type to remove redundant state vectors.
+                           Please choose from either 'position' or 'any'", sep=""), 
+                     initial="", prefix="\n"))
+      }
+      if(updateType == "position") {
+        updateField <- "last_position_update_time"
+      } else if (updateType == "any") {
+        updateField <- "last_any_update_time"
+      } 
+      self$sort_by_field(updateField)
+      nonRedundantIndeces <- !duplicated(self$get_values(updateField))
+      self$state_vectors <- self$state_vectors[nonRedundantIndeces]
+      invisible(self)
+    },
     print = function(...) {
       cat("State vector set with ", length(self$state_vectors), " state vectors\n", sep = "")
       cat("Requested time: ", as.character(self$requested_time), " ", 

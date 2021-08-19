@@ -79,9 +79,24 @@ openSkiesStateVectorSet
      and \code{timeDiffThreshold} arguments. In both cases, the value should be
      provided in seconds.
    }
+   \item{
+    \code{remove_redundants(updateType="position")}}{
+     This method removes redundant state vectors, i.e., those that do not
+     contain updated information with respect to older state vectors. What is
+     considered as a redundant state vector is defined by the \code{updateType} 
+     argument. If \code{updateType="position"}, which is also the default
+     behavior, state vectors for which there was no update of positional
+     information will be considered as redundant (even if there might have been
+     an update of other information). If \code{updateType="any"}, only state
+     vectors for which no information was updated (positional or any other) will
+     be considered as redundant. It should be noted that applying this method
+     will also sort the state vectors from older to more recent. The method
+     is intended to be applied to time series, and therefore a warning will be
+     given if it is applied on an \code{\link{openSkiesStateVectorSet}} with
+     field \code{time_series=FALSE}.
+   }
 }
 }
-
 
 \examples{
 
