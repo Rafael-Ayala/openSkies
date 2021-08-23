@@ -1,13 +1,9 @@
-getVectorSetFeatures <- function(stateVectorSet, resamplingSize=15, method="fmm", useAngles=FALSE){
+getVectorSetFeatures <- function(stateVectorSet, resamplingSize=15, method="fmm", fields=NULL){
   features = NULL
-  if(useAngles){
-    featuresDF <- stateVectorSet$get_uniform_interpolation(resamplingSize, c("longitude", "latitude", 
-                                                                             "true_track"), 
-                                                           method=method)
-  } else {
-    featuresDF <- stateVectorSet$get_uniform_interpolation(resamplingSize, c("longitude", "latitude"), 
-                                                           method=method)
+  if(is.null(fields)){
+    fields <- c("longitude", "latitude")
   }
+  featuresDF <- stateVectorSet$get_uniform_interpolation(resamplingSize, fields, method=method)
   for(i in 1:nrow(featuresDF)){
     features = c(features, as.numeric(featuresDF[i,]))
   }
@@ -15,10 +11,10 @@ getVectorSetFeatures <- function(stateVectorSet, resamplingSize=15, method="fmm"
 }
 
 getVectorSetListFeatures <- function(stateVectorSetList, resamplingSize=15, method="fmm",
-                                     scale=TRUE, useAngles=FALSE) {
+                                     scale=TRUE, fields=NULL) {
   featuresMatrix <- list()
   for(stateVectorSet in stateVectorSetList){
-    features <- getVectorSetFeatures(stateVectorSet, resamplingSize, method, useAngles)
+    features <- getVectorSetFeatures(stateVectorSet, resamplingSize, method, fields)
     featuresMatrix[[length(featuresMatrix)+1]] = features
   }
   featuresMatrix <- do.call(rbind, featuresMatrix)
