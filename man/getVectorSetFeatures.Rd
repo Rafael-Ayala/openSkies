@@ -7,7 +7,7 @@ Retrieves positional features of an \code{\link{openSkiesStateVectorSet}} object
 Features will be uniformly interpolated from the observed values.
 }
 \usage{
-getVectorSetFeatures(stateVectorSet, resamplingSize=15, method="fmm", useAngles=FALSE)
+getVectorSetFeatures(stateVectorSet, resamplingSize=15, method="fmm", fields=NULL)
 }
 \arguments{
   \item{stateVectorSet}{object of class \code{\link{openSkiesStateVectorSet}} for
@@ -20,15 +20,18 @@ getVectorSetFeatures(stateVectorSet, resamplingSize=15, method="fmm", useAngles=
   linear interpolation, while "fmm", "periodic", or "natural" will result in 
   different types of spline interpolation.
   }
-  \item{useAngles}{logical indicating if the angle of the trajectory of the
-  aircraft should be included in the extracted positional features.
+  \item{fields}{character vector indicating the names of the fields of the
+  \code{\link{openSkiesStateVector}} objects that should be included in the
+  extracted positional features. In the default behavior, \code{fields=NULL}
+  and only latitude and longitude values will be used.
   }
 }
 \value{
 A vector with positional features of the provided \code{\link{openSkiesStateVectorSet}} object.
-The vector alternates values of longitude and latitude at each interpolated
-point, unless \code{useAngles=TRUE}, in which case values of longitude, latitude
-and trajectory angle are alternated, in this order.
+The vector alternates values of longitude and latitude at each interpolated 
+point, unless a character vector with valid names of fields of \code{\link{openSkiesStateVector}} 
+objects is provided through \code{fields}, in which case values of the specified 
+fields are alternated, in the specified order.
 }
 \examples{
 # Extract positional features for a time series of state vectors for the 

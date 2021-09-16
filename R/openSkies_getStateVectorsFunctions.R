@@ -95,7 +95,7 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
         return(NULL)
       }
     }
-    if(status_code(response) != 200) {
+    if(status_code(response) != 200 | is.null(content(response)$states)) {
       message(strwrap("No state vectors found for the specified aircrafts, 
                        location and interval."), initial="", prefix="\n")
       return(NULL)
@@ -267,7 +267,7 @@ getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone
           return(NULL)
         }
       }
-      if(status_code(response) != 200) {
+      if(status_code(response) != 200| is.null(content(response)$states)) {
         message(strwrap("No state vectors found for part of the specified 
                          interval."), initial="", prefix="\n")
         stateVectorsSeries[[i]] <- NULL

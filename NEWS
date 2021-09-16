@@ -6,6 +6,7 @@ Changes in version 1.1.5 (2021-XX-XX)
 + OpenSky Network coverage can now be retrieved with getOSNCoverage()
 + Added method remove_redundants to objects of class openSkiesStateVectorSet, to remove state vectors that did not contain any update of positional or other type of information
 + getVectorSetFeatures and getVectorSetListFeatures now have a fields argument, that can be used to specify which fields should be used to extract features for clustering
++ Fixed another possible type of failure of the state vectors endpoint of the live API
 
 Changes in version 1.1.4 (2021-08-09)
 + Fixed the behaviour of functions accessing Internet resources to default to 60 seconds timeout

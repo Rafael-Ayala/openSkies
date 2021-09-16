@@ -9,7 +9,7 @@ Features will be uniformly interpolated from the observed values for all the
 }
 \usage{
 getVectorSetListFeatures(stateVectorSetList, resamplingSize=15, method="fmm", 
-                         scale=TRUE, useAngles=FALSE)
+                         scale=TRUE, fields=NULL)
 }
 \arguments{
   \item{stateVectorSetList}{list of objects of class \code{\link{openSkiesStateVectorSet}} 
@@ -26,17 +26,20 @@ getVectorSetListFeatures(stateVectorSetList, resamplingSize=15, method="fmm",
   by applying the \code{\link{scale}} function. This can be desirable if the
   features are going to be used for clustering.
   }
-  \item{useAngles}{logical indicating if the angle of the trajectory of the
-  aircraft should be included in the extracted positional features.
+  \item{fields}{character vector indicating the names of the fields of the
+  \code{\link{openSkiesStateVector}} objects that should be included in the
+  extracted positional features. In the default behavior, \code{fields=NULL}
+  and only latitude and longitude values will be used.
   }
 }
 \value{
 A matrix with positional features of the provided list of \code{\link{openSkiesStateVectorSet}} 
 objects. Each row of the matrix represents a vector of features for each of the
 \code{\link{openSkiesStateVectorSet}} objects. Each vector alternates values of 
-longitude and latitude at each interpolated point, unless \code{useAngles=TRUE}, 
-in which case values of longitude, latitude and trajectory angle are alternated, 
-in this order.
+longitude and latitude at each interpolated point, unless a character vector
+with valid names of fields of \code{\link{openSkiesStateVector}} objects is
+provided through \code{fields}, in which case values of the specified fields are 
+alternated, in the specified order.
 }
 \examples{
 # Extract positional features for a time series of state vectors for the 
@@ -54,6 +57,7 @@ timeZone="Europe/London", timeResolution=300)
 
 vectors_list=list(vectors1, vectors2)
 
-features_matrix=getVectorSetListFeatures(vectors_list, scale=FALSE, useAngles=TRUE)
+features_matrix=getVectorSetListFeatures(vectors_list, scale=FALSE, 
+                                         fields=c("longitude", "latitude", "true_track"))
 }
 }

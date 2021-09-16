@@ -61,7 +61,7 @@ openSkiesFlight
    \item{
     \code{distance_to_flight(flight, numberSamples=15, 
                              samplesAggregationMethod="concatenated", 
-                             method="euclidean", useAngles=FALSE)}}{
+                             method="euclidean", additionalFields=NULL)}}{
      This method calculates the distance to the provided flight, which must be 
      another object of class openSkiesFlight. Both openSkiesFlight objects
      will be resampled to the number of points specified by 
@@ -71,8 +71,11 @@ openSkiesFlight
      average distance is returned. By default, \code{method="euclidean"} and
      euclidean distances are calculated. Other possible values of \code{method}
      are all values accepted by \code{\link{dist}}. By default, 
-     \code{useAngles=FALSE}, and track angles are not included in the features
-     vectors used to calculate distances.
+     \code{additionalFields=NULL}, and only latitude and longitude values will
+     be included in the features vectors used to calculate distances. Additional
+     fields can be specified by providing their names as a character vector
+     through \code{additionalFields}. The names should be valid names of fields
+     of \code{\link{openSkiesStateVector}} objects.
    }
 }
 }
