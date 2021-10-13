@@ -154,24 +154,38 @@ openSkiesStateVectorSet <- R6Class(
     #   self$segments_categories <- categories
     #   invisible(self)
     # },
-    get_values = function(field, removeNAs=FALSE, unwrapAngles=FALSE) {
-      if(!(field %in% c("ICAO24", "call_sign", "origin_country", "requested_time",
-                        "last_position_update_time", "last_any_update_time",
-                        "longitude", "latitude", "baro_altitude", "geo_altitude",
-                        "on_ground", "velocity", "true_track", "vertical_rate",
-                        "squawk", "special_purpose_indicator", "position_source"))){
-        stop(paste(field, " is not a valid openSkiesStateVector field name", sep=""))
+    get_values = function(fields, removeNAs=FALSE, unwrapAngles=FALSE) {
+      for(field in fields) {
+        if(!(field %in% c("ICAO24", "call_sign", "origin_country", "requested_time",
+                          "last_position_update_time", "last_any_update_time",
+                          "longitude", "latitude", "baro_altitude", "geo_altitude",
+                          "on_ground", "velocity", "true_track", "vertical_rate",
+                          "squawk", "special_purpose_indicator", "position_source"))){
+          stop(paste(field, " is not a valid openSkiesStateVector field name", sep=""))
+        }
       }
-      values <- lapply(as.list(self$state_vectors), "[[", field)
-      if(removeNAs){
-        values <- values[sapply(values, function(x) length(x)!=0L)]
+      if(length(fields) == 1) {
+        field <- fields
+        values <- lapply(as.list(self$state_vectors), "[[", field)
+        if(removeNAs){
+          values <- values[sapply(values, function(x) length(x)!=0L)]
+        } else {
+          values[sapply(values, function(x) length(x)==0L)] <- NA
+        }
+        values <- unlist(values)
+        if(field %in% c("true_track")){
+          if(unwrapAngles){
+            values <- unwrapAngles(values)
+          }
+        }
       } else {
-        values[sapply(values, function(x) length(x)==0L)] <- NA
-      }
-      values <- unlist(values)
-      if(field %in% c("true_track")){
-        if(unwrapAngles){
-          values <- unwrapAngles(values)
+        values <- lapply(as.list(self$state_vectors), mget, x=fields)
+        values <- do.call(rbind.data.frame, values)
+        if(removeNAs) {
+          values <- values[rowSums(is.na(values)) != ncol(values), ]
+        }
+        if(("true_track" %in% fields) & unwrapAngles) {
+          values$true_track <- unwrapAngles(values$true_track)
         }
       }
       return(values)

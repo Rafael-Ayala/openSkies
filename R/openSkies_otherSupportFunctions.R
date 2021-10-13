@@ -72,7 +72,7 @@ listToOpenSkiesStateVector <- function(stateVectorList) {
 }
 
 unwrapAngles <- function(angles, usingRadians=FALSE) {
-  newAngles = c(angles[0])
+  newAngles = c(angles[1])
   loops = 0
   if(usingRadians){
     threshold = pi
@@ -87,10 +87,10 @@ unwrapAngles <- function(angles, usingRadians=FALSE) {
     angle2 = angles[i]
     diff = angle2 - angle1
     # Counter-clockwise loop
-    if(angle1>halfValue && angle2<halfValue && diff <= -threshold){
+    if(angle1>halfValue & angle2<halfValue & diff <= -threshold){
       loops = loops + 1
       # Clockwise loop
-    } else if(angle2>halfValue && angle1<halfValue && diff >= threshold){
+    } else if(angle2>halfValue & angle1<halfValue & diff >= threshold){
       loops = loops - 1
     }
     newAngle = angle2 + loops * (2*halfValue)

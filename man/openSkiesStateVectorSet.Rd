@@ -37,6 +37,21 @@ openSkiesStateVectorSet
      \code{state_vector_history}. \code{state_vector} should be an
      \code{\link{openSkiesStateVector}} object
    }
+  \item{
+    \code{get_values(fields, removeNAs=FALSE, unwrapAngles=FALSE)}}{
+     This method retrieves all the values for the specified fields in the 
+     ensemble of \code{\link{openSkiesStateVector}} objects. One or several
+     field names can be provided through the \code{fields} argument. The values
+     will be returned as a vector if a single field was provided, or as a data
+     frame if multiple fields were provided. Field names should match those of
+     the fields of \code{\link{openSkiesStateVector}} objects. If \code{removeNAs=TRUE},
+     NA values will be omitted from the output (if multiple fields were provided,
+     only state vectors for which all of the fields were NA will be omitted).
+     If \code{unwrapAngles=TRUE} and values for the \code{true_track} field
+     were requested, the values will be unwrapped to be a smooth succession of
+     values without sudden discontinuities when crossing from 360º to 0º
+     (this will likely make multiple values become higher than 360).
+   }
    \item{
     \code{get_uniform_interpolation(n, fields, method="fmm")}}{
      This method obtains a data frame with an interpolation of the specified fields along the

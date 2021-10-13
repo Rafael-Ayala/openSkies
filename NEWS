@@ -1,4 +1,7 @@
-Changes in version 1.1.5 (2021-XX-XX)
+Changes in version 1.1.6 (2021-XX-XX)
++ Now multiple field names can be passed to the get_values metjod of openSkiesStateVectorSet objects
+
+Changes in version 1.1.5 (2021-10-07)
 + Additional query filters have been added to getIntervalStateVectors()
 + Fixed a bug leading to wrong formatting of category description for aircraft metadata
 + Fixed a bug leading to unintended behavior of functions with maxQueryAttempts parameter, where 1 attempt less than specified was performed
