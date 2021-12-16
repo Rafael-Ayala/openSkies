@@ -1,5 +1,6 @@
 Changes in version 1.1.6 (2021-XX-XX)
-+ Now multiple field names can be passed to the get_values metjod of openSkiesStateVectorSet objects
++ Now multiple field names can be passed to the get_values method of openSkiesStateVectorSet objects
++ Identification of flight phases is now implemented through findFlightPhases() and the detec_phases() method of class openSkiesFlight
 
 Changes in version 1.1.5 (2021-10-07)
 + Additional query filters have been added to getIntervalStateVectors()

@@ -261,6 +261,37 @@ runImpalaQuery <- function(query, username, password){
   return(data_matrix)
 }
 
+G_membership <- function(x, mu, sigma) {
+    membership <- exp((-(x - mu)^2) / (2*sigma^2))
+    return(membership)
+}
+
+Z_membership <- function(x, a, b) {
+    membership <- numeric(length(x))
+    set1 <- x <= a
+    set2 <- (x >= a) & (x <= ((a + b)/2))
+    set3 <- (x >= ((a + b)/2)) & (x <= b)
+    set4 <- x >= b
+    membership[set1] <- 1
+    membership[set2] <- 1 - 2*((x[set2] - a)/(b - a))^2
+    membership[set3] <- 2*((x[set3] - b)/(b - a))^2
+    membership[set4] <- 0
+    return(membership)
+}
+
+S_membership <- function(x, a, b) {
+    membership <- numeric(length(x))
+    set1 <- x <= a
+    set2 <- (x >= a) & (x <= ((a + b)/2))
+    set3 <- (x >= ((a + b)/2)) & (x <= b)
+    set4 <- x >= b
+    membership[set1] <- 0
+    membership[set2] <- 2*((x[set2] - a)/(b - a))^2
+    membership[set3] <- 1 - 2*((x[set3] - b)/(b - a))^2
+    membership[set4] <- 1
+    return(membership)
+}
+
 # generateEnclosingAirspace <- function(elements, groupingFunction){ TODO
 #   
 #   

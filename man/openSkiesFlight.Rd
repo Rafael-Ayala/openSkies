@@ -77,6 +77,16 @@ openSkiesFlight
      through \code{additionalFields}. The names should be valid names of fields
      of \code{\link{openSkiesStateVector}} objects.
    }
+   \item{
+    \code{detect_phases(time_window, use_baro_altitude = FALSE)}}{
+     This method detects the phases of the flight, applying the \code{\link{findFlightPhases}}
+     function. A time window will be applied to calculate mean values of altitude,
+     vertical rate and speed. Its length is provided in seconds through the 
+     \code{time_window} argument. Setting this value to 1 effectively disables
+     the usage of a time window. By default, \code{use_baro_altitude=FALSE} and
+     geo altitude values will be used to calculate the flight phases. If 
+     \code{use_baro_altitude=TRUE}, barometric altitude values will be used instead.
+   }
 }
 }
 
