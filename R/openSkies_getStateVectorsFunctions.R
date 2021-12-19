@@ -95,10 +95,16 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
         return(NULL)
       }
     }
-    if(status_code(response) != 200 | is.null(content(response)$states)) {
-      message(strwrap("No state vectors found for the specified aircrafts, 
+    if(status_code(response) != 200 || is.null(content(response)$states)) {
+        if(status_code(response) == 500) {
+            message(strwrap("Resource not currently available. Please try again 
+                         later.", initial="", prefix="\n"))
+            return(NULL)
+        } else {
+            message(strwrap("No state vectors found for the specified aircrafts, 
                        location and interval."), initial="", prefix="\n")
-      return(NULL)
+            return(NULL)
+        }
     } 
     formattedStateVectorsList <- formatStateVectorsResponse(content(response))
     openSkiesStateVectorsList <- lapply(formattedStateVectorsList, listToOpenSkiesStateVector)
@@ -267,11 +273,16 @@ getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone
           return(NULL)
         }
       }
-      if(status_code(response) != 200| is.null(content(response)$states)) {
-        message(strwrap("No state vectors found for part of the specified 
+      if(status_code(response) != 200 || is.null(content(response)$states)) {
+          if(status_code(response) == 500) {
+              message(strwrap("Resource not currently available. Please try again 
+                         later.", initial="", prefix="\n"))
+          } else {
+              message(strwrap("No state vectors found for part of the specified 
                          interval."), initial="", prefix="\n")
-        stateVectorsSeries[[i]] <- NULL
-        next
+          }
+          stateVectorsSeries[[i]] <- NULL
+          next
       }
       stateVectorsSeries[[i]] <- listToOpenSkiesStateVector(unlist(formatStateVectorsResponse(content(response)), recursive=FALSE))
     }
