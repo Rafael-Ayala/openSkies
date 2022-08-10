@@ -1,3 +1,6 @@
+Changes in version 1.1.7 (2022-08-10)
++ Now functions to retrieve flights accept intervals longer than 1 week
+
 Changes in version 1.1.6 (2021-12-19)
 + Now multiple field names can be passed to the get_values method of openSkiesStateVectorSet objects
 + Identification of flight phases is now implemented through findFlightPhases() and the detect_phases() method of class openSkiesFlight

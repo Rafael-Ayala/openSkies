@@ -1,8 +1,8 @@
 Package: openSkies
 Type: Package
 Title: Retrieval, Analysis and Visualization of Air Traffic Data
-Version: 1.1.6
-Date: 2021-12-19
+Version: 1.1.7
+Date: 2022-08-10
 Author: Rafael Ayala, Daniel Ayala, David Ruiz, Aleix Sellés, Lara Sellés Vidal
 Maintainer: Rafael Ayala <rafael.ayala@oist.jp>
 Description: Provides functionalities and data structures to retrieve, analyze and visualize aviation 
