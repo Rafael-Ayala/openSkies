@@ -72,6 +72,7 @@ the class.
 https://opensky-network.org/apidoc/rest.html
 }
 \examples{
+if(interactive()){
 # Obtain a list with information for all the flights registered during the 16th
 # of November, 2019 between 9 AM and 10 AM, London time.
 
@@ -80,7 +81,6 @@ endTime="2019-11-16 10:00:00", timeZone="Europe/London")
 
 # Count the number of registered flights.
 
-if(interactive()){
 length(flights)
 }
 }
