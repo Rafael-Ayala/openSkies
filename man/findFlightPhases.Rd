@@ -37,7 +37,7 @@ of the time points.
 # the different phases of the flight, and plot it together with altitude values.
 # Note that when retrieving the state vectors, the username and password should 
 # be substituted by your own, for which you should have received authorization 
-# to access the OpenSky Impala shell
+# to access the OpenSky Trino interface
 
 \dontrun{
 state_vectors <- getIntervalStateVectors(aircraft = "ab3da7",

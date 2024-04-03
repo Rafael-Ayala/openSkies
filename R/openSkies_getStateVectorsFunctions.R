@@ -1,7 +1,7 @@
 getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.timezone(),
                                       minLatitude=NULL, maxLatitude=NULL, minLongitude=NULL,
                                       maxLongitude=NULL, username=NULL, password=NULL, 
-                                      useImpalaShell=FALSE, timeOut=60, maxQueryAttempts=1) {
+                                      useTrino=FALSE, timeOut=60, maxQueryAttempts=1) {
   if(!is.null(aircraft)) {
     checkICAO24(aircraft)
   }
@@ -34,7 +34,7 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
                         time will be retrieved.", initial="", prefix="\n"))
       }
     }
-  } else if((!is.null(time)) & !useImpalaShell) {
+  } else if((!is.null(time)) & !useTrino) {
     if(secondsFromCurrentTime(time, timeZone) >= 3600) {
       if(is.null(aircraft) | length(aircraft) > 1) {
         stop(strwrap("Historical data for multiple aircrafts older than 1 hour ago
@@ -44,14 +44,17 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
       }
     }
   }
-  if(useImpalaShell){
+  if(useTrino){
     if(is.null(time)) {
       time <- Sys.time()
     }
+    token <- getTrinoToken(username, password)
+    connection <- getTrinoConnection(username, token)
     query <- makeImpalaQueryStateVectorsSingleTime(aircraft, time, timeZone, minLatitude, maxLatitude, minLongitude, maxLongitude)
-    results <- runImpalaQuery(query, username, password)
+    results <- runTrinoQuery(query, connection)
+    dbDisconnect(connection)
     if(is.null(results)) {
-      message(strwrap("Query to the Impala shell did not yield any results.", 
+      message(strwrap("Query to Trino database did not yield any results.", 
                       initial="", prefix="\n"))
       return(NULL)
     }
@@ -184,6 +187,8 @@ getIntervalStateVectors <- function(aircraft=NULL, startTime, endTime,
   if(!is.null(alertStatus) & !is.logical(alertStatus)) {
     stop("Invalid alert status provided. Please provide a NULL, TRUE or FALSE value")
   }
+  token <- getTrinoToken(username, password)
+  connection <- getTrinoConnection(username, token)
   query <- makeImpalaQueryStateVectorsInterval(aircraft, startTime, endTime,
                                                timeZone, minLatitude, maxLatitude, 
                                                minLongitude, maxLongitude,
@@ -193,9 +198,10 @@ getIntervalStateVectors <- function(aircraft=NULL, startTime, endTime,
                                                minVerticalRate, maxVerticalRate,
                                                callSignFilter, onGroundStatus,
                                                squawkFilter, spiStatus, alertStatus)
-  results <- runImpalaQuery(query, username, password)
+  results <- runTrinoQuery(query, connection)
+  dbDisconnect(connection)
   if(is.null(results)) {
-    message(strwrap("Query to the Impala shell did not yield any results.", 
+    message(strwrap("Query to Trino database did not yield any results.", 
                     initial="", prefix="\n"))
     return(NULL)
   }
@@ -212,7 +218,7 @@ getIntervalStateVectors <- function(aircraft=NULL, startTime, endTime,
 
 getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone=Sys.timezone(),
                                           timeResolution, username=NULL, password=NULL, 
-                                          useImpalaShell=FALSE, timeOut=60, maxQueryAttempts=1) {
+                                          useTrino=FALSE, timeOut=60, maxQueryAttempts=1) {
   if(timeResolution < 10) {
     if(is.null(username) | is.null(password)) {
       timeResolution <- 10
@@ -227,11 +233,14 @@ getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone
     }
   }
   timePoints <- generateTimePoints(startTime, endTime, timeZone, timeResolution)
-  if(useImpalaShell){
+  if(useTrino){
+    token <- getTrinoToken(username, password)
+    connection <- getTrinoConnection(username, token)
     query <- makeImpalaQueryStateVectorsTimeSeries(aircraft, timePoints)
-    results <- runImpalaQuery(query, username, password)
+    results <- runTrinoQuery(query, connection)
+    dbDisconnect(connection)
     if(is.null(results)) {
-      message(strwrap("Query to the Impala shell did not yield any results.", 
+      message(strwrap("Query to Trino database did not yield any results.", 
                       initial="", prefix="\n"))
       return(NULL)
     }

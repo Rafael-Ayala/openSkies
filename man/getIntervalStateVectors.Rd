@@ -11,9 +11,9 @@ as latitude, longitude, altitude, etc.)
 The starting and end time points must be specified as date-time strings in any 
 format that can be  unambiguously converted to POSIXct (such as 
 YYYY-MM-DD HH:MM:SS). Results can be filtered to specific ranges of latitudes 
-and/or longitudes. This function requires access to the OpenSky Network Impala
-shell, and therefore can only be used by registered users that have been granted
-access to the Impala shell.
+and/or longitudes. This function requires access to the OpenSky Network Trino
+query interface, and therefore can only be used by registered users that have been 
+granted access to the Trino interface.
 }
 \usage{
 getIntervalStateVectors(aircraft=NULL, startTime, endTime,
@@ -133,10 +133,10 @@ getIntervalStateVectors(aircraft=NULL, startTime, endTime,
   https://www.faa.gov/documentLibrary/media/Order/FAA_Order_6365.1A.pdf
   }
   \item{username}{string with the username to use for authentication for the 
-  OpenSky API. The user must have been granted access to the Impala shell.
+  OpenSky Trino interface. The user must have been granted access to the Trino interface.
   }
   \item{password}{string with the password to use for authentication for the 
-  OpenSky API. The user must have been granted access to the Impala shell.
+  OpenSky Trino interface. The user must have been granted access to the Trino interface.
   }
 }
 \value{
@@ -155,7 +155,7 @@ https://www.faa.gov/documentLibrary/media/Order/FAA_Order_6365.1A.pdf
 # of Seville the 21st of July, 2019 between 7 AM and 8 PM Spanish time.
 # Note that the username and password should be substituted by your own,
 # for which you should have received authorization to access the OpenSky
-# Impala shell
+# Trino query interface
 
 \dontrun{
 state_vectors <- getIntervalStateVectors(startTime = "2019-07-21 07:00:00",

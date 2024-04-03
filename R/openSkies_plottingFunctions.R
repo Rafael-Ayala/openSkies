@@ -15,7 +15,7 @@ plotRoute <- function(stateVectorSet, pathColor="blue", ggmapObject=NULL,
   data <- data.frame(lat=na.omit(latitudes), lon=na.omit(longitudes))
   if (is.null(ggmapObject)){
     limits <- getMapLimits(longitudes, latitudes, paddingFactor)
-    map <- get_map(limits)
+    map <- get_stamenmap(limits)
     ggmapObject <- ggmap(map)
   }
   ggmapObject <- ggmapObject +
@@ -49,7 +49,7 @@ plotRoutes <- function(stateVectorSetList, pathColors="blue", ggmapObject=NULL,
   }
   if (is.null(ggmapObject)) {
     limits <- getMapLimits(longitudes, latitudes, paddingFactor)
-    map <- get_map(limits)
+    map <- get_stamenmap(limits)
     ggmapObject <- ggmap(map)
   }
   data <- data.frame(lat=numeric(), lon=numeric(), group=numeric()) 
@@ -119,7 +119,7 @@ plotPlanes <- function(stateVectors, ggmapObject=NULL, plotResult=TRUE,
     limits <- getMapLimits(longitudes, latitudes, paddingFactor)
     iconScaleFactor <- abs(limits["right"] - limits["left"])/4.05356
     print(limits)
-    map <- get_map(limits)
+    map <- get_stamenmap(limits)
     ggmapObject <- ggmap(map)
   }
   plane <- magick::image_read(system.file("images", "airplane-4-48.png", package="openSkies"))

@@ -11,7 +11,7 @@ YYYY-MM-DD HH:MM:SS).
 \usage{
 getIntervalFlights(startTime, endTime, timeZone=Sys.timezone(), username=NULL, 
                    password=NULL, includeStateVectors=FALSE, 
-                   timeResolution=NULL, useImpalaShell=FALSE, 
+                   timeResolution=NULL, useTrino=FALSE, 
                    includeAirportsMetadata=FALSE, timeOut=60, maxQueryAttempts=1)
 }
 \arguments{
@@ -42,9 +42,9 @@ getIntervalFlights(startTime, endTime, timeZone=Sys.timezone(), username=NULL,
   \item{timeResolution}{time resolution in seconds with which state vectors
   should be retrieved if \code{includeStateVectors=TRUE}.
   }
-  \item{useImpalaShell}{logical indicating whether or not to use the OpenSky
-  impala shell instead of the API to retrieve state vectors if \code{includeStateVectors=TRUE}. If used, the provided 
-  username and password are used for the ssh connection. By default, the impala shell
+  \item{useTrino}{logical indicating whether or not to use the OpenSky
+  Trino query interface instead of the API to retrieve state vectors if \code{includeStateVectors=TRUE}. If used, the provided 
+  username and password are used for the Trino connection. By default, the Trino interface
   is not used.
   }
   \item{includeAirportsMetadata}{logical indicating if the data about the origin and destination

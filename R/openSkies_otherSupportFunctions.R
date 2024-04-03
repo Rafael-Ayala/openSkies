@@ -233,6 +233,35 @@ makeImpalaQueryStateVectorsInterval <- function(aircraft=NULL, startTime, endTim
   return(query)
 }
 
+getTrinoToken <- function(username, password) {
+  request = POST("https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token",
+                 body=list(client_id="trino-client", grant_type="password", username=username, password=password), encode="form")
+  token <- content(request)$access_token
+  return(token)
+}
+
+getTrinoConnection <- function(username, token) {
+    set_config(
+        add_headers(Authorization = paste("Bearer", token)),
+        override = TRUE
+        )
+    con <- dbConnect(
+        drv = RPresto::Presto(),
+        host = "https://trino.opensky-network.org",
+        port = 443,
+        user = username,
+        catalog = "minio",
+        schema = "osky",
+        use.trino.headers=TRUE)
+    set_config(config())
+    return(con)
+}
+
+runTrinoQuery <- function(query, connection) {
+    result <- dbGetQuery(connection, query)
+    return(as.data.frame(result))
+}
+
 runImpalaQuery <- function(query, username, password){
   session <- ssh_connect(paste(username,"@data.opensky-network.org:2230"), passwd=password)
   lines <- rawToChar(ssh_exec_internal(session,paste("-q ", query))$stdout)
@@ -326,7 +355,7 @@ makeIntervals <- function(startTime, endTime, timeZone, intervalLength) {
 
 getAirportArrivalsSingleInterval <- function(airport, startTime, endTime, timeZone, 
                                              username, password, includeStateVectors, 
-                                             timeResolution, useImpalaShell, 
+                                             timeResolution, useTrino, 
                                              includeAirportsMetadata, timeOut,
                                              maxQueryAttempts) {
     jsonResponse <- FALSE
@@ -366,7 +395,7 @@ getAirportArrivalsSingleInterval <- function(airport, startTime, endTime, timeZo
         for(i in 1:length(arrivalsOpenSkiesFlights)){
             departureTime <- arrivalsOpenSkiesFlights[[i]]$departure_time
             arrivalTime <- arrivalsOpenSkiesFlights[[i]]$arrival_time
-            stateVectors <- getAircraftStateVectorsSeries(arrivalsOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, useImpalaShell)
+            stateVectors <- getAircraftStateVectorsSeries(arrivalsOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, useTrino)
             arrivalsOpenSkiesFlights[[i]]$state_vectors <- stateVectors
         }
     }
@@ -389,7 +418,7 @@ getAirportArrivalsSingleInterval <- function(airport, startTime, endTime, timeZo
 
 getAirportDeparturesSingleInterval <- function(airport, startTime, endTime, timeZone,
                                                username, password, includeStateVectors, 
-                                               timeResolution, useImpalaShell, includeAirportsMetadata,
+                                               timeResolution, useTrino, includeAirportsMetadata,
                                                timeOut, maxQueryAttempts) {
     jsonResponse <- FALSE
     attemptCount <- 0
@@ -428,7 +457,7 @@ getAirportDeparturesSingleInterval <- function(airport, startTime, endTime, time
         for(i in 1:length(departuresOpenSkiesFlights)){
             departureTime <- departuresOpenSkiesFlights[[i]]$departure_time
             arrivalTime <- departuresOpenSkiesFlights[[i]]$arrival_time
-            stateVectors <- getAircraftStateVectorsSeries(departuresOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, useImpalaShell)
+            stateVectors <- getAircraftStateVectorsSeries(departuresOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, useTrino)
             departuresOpenSkiesFlights[[i]]$state_vectors <- stateVectors
         }
     }
@@ -451,7 +480,7 @@ getAirportDeparturesSingleInterval <- function(airport, startTime, endTime, time
 
 getAircraftFlightsSingleInterval <- function(aircraft, startTime, endTime, timeZone,
                                              username, password, includeStateVectors, 
-                                             timeResolution, useImpalaShell, 
+                                             timeResolution, useTrino, 
                                              includeAirportsMetadata,
                                              timeOut, maxQueryAttempts) {
     jsonResponse <- FALSE
@@ -491,7 +520,7 @@ getAircraftFlightsSingleInterval <- function(aircraft, startTime, endTime, timeZ
         for(i in 1:length(aircraftOpenSkiesFlights)){
             departureTime <- aircraftOpenSkiesFlights[[i]]$departure_time
             arrivalTime <- aircraftOpenSkiesFlights[[i]]$arrival_time
-            stateVectors <- getAircraftStateVectorsSeries(aircraft, departureTime, arrivalTime, timeZone, timeResolution, username, password, useImpalaShell)
+            stateVectors <- getAircraftStateVectorsSeries(aircraft, departureTime, arrivalTime, timeZone, timeResolution, username, password, useTrino)
             aircraftOpenSkiesFlights[[i]]$state_vectors <- stateVectors
         }
     if(includeAirportsMetadata){
@@ -513,7 +542,7 @@ getAircraftFlightsSingleInterval <- function(aircraft, startTime, endTime, timeZ
 
 getIntervalFlightsSingleInterval <- function(startTime, endTime, timeZone,
                                              username, password, includeStateVectors, 
-                                             timeResolution, useImpalaShell, 
+                                             timeResolution, useTrino, 
                                              includeAirportsMetadata,
                                              timeOut, maxQueryAttempts) {
     jsonResponse <- FALSE
@@ -551,7 +580,7 @@ getIntervalFlightsSingleInterval <- function(startTime, endTime, timeZone,
         for(i in 1:length(intervalOpenSkiesFlights)){
             departureTime <- intervalOpenSkiesFlights[[i]]$departure_time
             arrivalTime <- intervalOpenSkiesFlights[[i]]$arrival_time
-            stateVectors <- getAircraftStateVectorsSeries(intervalOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, useImpalaShell)
+            stateVectors <- getAircraftStateVectorsSeries(intervalOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, useTrino)
             intervalOpenSkiesFlights[[i]]$state_vectors <- stateVectors
         }
     }

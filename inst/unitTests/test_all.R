@@ -70,9 +70,9 @@ all_messages_decoded <- ADSBDecoder$decodeMessages(list(message1_bin, message2_b
 
 checkTrue(identical(all_messages_decoded[[2]]$icao, "0246b8"))
 
-## Test generation of Impala shell queries
+## Test generation of Trino interface queries
 
-ImpalaTestQuery <-
+TrinoTestQuery <-
     openSkies:::makeImpalaQueryStateVectorsInterval(
         aircraft = "0246b8",
         startTime = "2019-07-01 11:00:00",
@@ -84,7 +84,7 @@ ImpalaTestQuery <-
         maxLongitude = -5.861130
     )
 
-checkTrue(grepl("hour>=1561971600", ImpalaTestQuery))
+checkTrue(grepl("hour>=1561971600", TrinoTestQuery))
 
 ## Test generateTimePoints
 

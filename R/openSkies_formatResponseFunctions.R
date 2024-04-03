@@ -12,22 +12,22 @@ formatStateVectorsResponseImpala <- function(responseMatrix) {
   for(i in 1:nrow(responseMatrix)){
     row <- responseMatrix[i,]
     parsedRow <- list(
-                      "ICAO24"=if(row["icao24"]!="NULL") row["icao24"] else NULL,
-                      "callSign"=if(row["callsign"]!="NULL") row["callsign"] else NULL,
-                      "lastPositionUpdateTime"=if(row["lastposupdate"]!="NULL") as.POSIXct(as.numeric(row["lastposupdate"]), origin="1970-01-01", tz=Sys.timezone()) else NULL,
-                      "lastAnyUpdateTime"=if(row["lastcontact"]!="NULL") as.POSIXct(as.numeric(row["lastcontact"]), origin="1970-01-01", tz=Sys.timezone()) else NULL,
-                      "longitude"=if(row["lon"]!="NULL") as.numeric(row["lon"]) else NULL,
-                      "latitude"=if(row["lat"]!="NULL") as.numeric(row["lat"]) else NULL,
-                      "baroAltitude"=if(row["baroaltitude"]!="NULL") as.numeric(row["baroaltitude"]) else NULL,
-                      "geoAltitude"=if(row["geoaltitude"]!="NULL") as.numeric(row["geoaltitude"]) else NULL,
-                      "onGround"=if(row["onground"]!="NULL") as.logical(row["onground"]) else NULL,
-                      "velocity"=if(row["velocity"]!="NULL") as.numeric(row["velocity"]) else NULL,
-                      "verticalRate"=if(row["vertrate"]!="NULL") as.numeric(row["vertrate"]) else NULL,
-                      "squawk"=if(row["squawk"]!="NULL") row["squawk"] else NULL,
-                      "specialPurposeIndicator"=if(row["spi"]!="NULL") as.logical(row["spi"]) else NULL,
+                      "ICAO24"=if(!is.na(row["icao24"])) row["icao24"] else NULL,
+                      "callSign"=if(!is.na(row["callsign"])) row["callsign"] else NULL,
+                      "lastPositionUpdateTime"=if(!is.na(row["lastposupdate"])) as.POSIXct(as.numeric(row["lastposupdate"]), origin="1970-01-01", tz=Sys.timezone()) else NULL,
+                      "lastAnyUpdateTime"=if(!is.na(row["lastcontact"])) as.POSIXct(as.numeric(row["lastcontact"]), origin="1970-01-01", tz=Sys.timezone()) else NULL,
+                      "longitude"=if(!is.na(row["lon"])) as.numeric(row["lon"]) else NULL,
+                      "latitude"=if(!is.na(row["lat"])) as.numeric(row["lat"]) else NULL,
+                      "baroAltitude"=if(!is.na(row["baroaltitude"])) as.numeric(row["baroaltitude"]) else NULL,
+                      "geoAltitude"=if(!is.na(row["geoaltitude"])) as.numeric(row["geoaltitude"]) else NULL,
+                      "onGround"=if(!is.na(row["onground"])) as.logical(row["onground"]) else NULL,
+                      "velocity"=if(!is.na(row["velocity"])) as.numeric(row["velocity"]) else NULL,
+                      "verticalRate"=if(!is.na(row["vertrate"])) as.numeric(row["vertrate"]) else NULL,
+                      "squawk"=if(!is.na(row["squawk"])) row["squawk"] else NULL,
+                      "specialPurposeIndicator"=if(!is.na(row["spi"])) as.logical(row["spi"]) else NULL,
                       "originCountry"=NULL,
-                      "requestedTime"=if(row["time"]!="NULL") as.POSIXct(as.numeric(row["time"]), origin="1970-01-01", tz=Sys.timezone()) else NULL,
-                      "trueTrack"=if(row["heading"]!="NULL") as.numeric(row["heading"]) else NULL,
+                      "requestedTime"=if(!is.na(row["time"])) as.POSIXct(as.numeric(row["time"]), origin="1970-01-01", tz=Sys.timezone()) else NULL,
+                      "trueTrack"=if(!is.na(row["heading"])) as.numeric(row["heading"]) else NULL,
                       "positionSource"=NULL
                       )
     formattedList[[i]] <- parsedRow
