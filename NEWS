@@ -1,4 +1,4 @@
-Changes in version 1.2 (2024-04-03)
+Changes in version 1.2.1 (2024-04-03)
 + Now functions to retrieve flights accept intervals longer than 1 week
 + The Impala shell backend has been changed to Trino in accordance to changes in the OpenSky Network infrastructure. The only change visible to users is that functions previously using useImpalaShell argument now use useTrio argument. Users previously using an Impala shell account are required to obtain a new Trino account from OpenSky Network
 
