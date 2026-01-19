@@ -3,8 +3,12 @@
 \title{Plot the location of a set of aircrafts
 }
 \description{
-Draws the location of a set of aircrafts given in their state vectors on a ggmap 
+Draws the location of a set of aircrafts given in their state vectors on a ggmap
 object. The planes will be oriented according to the path they are following.
+
+Note: This function uses Stadia Maps for map tiles. Before using this function,
+you must register for a free API key at \url{https://stadiamaps.com/} and call
+\code{ggmap::register_stadiamaps("YOUR-API-KEY")} to set up authentication.
 }
 \usage{
 plotPlanes(stateVectors, ggmapObject=NULL, plotResult=TRUE, paddingFactor=0.2, 

@@ -17,7 +17,7 @@ granted access to the Trino interface.
 }
 \usage{
 getIntervalStateVectors(aircraft=NULL, startTime, endTime,
-                        timeZone=Sys.timezone(), minLatitude=NULL, 
+                        timeZone=Sys.timezone(), minLatitude=NULL,
                         maxLatitude=NULL, minLongitude=NULL, maxLongitude=NULL,
                         minBaroAltitude=NULL, maxBaroAltitude=NULL,
                         minGeoAltitude=NULL, maxGeoAltitude=NULL,
@@ -25,7 +25,8 @@ getIntervalStateVectors(aircraft=NULL, startTime, endTime,
                         minVerticalRate=NULL, maxVerticalRate=NULL,
                         callSignFilter=NULL, onGroundStatus=NULL,
                         squawkFilter=NULL, spiStatus=NULL, alertStatus=NULL,
-                        username, password)
+                        username=NULL, password=NULL,
+                        clientId=NULL, clientSecret=NULL)
 }
 \arguments{
   \item{aircraft}{string with the ICAO 24-bit address of an aircraft (for 
@@ -132,11 +133,23 @@ getIntervalStateVectors(aircraft=NULL, startTime, endTime,
   default, no filtering based on the alert flag is performed. For details, see
   https://www.faa.gov/documentLibrary/media/Order/FAA_Order_6365.1A.pdf
   }
-  \item{username}{string with the username to use for authentication for the 
+  \item{username}{optional string with the username to use for authentication for the
   OpenSky Trino interface. The user must have been granted access to the Trino interface.
+  This is the legacy authentication method; for new users, clientId and clientSecret
+  should be used instead.
   }
-  \item{password}{string with the password to use for authentication for the 
+  \item{password}{optional string with the password to use for authentication for the
   OpenSky Trino interface. The user must have been granted access to the Trino interface.
+  This is the legacy authentication method; for new users, clientId and clientSecret
+  should be used instead.
+  }
+  \item{clientId}{optional string with the client ID to use for OAuth2
+  authentication for the OpenSky Trino interface. This is the recommended authentication
+  method for new users. The user must have been granted access to the Trino interface.
+  }
+  \item{clientSecret}{optional string with the client secret to use for OAuth2
+  authentication for the OpenSky Trino interface. This is the recommended authentication
+  method for new users. The user must have been granted access to the Trino interface.
   }
 }
 \value{

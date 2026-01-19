@@ -3,9 +3,13 @@
 \title{Plot several aircraft routes
 }
 \description{
-Draws the given routes on a ggmap object. The routes must be given as a list of 
-objects of class \code{\link{openSkiesStateVectorSet}}, all of them with field 
+Draws the given routes on a ggmap object. The routes must be given as a list of
+objects of class \code{\link{openSkiesStateVectorSet}}, all of them with field
 \code{time_series=TRUE}.
+
+Note: This function uses Stadia Maps for map tiles. Before using this function,
+you must register for a free API key at \url{https://stadiamaps.com/} and call
+\code{ggmap::register_stadiamaps("YOUR-API-KEY")} to set up authentication.
 }
 \usage{
 plotRoutes(stateVectorSetList, pathColors="blue", ggmapObject=NULL, 

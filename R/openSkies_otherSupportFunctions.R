@@ -233,23 +233,50 @@ makeImpalaQueryStateVectorsInterval <- function(aircraft=NULL, startTime, endTim
   return(query)
 }
 
-getTrinoToken <- function(username, password) {
-  request = POST("https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token",
-                 body=list(client_id="trino-client", grant_type="password", username=username, password=password), encode="form")
+getTrinoToken <- function(username=NULL, password=NULL, clientId=NULL, clientSecret=NULL) {
+  if(!is.null(clientId) && !is.null(clientSecret)) {
+    request = POST("https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token",
+                   body=list(client_id=clientId, client_secret=clientSecret, grant_type="client_credentials"), encode="form")
+  } else if(!is.null(username) && !is.null(password)) {
+    request = POST("https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token",
+                   body=list(client_id="trino-client", grant_type="password", username=username, password=password), encode="form")
+  } else {
+    stop("Either clientId and clientSecret, or username and password must be provided for Trino authentication")
+  }
+  if(status_code(request) != 200) {
+    stop(paste("Failed to obtain Trino token. Status code:", status_code(request)))
+  }
   token <- content(request)$access_token
+  if(is.null(token)) {
+    stop("Failed to obtain access token from authentication response")
+  }
   return(token)
 }
 
-getTrinoConnection <- function(username, token) {
+getAccessToken <- function(clientId, clientSecret) {
+  request = POST("https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token",
+                 body=list(client_id=clientId, client_secret=clientSecret, grant_type="client_credentials"), encode="form")
+  if(status_code(request) != 200) {
+    stop(paste("Failed to obtain access token. Status code:", status_code(request)))
+  }
+  token <- content(request)$access_token
+  if(is.null(token)) {
+    stop("Failed to obtain access token from authentication response")
+  }
+  return(token)
+}
+
+getTrinoConnection <- function(token, username=NULL, clientId=NULL) {
     set_config(
         add_headers(Authorization = paste("Bearer", token)),
         override = TRUE
         )
+    user <- if(!is.null(username)) username else if(!is.null(clientId)) clientId else "openSkies"
     con <- dbConnect(
         drv = RPresto::Presto(),
         host = "https://trino.opensky-network.org",
         port = 443,
-        user = username,
+        user = user,
         catalog = "minio",
         schema = "osky",
         use.trino.headers=TRUE)
@@ -353,22 +380,31 @@ makeIntervals <- function(startTime, endTime, timeZone, intervalLength) {
     return(list(startTimes, endTimes))
 }
 
-getAirportArrivalsSingleInterval <- function(airport, startTime, endTime, timeZone, 
-                                             username, password, includeStateVectors, 
-                                             timeResolution, useTrino, 
+getAirportArrivalsSingleInterval <- function(airport, startTime, endTime, timeZone,
+                                             username, password,
+                                             clientId, clientSecret,
+                                             includeStateVectors,
+                                             timeResolution, useTrino,
                                              includeAirportsMetadata, timeOut,
                                              maxQueryAttempts) {
     jsonResponse <- FALSE
     attemptCount <- 0
     while(!jsonResponse) {
         attemptCount <- attemptCount + 1
+        authConfig <- NULL
+        if(!is.null(clientId) && !is.null(clientSecret)) {
+            accessToken <- getAccessToken(clientId, clientSecret)
+            authConfig <- add_headers(Authorization = paste("Bearer", accessToken))
+        } else if(!is.null(username) && !is.null(password)) {
+            authConfig <- authenticate(username, password)
+        }
         response <- tryCatch({
             GET(paste(openskyApiRootURL, "flights/arrival", sep="" ),
                 query=list(airport=airport,
                            begin=stringToEpochs(startTime, timeZone),
                            end=stringToEpochs(endTime, timeZone)),
                 timeout(timeOut),
-                if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+                authConfig)
         },
         error = function(e) e
         )
@@ -395,7 +431,7 @@ getAirportArrivalsSingleInterval <- function(airport, startTime, endTime, timeZo
         for(i in 1:length(arrivalsOpenSkiesFlights)){
             departureTime <- arrivalsOpenSkiesFlights[[i]]$departure_time
             arrivalTime <- arrivalsOpenSkiesFlights[[i]]$arrival_time
-            stateVectors <- getAircraftStateVectorsSeries(arrivalsOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, useTrino)
+            stateVectors <- getAircraftStateVectorsSeries(arrivalsOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, clientId, clientSecret, useTrino)
             arrivalsOpenSkiesFlights[[i]]$state_vectors <- stateVectors
         }
     }
@@ -417,37 +453,46 @@ getAirportArrivalsSingleInterval <- function(airport, startTime, endTime, timeZo
 }
 
 getAirportDeparturesSingleInterval <- function(airport, startTime, endTime, timeZone,
-                                               username, password, includeStateVectors, 
+                                               username, password,
+                                               clientId, clientSecret,
+                                               includeStateVectors,
                                                timeResolution, useTrino, includeAirportsMetadata,
                                                timeOut, maxQueryAttempts) {
     jsonResponse <- FALSE
     attemptCount <- 0
     while(!jsonResponse) {
         attemptCount <- attemptCount + 1
+        authConfig <- NULL
+        if(!is.null(clientId) && !is.null(clientSecret)) {
+            accessToken <- getAccessToken(clientId, clientSecret)
+            authConfig <- add_headers(Authorization = paste("Bearer", accessToken))
+        } else if(!is.null(username) && !is.null(password)) {
+            authConfig <- authenticate(username, password)
+        }
         response <- tryCatch({
             GET(paste(openskyApiRootURL, "flights/departure", sep="" ),
                 query=list(airport=airport,
                            begin=stringToEpochs(startTime, timeZone),
                            end=stringToEpochs(endTime, timeZone)),
                 timeout(timeOut),
-                if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+                authConfig)
         },
         error = function(e) e
         )
         if(inherits(response, "error")) {
-            message(strwrap("Resource not currently available. Please try again 
+            message(strwrap("Resource not currently available. Please try again
                        later.", initial="", prefix="\n"))
             return(NULL)
         }
         jsonResponse <- grepl("json", headers(response)$`content-type`)
         if(attemptCount > maxQueryAttempts) {
-            message(strwrap("Resource not currently available. Please try again 
+            message(strwrap("Resource not currently available. Please try again
                        later.", initial="", prefix="\n"))
             return(NULL)
         }
     }
     if(status_code(response) != 200) {
-        # message(strwrap("No departures found for the specified interval and 
+        # message(strwrap("No departures found for the specified interval and
         #             airport.", initial="", prefix="\n"))
         return(NULL)
     }
@@ -457,7 +502,7 @@ getAirportDeparturesSingleInterval <- function(airport, startTime, endTime, time
         for(i in 1:length(departuresOpenSkiesFlights)){
             departureTime <- departuresOpenSkiesFlights[[i]]$departure_time
             arrivalTime <- departuresOpenSkiesFlights[[i]]$arrival_time
-            stateVectors <- getAircraftStateVectorsSeries(departuresOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, useTrino)
+            stateVectors <- getAircraftStateVectorsSeries(departuresOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, clientId, clientSecret, useTrino)
             departuresOpenSkiesFlights[[i]]$state_vectors <- stateVectors
         }
     }
@@ -479,48 +524,57 @@ getAirportDeparturesSingleInterval <- function(airport, startTime, endTime, time
 }
 
 getAircraftFlightsSingleInterval <- function(aircraft, startTime, endTime, timeZone,
-                                             username, password, includeStateVectors, 
-                                             timeResolution, useTrino, 
+                                             username, password,
+                                             clientId, clientSecret,
+                                             includeStateVectors,
+                                             timeResolution, useTrino,
                                              includeAirportsMetadata,
                                              timeOut, maxQueryAttempts) {
     jsonResponse <- FALSE
     attemptCount <- 0
     while(!jsonResponse) {
         attemptCount <- attemptCount + 1
+        authConfig <- NULL
+        if(!is.null(clientId) && !is.null(clientSecret)) {
+            accessToken <- getAccessToken(clientId, clientSecret)
+            authConfig <- add_headers(Authorization = paste("Bearer", accessToken))
+        } else if(!is.null(username) && !is.null(password)) {
+            authConfig <- authenticate(username, password)
+        }
         response <- tryCatch({
             GET(paste(openskyApiRootURL, "flights/aircraft", sep="" ),
                 query=list(icao24=aircraft,
                            begin=stringToEpochs(startTime, timeZone),
                            end=stringToEpochs(endTime, timeZone)),
                 timeout(timeOut),
-                if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+                authConfig)
         },
         error = function(e) e
         )
         if(inherits(response, "error")) {
-            message(strwrap("Resource not currently available. Please try again 
+            message(strwrap("Resource not currently available. Please try again
                        later.", initial="", prefix="\n"))
             return(NULL)
         }
         jsonResponse <- grepl("json", headers(response)$`content-type`)
         if(attemptCount > maxQueryAttempts) {
-            message(strwrap("Resource not currently available. Please try again 
+            message(strwrap("Resource not currently available. Please try again
                        later.", initial="", prefix="\n"))
             return(NULL)
         }
     }
     if(status_code(response) != 200) {
-        # message(strwrap("No flights found for the specified interval and 
+        # message(strwrap("No flights found for the specified interval and
         #             aircraft", initial="", prefix="\n"))
         return(NULL)
-    } 
+    }
     aircraftFlightsList <- formatFlightsListResponse(content(response))
     aircraftOpenSkiesFlights <- lapply(aircraftFlightsList, listToOpenSkiesFlight)
     if(includeStateVectors)
         for(i in 1:length(aircraftOpenSkiesFlights)){
             departureTime <- aircraftOpenSkiesFlights[[i]]$departure_time
             arrivalTime <- aircraftOpenSkiesFlights[[i]]$arrival_time
-            stateVectors <- getAircraftStateVectorsSeries(aircraft, departureTime, arrivalTime, timeZone, timeResolution, username, password, useTrino)
+            stateVectors <- getAircraftStateVectorsSeries(aircraft, departureTime, arrivalTime, timeZone, timeResolution, username, password, clientId, clientSecret, useTrino)
             aircraftOpenSkiesFlights[[i]]$state_vectors <- stateVectors
         }
     if(includeAirportsMetadata){
@@ -541,31 +595,40 @@ getAircraftFlightsSingleInterval <- function(aircraft, startTime, endTime, timeZ
 }
 
 getIntervalFlightsSingleInterval <- function(startTime, endTime, timeZone,
-                                             username, password, includeStateVectors, 
-                                             timeResolution, useTrino, 
+                                             username, password,
+                                             clientId, clientSecret,
+                                             includeStateVectors,
+                                             timeResolution, useTrino,
                                              includeAirportsMetadata,
                                              timeOut, maxQueryAttempts) {
     jsonResponse <- FALSE
     attemptCount <- 0
     while(!jsonResponse) {
         attemptCount <- attemptCount + 1
+        authConfig <- NULL
+        if(!is.null(clientId) && !is.null(clientSecret)) {
+            accessToken <- getAccessToken(clientId, clientSecret)
+            authConfig <- add_headers(Authorization = paste("Bearer", accessToken))
+        } else if(!is.null(username) && !is.null(password)) {
+            authConfig <- authenticate(username, password)
+        }
         response <- tryCatch({
             GET(paste(openskyApiRootURL, "flights/all", sep="" ),
                 query=list(begin=stringToEpochs(startTime, timeZone),
                            end=stringToEpochs(endTime, timeZone)),
                 timeout(timeOut),
-                if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+                authConfig)
         },
         error = function(e) e
         )
         if(inherits(response, "error")) {
-            message(strwrap("Resource not currently available. Please try again 
+            message(strwrap("Resource not currently available. Please try again
                        later.", initial="", prefix="\n"))
             return(NULL)
         }
         jsonResponse <- grepl("json", headers(response)$`content-type`)
         if(attemptCount > maxQueryAttempts) {
-            message(strwrap("Resource not currently available. Please try again 
+            message(strwrap("Resource not currently available. Please try again
                        later.", initial="", prefix="\n"))
             return(NULL)
         }
@@ -573,14 +636,14 @@ getIntervalFlightsSingleInterval <- function(startTime, endTime, timeZone,
     if(status_code(response) != 200) {
         # message("No flights found for the specified interval")
         return(NULL)
-    } 
+    }
     intervalFlightsList <- formatFlightsListResponse(content(response))
     intervalOpenSkiesFlights <- lapply(intervalFlightsList, listToOpenSkiesFlight)
     if(includeStateVectors){
         for(i in 1:length(intervalOpenSkiesFlights)){
             departureTime <- intervalOpenSkiesFlights[[i]]$departure_time
             arrivalTime <- intervalOpenSkiesFlights[[i]]$arrival_time
-            stateVectors <- getAircraftStateVectorsSeries(intervalOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, useTrino)
+            stateVectors <- getAircraftStateVectorsSeries(intervalOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, clientId, clientSecret, useTrino)
             intervalOpenSkiesFlights[[i]]$state_vectors <- stateVectors
         }
     }

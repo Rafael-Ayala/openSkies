@@ -3,8 +3,12 @@
 \title{Plot a single aircraft route
 }
 \description{
-Draws a given route on a ggmap object. The route must be given as an object of 
+Draws a given route on a ggmap object. The route must be given as an object of
 class \code{\link{openSkiesStateVectorSet}} with field \code{time_series=TRUE}.
+
+Note: This function uses Stadia Maps for map tiles. Before using this function,
+you must register for a free API key at \url{https://stadiamaps.com/} and call
+\code{ggmap::register_stadiamaps("YOUR-API-KEY")} to set up authentication.
 }
 \usage{
 plotRoute(stateVectorSet, pathColor="blue", ggmapObject=NULL, plotResult=TRUE, 

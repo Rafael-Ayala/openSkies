@@ -9,9 +9,11 @@ Beginning and end times must be specified as date-time strings in any format
 that can be unambiguously converted to POSIXct (such as YYYY-MM-DD HH:MM:SS).
 }
 \usage{
-getAirportDepartures(airport, startTime, endTime, timeZone=Sys.timezone(), 
-                     username=NULL, password=NULL, includeStateVectors=FALSE, 
-                     timeResolution=NULL, useTrino=FALSE, 
+getAirportDepartures(airport, startTime, endTime, timeZone=Sys.timezone(),
+                     username=NULL, password=NULL,
+                     clientId=NULL, clientSecret=NULL,
+                     includeStateVectors=FALSE,
+                     timeResolution=NULL, useTrino=FALSE,
                      includeAirportsMetadata=FALSE, timeOut=60, maxQueryAttempts=1)
 }
 \arguments{
@@ -36,7 +38,17 @@ getAirportDepartures(airport, startTime, endTime, timeZone=Sys.timezone(),
   for the OpenSky API. By default, no authentication is performed.
   }
   \item{password}{optional string with the password to use for authentication
-  for the OpenSky API. By default, no authentication is performed.
+  for the OpenSky API. By default, no authentication is performed. This is the
+  legacy authentication method; for new users, clientId and clientSecret should
+  be used instead.
+  }
+  \item{clientId}{optional string with the client ID to use for OAuth2
+  authentication for the OpenSky API. This is the recommended authentication
+  method for new users. By default, no authentication is performed.
+  }
+  \item{clientSecret}{optional string with the client secret to use for OAuth2
+  authentication for the OpenSky API. This is the recommended authentication
+  method for new users. By default, no authentication is performed.
   }
   \item{includeStateVectors}{logical indicating if the set of state vectors for
   each flight should also be retrieved. By default, state vectors are not
@@ -46,8 +58,8 @@ getAirportDepartures(airport, startTime, endTime, timeZone=Sys.timezone(),
   should be retrieved if \code{includeStateVectors=TRUE}.
   }
   \item{useTrino}{logical indicating whether or not to use the OpenSky
-  Trino query interface instead of the API to retrieve state vectors if \code{includeStateVectors=TRUE}. If used, the provided 
-  username and password are used for the Trino connection. By default, the Trino interface
+  Trino query interface instead of the API to retrieve state vectors if \code{includeStateVectors=TRUE}. If used, the provided
+  username and password (or clientId and clientSecret) are used for the Trino connection. By default, the Trino interface
   is not used.
   }
   \item{includeAirportsMetadata}{logical indicating if the data about the origin and destination

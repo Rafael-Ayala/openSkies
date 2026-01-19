@@ -16,9 +16,10 @@ Time resolution is limited to 10 s for anonymous users, and 5 s for registered
 users.
 }
 \usage{
-getAircraftStateVectorsSeries(aircraft, startTime, endTime, 
-                              timeZone=Sys.timezone(), timeResolution, 
+getAircraftStateVectorsSeries(aircraft, startTime, endTime,
+                              timeZone=Sys.timezone(), timeResolution,
                               username=NULL, password=NULL,
+                              clientId=NULL, clientSecret=NULL,
                               useTrino=FALSE, timeOut=60, maxQueryAttempts=1)
 }
 \arguments{
@@ -49,11 +50,21 @@ getAircraftStateVectorsSeries(aircraft, startTime, endTime,
   for the OpenSky API. By default, no authentication is performed.
   }
   \item{password}{optional string with the password to use for authentication
-  for the OpenSky API. By default, no authentication is performed.
+  for the OpenSky API. By default, no authentication is performed. This is the
+  legacy authentication method; for new users, clientId and clientSecret should
+  be used instead.
+  }
+  \item{clientId}{optional string with the client ID to use for OAuth2
+  authentication for the OpenSky API. This is the recommended authentication
+  method for new users. By default, no authentication is performed.
+  }
+  \item{clientSecret}{optional string with the client secret to use for OAuth2
+  authentication for the OpenSky API. This is the recommended authentication
+  method for new users. By default, no authentication is performed.
   }
   \item{useTrino}{logical indicating whether or not to use the OpenSky
-  Trino query interface instead of the API to retrieve state vectors. If used, the provided 
-  username and password are used for the Trino connection. By default, the Trino interface
+  Trino query interface instead of the API to retrieve state vectors. If used, the provided
+  username and password (or clientId and clientSecret) are used for the Trino connection. By default, the Trino interface
   is not used.
   }
   \item{timeOut}{number of seconds after which the query will time out and return

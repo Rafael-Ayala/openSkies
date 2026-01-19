@@ -1,6 +1,7 @@
 getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.timezone(),
                                       minLatitude=NULL, maxLatitude=NULL, minLongitude=NULL,
-                                      maxLongitude=NULL, username=NULL, password=NULL, 
+                                      maxLongitude=NULL, username=NULL, password=NULL,
+                                      clientId=NULL, clientSecret=NULL,
                                       useTrino=FALSE, timeOut=60, maxQueryAttempts=1) {
   if(!is.null(aircraft)) {
     checkICAO24(aircraft)
@@ -20,7 +21,8 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
   if(!is.null(maxLongitude)) {
     checkCoordinate(maxLongitude, "maximum longitude")
   }
-  if(is.null(username) | is.null(password)) {
+  hasAuth <- (!is.null(username) && !is.null(password)) || (!is.null(clientId) && !is.null(clientSecret))
+  if(!hasAuth) {
     if(!is.null(time)) {
       if(is.null(aircraft)) {
         time <- NULL
@@ -48,8 +50,8 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
     if(is.null(time)) {
       time <- Sys.time()
     }
-    token <- getTrinoToken(username, password)
-    connection <- getTrinoConnection(username, token)
+    token <- getTrinoToken(username, password, clientId, clientSecret)
+    connection <- getTrinoConnection(token, username, clientId)
     query <- makeImpalaQueryStateVectorsSingleTime(aircraft, time, timeZone, minLatitude, maxLatitude, minLongitude, maxLongitude)
     results <- runTrinoQuery(query, connection)
     dbDisconnect(connection)
@@ -78,11 +80,18 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
     attemptCount <- 0
     while(!jsonResponse) {
       attemptCount <- attemptCount + 1
+      authConfig <- NULL
+      if(!is.null(clientId) && !is.null(clientSecret)) {
+        accessToken <- getAccessToken(clientId, clientSecret)
+        authConfig <- add_headers(Authorization = paste("Bearer", accessToken))
+      } else if(!is.null(username) && !is.null(password)) {
+        authConfig <- authenticate(username, password)
+      }
       response <- tryCatch({
         GET(paste(openskyApiRootURL, "states/all", sep="" ),
             query=queryParameters,
             timeout(timeOut),
-            if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+            authConfig)
       },
       error = function(e) e
       )
@@ -122,7 +131,7 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
 }
 
 getIntervalStateVectors <- function(aircraft=NULL, startTime, endTime,
-                                    timeZone=Sys.timezone(), minLatitude=NULL, 
+                                    timeZone=Sys.timezone(), minLatitude=NULL,
                                     maxLatitude=NULL, minLongitude=NULL, maxLongitude=NULL,
                                     minBaroAltitude=NULL, maxBaroAltitude=NULL,
                                     minGeoAltitude=NULL, maxGeoAltitude=NULL,
@@ -130,7 +139,8 @@ getIntervalStateVectors <- function(aircraft=NULL, startTime, endTime,
                                     minVerticalRate=NULL, maxVerticalRate=NULL,
                                     callSignFilter=NULL, onGroundStatus=NULL,
                                     squawkFilter=NULL, spiStatus=NULL, alertStatus=NULL,
-                                    username, password) {
+                                    username=NULL, password=NULL,
+                                    clientId=NULL, clientSecret=NULL) {
   if(!is.null(aircraft)) {
     checkICAO24(aircraft)
   }
@@ -187,8 +197,8 @@ getIntervalStateVectors <- function(aircraft=NULL, startTime, endTime,
   if(!is.null(alertStatus) & !is.logical(alertStatus)) {
     stop("Invalid alert status provided. Please provide a NULL, TRUE or FALSE value")
   }
-  token <- getTrinoToken(username, password)
-  connection <- getTrinoConnection(username, token)
+  token <- getTrinoToken(username, password, clientId, clientSecret)
+  connection <- getTrinoConnection(token, username, clientId)
   query <- makeImpalaQueryStateVectorsInterval(aircraft, startTime, endTime,
                                                timeZone, minLatitude, maxLatitude, 
                                                minLongitude, maxLongitude,
@@ -217,10 +227,12 @@ getIntervalStateVectors <- function(aircraft=NULL, startTime, endTime,
 }
 
 getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone=Sys.timezone(),
-                                          timeResolution, username=NULL, password=NULL, 
+                                          timeResolution, username=NULL, password=NULL,
+                                          clientId=NULL, clientSecret=NULL,
                                           useTrino=FALSE, timeOut=60, maxQueryAttempts=1) {
+  hasAuth <- (!is.null(username) && !is.null(password)) || (!is.null(clientId) && !is.null(clientSecret))
   if(timeResolution < 10) {
-    if(is.null(username) | is.null(password)) {
+    if(!hasAuth) {
       timeResolution <- 10
       warning(strwrap("Anonymous users cannot retrieve data with a time resolution
                       higher than 10 seconds. A time resolution of 10 seconds will be used.",
@@ -234,8 +246,8 @@ getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone
   }
   timePoints <- generateTimePoints(startTime, endTime, timeZone, timeResolution)
   if(useTrino){
-    token <- getTrinoToken(username, password)
-    connection <- getTrinoConnection(username, token)
+    token <- getTrinoToken(username, password, clientId, clientSecret)
+    connection <- getTrinoConnection(token, username, clientId)
     query <- makeImpalaQueryStateVectorsTimeSeries(aircraft, timePoints)
     results <- runTrinoQuery(query, connection)
     dbDisconnect(connection)
@@ -261,12 +273,19 @@ getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone
       attemptCount <- 0
       while(!jsonResponse) {
         attemptCount <- attemptCount + 1
+        authConfig <- NULL
+        if(!is.null(clientId) && !is.null(clientSecret)) {
+          accessToken <- getAccessToken(clientId, clientSecret)
+          authConfig <- add_headers(Authorization = paste("Bearer", accessToken))
+        } else if(!is.null(username) && !is.null(password)) {
+          authConfig <- authenticate(username, password)
+        }
         response <- tryCatch({
           GET(paste(openskyApiRootURL, "states/all", sep="" ),
               query=list(icao24=aircraft,
                          time=timePoints[i]),
               timeout(timeOut),
-              if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+              authConfig)
         },
         error = function(e) e
         )

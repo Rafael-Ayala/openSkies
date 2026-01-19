@@ -120,6 +120,33 @@ flights <- getIntervalFlights(startTime="2019-11-16 09:00:00",
 length(flights)
 ```
 
+# Authentication
+
+While some data can be accessed anonymously, authenticating as a registered user
+offers access to additional data and higher rate limits. The OpenSky Network
+supports two authentication methods:
+
+**OAuth2 Client Credentials (Recommended)**: This is the recommended method for
+new users. You will need a `clientId` and `clientSecret`, which can be obtained
+from your OpenSky Network account settings.
+
+```{r tidy = TRUE}
+# Example using OAuth2 client credentials authentication
+getAirportArrivals(airport="EDDF", startTime="2018-01-29 12:00:00",
+                   endTime="2018-01-29 13:00:00", timeZone="Europe/Berlin",
+                   clientId="your_client_id", clientSecret="your_client_secret")
+```
+
+**Legacy Username/Password**: This method is still supported for existing users
+but is being phased out. New users should use the OAuth2 method instead.
+
+```{r tidy = TRUE}
+# Example using legacy username/password authentication
+getAirportArrivals(airport="EDDF", startTime="2018-01-29 12:00:00",
+                   endTime="2018-01-29 13:00:00", timeZone="Europe/Berlin",
+                   username="your_username", password="your_password")
+```
+
 # Accessing aircraft state vectors
 
 State vectors contain status information sent by the transponder of an aircraft.
