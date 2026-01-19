@@ -1,3 +1,4 @@
+# TODO implement authentication using client_credentials, see openSkies_auth.R, openSkies_otherSupportFunctions.R
 getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.timezone(),
                                       minLatitude=NULL, maxLatitude=NULL, minLongitude=NULL,
                                       maxLongitude=NULL, username=NULL, password=NULL, 

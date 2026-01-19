@@ -61,6 +61,8 @@ getIntervalFlights(startTime, endTime, timeZone=Sys.timezone(), username=NULL,
   In the default behavior, a single attempt will be performed. It is not recommended
   to change this to a very large number, since it can lead to long running times.
   }
+  \item{credentials}{Optional credentials object obtained via \code{getCredentials()} to authenticate
+  with the OpenSky API using either username + password or client_id + client_secret.}
 }
 \value{
 A list of objects of class \code{\link{openSkiesFlight}}, where each object

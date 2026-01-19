@@ -1,4 +1,5 @@
 openskyApiRootURL <- "https://opensky-network.org/api/"
+openskyAuthURL <-"https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token"
 
 globalVariables(c("lat", "lon", "group"))
 

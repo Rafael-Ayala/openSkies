@@ -2,7 +2,7 @@ getAirportArrivals <- function(airport, startTime, endTime, timeZone=Sys.timezon
                                username=NULL, password=NULL, includeStateVectors=FALSE, 
                                timeResolution=NULL, useTrino=FALSE, 
                                includeAirportsMetadata=FALSE,
-                               timeOut=60, maxQueryAttempts=1) {
+                               timeOut=60, maxQueryAttempts=1, credentials=NULL) {
   checkAirport(airport)
   checkTime(startTime)
   checkTime(endTime)
@@ -20,7 +20,7 @@ getAirportArrivals <- function(airport, startTime, endTime, timeZone=Sys.timezon
                                                        timeZone, username, password, includeStateVectors, 
                                                        timeResolution, useTrino, 
                                                        includeAirportsMetadata, timeOut,
-                                                       maxQueryAttempts)
+                                                       maxQueryAttempts, credentials = credentials)
       allArrivalsOpenSkiesFlights <- c(allArrivalsOpenSkiesFlights, arrivalsCurrentInterval)
   }
   if(is.null(allArrivalsOpenSkiesFlights)) {
@@ -35,7 +35,7 @@ getAirportDepartures <- function(airport, startTime, endTime, timeZone=Sys.timez
                                  username=NULL, password=NULL, includeStateVectors=FALSE, 
                                  timeResolution=NULL, useTrino=FALSE, 
                                  includeAirportsMetadata=FALSE,
-                                 timeOut=60, maxQueryAttempts=1) {
+                                 timeOut=60, maxQueryAttempts=1, credentials=NULL) {
   checkAirport(airport)
   checkTime(startTime)
   checkTime(endTime)
@@ -53,7 +53,7 @@ getAirportDepartures <- function(airport, startTime, endTime, timeZone=Sys.timez
                                                                     timeZone, username, password, includeStateVectors, 
                                                                     timeResolution, useTrino, 
                                                                     includeAirportsMetadata, timeOut,
-                                                                    maxQueryAttempts)
+                                                                    maxQueryAttempts, credentials = credentials)
       allDeparturesOpenSkiesFlights <- c(allDeparturesOpenSkiesFlights, departuresCurrentInterval)
   }
   if(is.null(allDeparturesOpenSkiesFlights)) {
@@ -67,7 +67,7 @@ getAircraftFlights <- function(aircraft, startTime, endTime, timeZone=Sys.timezo
                                username=NULL, password=NULL, includeStateVectors=FALSE, 
                                timeResolution=NULL, useTrino=FALSE, 
                                includeAirportsMetadata=FALSE,
-                               timeOut=60, maxQueryAttempts=1) {
+                               timeOut=60, maxQueryAttempts=1, credentials=NULL) {
   checkICAO24(aircraft)
   checkTime(startTime)
   checkTime(endTime)
@@ -85,7 +85,7 @@ getAircraftFlights <- function(aircraft, startTime, endTime, timeZone=Sys.timezo
                                                                          username, password, includeStateVectors, 
                                                                          timeResolution, useTrino, 
                                                                          includeAirportsMetadata,
-                                                                         timeOut, maxQueryAttempts)
+                                                                         timeOut, maxQueryAttempts, credentials = credentials)
       allAircraftOpenSkiesFlights <- c(allAircraftOpenSkiesFlights, aircraftFlightsCurrentInterval)
   }
   if(is.null(allAircraftOpenSkiesFlights)) {
@@ -99,7 +99,7 @@ getIntervalFlights <- function(startTime, endTime, timeZone=Sys.timezone(),
                                username=NULL, password=NULL, includeStateVectors=FALSE, 
                                timeResolution=NULL, useTrino=FALSE, 
                                includeAirportsMetadata=FALSE,
-                               timeOut=60, maxQueryAttempts=1) {
+                               timeOut=60, maxQueryAttempts=1, credentials = NULL) {
   checkTime(startTime)
   checkTime(endTime)
   if(includeStateVectors && is.null(timeResolution)){
@@ -116,7 +116,7 @@ getIntervalFlights <- function(startTime, endTime, timeZone=Sys.timezone(),
                                                                          username, password, includeStateVectors, 
                                                                          timeResolution, useTrino, 
                                                                          includeAirportsMetadata,
-                                                                         timeOut, maxQueryAttempts)
+                                                                         timeOut, maxQueryAttempts, credentials = credentials)
       allIntervalOpenSkiesFlights <- c(allIntervalOpenSkiesFlights, intervalFlightsCurrentInterval)
   }
   if(is.null(allIntervalOpenSkiesFlights)){
