@@ -1,8 +1,8 @@
 \name{openSkiesStateVector}
 \alias{openSkiesStateVector}
-\title{An \code{\link{R6Class}} object representing an aircraft state vector}
+\title{An \code{\link[R6]{R6Class}} object representing an aircraft state vector}
 \description{
-\code{\link{R6Class}} object representing an aircraft state vector. Contains 
+\code{\link[R6]{R6Class}} object representing an aircraft state vector. Contains 
 information about status at a given timepoint of an aircraft, including
 its position, altitude and velocity. New instances can be manually 
 created by providing values for at least the \code{ICAO24}, \code{longitude} and

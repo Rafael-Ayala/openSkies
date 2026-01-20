@@ -1,8 +1,8 @@
 \name{openSkiesFlight}
 \alias{openSkiesFlight}
-\title{An \code{\link{R6Class}} object representing a specific flight}
+\title{An \code{\link[R6]{R6Class}} object representing a specific flight}
 \description{
-\code{\link{R6Class}} object representing a specific flight performed by a
+\code{\link[R6]{R6Class}} object representing a specific flight performed by a
 certain aircraft. Contains information about the aircraft that performed the
 flight, the airports of origin and destination, the times of departure and
 arrival and the callsign under which the flight was performed. New instances can be manually created by providing values for at least the fields \code{ICAO24},  \code{departure_time} and  \code{arrival_time}. 

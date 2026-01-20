@@ -3,7 +3,7 @@
 \title{An object of class \code{adsbDecoder} object representing a decoder used 
 to decode ADS-B v2 messages}
 \description{
-\code{\link{R6Class}} object of class \code{adsbDecoder} representing a decoder 
+\code{\link[R6]{R6Class}} object of class \code{adsbDecoder} representing a decoder 
 used to decode ADS-B v2 messages. Provides methods for decoding a single message 
 or a batch. Additionally, it includes methods for transforming hex strings into 
 bits vectors and decoding some individual fields. Decoded messages are returned 

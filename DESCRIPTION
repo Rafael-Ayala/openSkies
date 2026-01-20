@@ -1,10 +1,15 @@
 Package: openSkies
 Type: Package
 Title: Retrieval, Analysis and Visualization of Air Traffic Data
-Version: 1.2.3
-Date: 2026-01-19
-Author: Rafael Ayala, Daniel Ayala, David Ruiz, Aleix Sellés, Pablo Hernandez, Lara Sellés Vidal
-Maintainer: Rafael Ayala <rafael.ayala@oist.jp>
+Version: 1.3.0
+Date: 2026-01-20
+Authors@R: c(
+    person("Rafael", "Ayala", email = "rafaelayalahernandez@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-9332-4623")),
+    person("Daniel", "Ayala", email = "dayala1@us.es", role = "aut", comment = c(ORCID = "0000-0003-2095-1009")),
+    person("David", "Ruiz", email = "druiz@us.es", role = "aut", comment = c(ORCID = "0000-0003-4460-5493")),
+    person("Aleix", "Sellés", role = "aut"),
+    person("Pablo", "Hernandez", email = "pabherser@alum.us.es", role="aut", comment = c(ORCID = "0009-0000-9279-6744")),
+    person("Lara", "Selles Vidal", email = "lara.selles@oist.jp", role = "aut", comment = c(ORCID = "0000-0003-2537-6824")))
 Description: Provides functionalities and data structures to retrieve, analyze and visualize aviation 
     data. It includes a client interface to the 'OpenSky' API <https://opensky-network.org>. It allows 
     retrieval of flight information, as well as aircraft state vectors.
@@ -16,7 +21,7 @@ License: CC BY-NC 4.0
 Depends: grid
 Imports: httr, ssh, xml2, ggmap, ggplot2, magick, utils, stats, R6,
         dbscan, cluster, DBI, RPresto
-Suggests: knitr, BiocStyle, RUnit, BiocGenerics, rmarkdown, markdown
+Suggests: knitr, BiocStyle, RUnit, rmarkdown, markdown
 VignetteBuilder: knitr
 BugReports: https://github.com/Rafael-Ayala/openSkies/issues
 NeedsCompilation: no

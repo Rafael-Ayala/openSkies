@@ -1,4 +1,4 @@
-Changes in version 1.2.3 (2026-01-19)
+Changes in version 1.3.0 (2026-01-20)
 + Added support for OAuth2 client credentials authentication. New users should use clientId and clientSecret parameters instead of username and password, as the legacy authentication method is being deprecated by the OpenSky Network.
 + All functions that support authentication (getAirportArrivals, getAirportDepartures, getAircraftFlights, getIntervalFlights, getSingleTimeStateVectors, getAircraftStateVectorsSeries, getIntervalStateVectors) now accept clientId and clientSecret parameters for OAuth2 authentication.
 + Legacy username/password authentication remains supported for backwards compatibility with existing users.

@@ -1,8 +1,8 @@
 \name{openSkiesAircraft}
 \alias{openSkiesAircraft}
-\title{An \code{\link{R6Class}} object representing an aircraft}
+\title{An \code{\link[R6]{R6Class}} object representing an aircraft}
 \description{
-\code{\link{R6Class}} object representing an aircraft. Contains information
+\code{\link[R6]{R6Class}} object representing an aircraft. Contains information
 about the ICAO 24-bit code of the aircraft, its registration code, its country
 of origin, its manufacturer and its operator. New instances can be manually 
 created by providing values for at least the \code{ICAO24} field. Alternatively, 

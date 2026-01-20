@@ -1,8 +1,8 @@
 \name{openSkiesRoute}
 \alias{openSkiesRoute}
-\title{An \code{\link{R6Class}} object representing a flight route}
+\title{An \code{\link[R6]{R6Class}} object representing a flight route}
 \description{
-\code{\link{R6Class}} object representing a flight route, usually operated by
+\code{\link[R6]{R6Class}} object representing a flight route, usually operated by
 a commercial airline. Contains information about the callsign under which the 
 route is operated, the operator itself and the airports of origin and 
 destination. New instances can be manually created by providing values for at 

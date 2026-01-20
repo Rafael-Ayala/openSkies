@@ -1,9 +1,9 @@
 \name{openSkiesStateVectorSet}
 \alias{openSkiesStateVectorSet}
-\title{An \code{\link{R6Class}} object representing an ensemble of aircraft 
+\title{An \code{\link[R6]{R6Class}} object representing an ensemble of aircraft 
 state vectors}
 \description{
-\code{\link{R6Class}} object representing an ensemble of aircraft state vectors. 
+\code{\link[R6]{R6Class}} object representing an ensemble of aircraft state vectors. 
 Contains a list of objects of class \code{\link{openSkiesStateVector}}. The
 ensemble can either represent a time series of state vectors of a single 
 aircraft, or represent state vectors corresponding to multiple different

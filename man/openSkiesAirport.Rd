@@ -1,8 +1,8 @@
 \name{openSkiesAirport}
 \alias{openSkiesAirport}
-\title{An \code{\link{R6Class}} object representing an airport}
+\title{An \code{\link[R6]{R6Class}} object representing an airport}
 \description{
-\code{\link{R6Class}} object representing an airport. Contains information
+\code{\link[R6]{R6Class}} object representing an airport. Contains information
 about the name of the airport, its IATA and ICAO codes, and its location.
 New instances can be manually created by providing values for at least the 
 fields \code{name}, \code{city}, \code{country}, \code{longitude} and 
